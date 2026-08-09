@@ -1,29 +1,35 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs';
+import { parseSRTContent } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, CheckCircle, ChevronRight, HelpCircle } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [customUrl, setCustomUrl] = useState('');
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
 
-  const song = KPOP_SONG_PRESETS[selectedSongIdx] || {
+  // Custom uploaded SRT lyrics state
+  const [customLyrics, setCustomLyrics] = useState(null);
+  const [showSrtModal, setShowSrtModal] = useState(false);
+  const [rawSrtText, setRawSrtText] = useState('');
+
+  const currentPreset = KPOP_SONG_PRESETS[selectedSongIdx];
+  const song = {
     id: activeVideoId,
-    title: 'Custom YouTube Video',
-    artist: 'K-Pop Track',
-    lyrics: [
-      { start: 0, end: 10, ko: '한국어 노래 가사', rom: 'han-gug-eo no-rae ga-sa', en: 'Korean Song Lyrics' }
-    ]
+    title: customLyrics ? 'Custom SRT Lyrics Video' : (currentPreset ? currentPreset.title : 'YouTube Video'),
+    artist: customLyrics ? 'User Upload' : (currentPreset ? currentPreset.artist : 'K-Pop Track'),
+    lyrics: customLyrics || (currentPreset ? currentPreset.lyrics : [
+      { start: 0, end: 10, ko: '한국어 가사 srt 파일 업로드 가능', rom: 'han-gug-eo ga-sa srt fa-il eop-ro-deu ga-neung', en: 'Upload your own SRT subtitle file!' }
+    ])
   };
 
   const [activeLineIdx, setActiveLineIdx] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
-  const [practiceMode, setPracticeMode] = useState(false); // Enable typing practice mode
+  const [practiceMode, setPracticeMode] = useState(false);
 
   // Typing practice state
   const [typedKeys, setTypedKeys] = useState('');
@@ -31,8 +37,9 @@ export default function KpopVideoMode({ onAddXp }) {
   const [activeKeyPressed, setActiveKeyPressed] = useState([]);
 
   const playerRef = useRef(null);
+  const fileInputRef = useRef(null);
 
-  // Extract YouTube Video ID from any URL format
+  // Extract YouTube Video ID
   const extractVideoId = (url) => {
     if (!url) return null;
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
@@ -50,6 +57,43 @@ export default function KpopVideoMode({ onAddXp }) {
     }
   };
 
+  // Process SRT File Upload
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target.result;
+      const parsed = parseSRTContent(content);
+      if (parsed.length > 0) {
+        setCustomLyrics(parsed);
+        setSelectedSongIdx(-1);
+        setActiveLineIdx(0);
+        sound.playCorrect();
+        alert(`✅ Successfully loaded ${parsed.length} lyric lines from ${file.name}!`);
+      } else {
+        alert('Could not parse SRT file. Please ensure it follows standard SRT format.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Process pasted SRT text
+  const handleParsePastedSrt = () => {
+    const parsed = parseSRTContent(rawSrtText);
+    if (parsed.length > 0) {
+      setCustomLyrics(parsed);
+      setSelectedSongIdx(-1);
+      setActiveLineIdx(0);
+      setShowSrtModal(false);
+      sound.playCorrect();
+      alert(`✅ Loaded ${parsed.length} lyric lines!`);
+    } else {
+      alert('Could not parse SRT text. Check timestamps format (e.g. 00:00:05,000 --> 00:00:10,000).');
+    }
+  };
+
   // Sync lyrics time ticker
   useEffect(() => {
     let interval = null;
@@ -59,7 +103,6 @@ export default function KpopVideoMode({ onAddXp }) {
           const time = playerRef.current.getCurrentTime();
           setCurrentTime(time);
 
-          // Find current lyric line based on timestamp
           const matchedIdx = song.lyrics.findIndex(line => time >= line.start && time < line.end);
           if (matchedIdx !== -1 && matchedIdx !== activeLineIdx) {
             setActiveLineIdx(matchedIdx);
@@ -113,7 +156,6 @@ export default function KpopVideoMode({ onAddXp }) {
     };
   }, [activeVideoId]);
 
-  // Jump player to specific timestamp
   const seekToTime = (seconds) => {
     if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
       playerRef.current.seekTo(seconds, true);
@@ -121,9 +163,9 @@ export default function KpopVideoMode({ onAddXp }) {
     }
   };
 
-  const activeLine = song.lyrics[activeLineIdx] || song.lyrics[0];
+  const activeLine = song.lyrics[activeLineIdx] || song.lyrics[0] || { ko: '', rom: '', en: '' };
 
-  // Helper: Decompose active Korean line into character breakdown & Vowels
+  // Decompose Hangul into character breakdown & Vowels for Newbies
   const getVowelBreakdown = (text) => {
     if (!text) return [];
     const tokens = [];
@@ -148,7 +190,7 @@ export default function KpopVideoMode({ onAddXp }) {
 
   const vowelTokens = getVowelBreakdown(activeLine.ko);
 
-  // Typing practice logic for lyric line
+  // Typing practice logic
   const handleGlobalKeyDown = useCallback((e) => {
     if (!practiceMode) return;
 
@@ -193,7 +235,7 @@ export default function KpopVideoMode({ onAddXp }) {
 
   return (
     <div className="kpop-mode-container">
-      {/* Header Controls & YouTube URL Loader */}
+      {/* Header Controls & YouTube URL / SRT Loader */}
       <div className="kpop-controls-bar glassmorphism">
         <div className="song-presets-group">
           <span className="preset-label">Featured K-Pop Videos:</span>
@@ -205,6 +247,7 @@ export default function KpopVideoMode({ onAddXp }) {
                 e.currentTarget.blur();
                 setSelectedSongIdx(idx);
                 setActiveVideoId(p.id);
+                setCustomLyrics(null);
                 setActiveLineIdx(0);
               }}
             >
@@ -214,20 +257,46 @@ export default function KpopVideoMode({ onAddXp }) {
           ))}
         </div>
 
-        {/* Custom YouTube URL Form */}
-        <form className="youtube-url-form" onSubmit={handleLoadCustomUrl}>
-          <Tv className="yt-icon" size={18} />
-          <input
-            type="text"
-            className="yt-url-input"
-            placeholder="Paste YouTube Link (e.g. https://www.youtube.com/watch?v=cxhqqpVk65Q)"
-            value={customUrl}
-            onChange={(e) => setCustomUrl(e.target.value)}
-          />
-          <button type="submit" className="load-url-btn">
-            Load Video
-          </button>
-        </form>
+        {/* Action Row: Custom YouTube URL & Upload SRT */}
+        <div className="controls-action-row">
+          <form className="youtube-url-form" onSubmit={handleLoadCustomUrl}>
+            <Tv className="yt-icon" size={18} />
+            <input
+              type="text"
+              className="yt-url-input"
+              placeholder="Paste YouTube Link (e.g. https://www.youtube.com/watch?v=cxhqqpVk65Q)"
+              value={customUrl}
+              onChange={(e) => setCustomUrl(e.target.value)}
+            />
+            <button type="submit" className="load-url-btn">
+              Load Video
+            </button>
+          </form>
+
+          {/* Upload SRT File Button */}
+          <div className="srt-upload-group">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".srt,.txt"
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+            />
+            <button
+              className="srt-btn upload-file-btn"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload size={16} /> Upload .SRT File
+            </button>
+
+            <button
+              className="srt-btn paste-text-btn"
+              onClick={() => setShowSrtModal(true)}
+            >
+              <FileText size={16} /> Paste SRT Text
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Main Grid: YouTube Video + Sync Lyrics CC Overlay */}
@@ -243,7 +312,7 @@ export default function KpopVideoMode({ onAddXp }) {
             <div className="cc-tag">CC SUBTITLES (CLOSED CAPTION)</div>
             <div className="cc-hangul">{activeLine.ko}</div>
             <div className="cc-romanization">[{activeLine.rom}]</div>
-            <div className="cc-english">"{activeLine.en}"</div>
+            {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
           </div>
 
           {/* Audio Pronounce & Practice Toggle */}
@@ -294,8 +363,8 @@ export default function KpopVideoMode({ onAddXp }) {
                   </div>
                   <div className="lyric-content">
                     <div className="lyric-ko">{line.ko}</div>
-                    <div className="lyric-rom">{line.rom}</div>
-                    <div className="lyric-en">{line.en}</div>
+                    {line.rom && <div className="lyric-rom">{line.rom}</div>}
+                    {line.en && <div className="lyric-en">{line.en}</div>}
                   </div>
                 </div>
               );
@@ -372,6 +441,44 @@ export default function KpopVideoMode({ onAddXp }) {
               });
             }}
           />
+        </div>
+      )}
+
+      {/* Paste SRT Text Modal */}
+      {showSrtModal && (
+        <div className="modal-overlay" onClick={() => setShowSrtModal(false)}>
+          <div className="modal-content glassmorphism srt-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title">
+                <FileText size={22} className="purple-icon" />
+                <h3>Paste Your Custom SRT Subtitle Lyrics</h3>
+              </div>
+              <button className="close-btn" onClick={() => setShowSrtModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="modal-instruction">
+              Paste standard <code>.srt</code> text below. Lines can contain Korean, Romanization, or pipe <code>|</code> separated columns.
+            </p>
+
+            <textarea
+              className="srt-textarea"
+              rows={10}
+              placeholder={`Example SRT format:\n\n1\n00:00:09,000 --> 00:00:14,000\n가만히 보고만 있지 말고\nga-man-hi bo-go-man it-ji mal-go\nDon't just stand there watching\n\n2\n00:00:14,000 --> 00:00:18,000\n나를 봐 내 이름은 Super Shy`}
+              value={rawSrtText}
+              onChange={(e) => setRawSrtText(e.target.value)}
+            />
+
+            <div className="modal-actions">
+              <button className="card-nav-btn reset-btn" onClick={() => setShowSrtModal(false)}>
+                Cancel
+              </button>
+              <button className="card-nav-btn primary" onClick={handleParsePastedSrt}>
+                Apply Custom SRT Lyrics
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

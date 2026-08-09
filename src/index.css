@@ -761,7 +761,14 @@ body {
   box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
 }
 
+.controls-action-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
 .youtube-url-form {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -769,6 +776,7 @@ body {
   padding: 6px 12px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
+  min-width: 280px;
 }
 
 .yt-icon { color: #ef4444; }
@@ -792,6 +800,37 @@ body {
   font-weight: 700;
   font-size: 12px;
   cursor: pointer;
+}
+
+.srt-upload-group {
+  display: flex;
+  gap: 8px;
+}
+
+.srt-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--accent-green);
+  color: #34d399;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.srt-btn:hover {
+  background: rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+}
+
+.srt-btn.paste-text-btn {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: var(--accent-cyan);
+  color: #38bdf8;
 }
 
 .kpop-main-grid {
@@ -1078,6 +1117,35 @@ body {
   font-size: 20px;
   font-weight: 700;
   color: white;
+}
+
+/* SRT Modal Styling */
+.srt-modal-content {
+  max-width: 650px;
+}
+
+.modal-instruction {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.srt-textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  color: white;
+  font-family: monospace;
+  font-size: 13px;
+  padding: 14px;
+  outline: none;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
 /* Responsive Grid */
