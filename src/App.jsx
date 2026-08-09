@@ -6,6 +6,8 @@ import SpeedRaceMode from './components/SpeedRaceMode';
 import BadgeModal from './components/BadgeModal';
 import { sound } from './utils/audio';
 
+import KpopVideoMode from './components/KpopVideoMode';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('lessons');
 
@@ -61,6 +63,12 @@ export default function App() {
             onAddXp={handleAddXp}
             onUpdateStreak={handleUpdateStreak}
             soundMuted={soundMuted}
+          />
+        )}
+
+        {activeTab === 'kpop' && (
+          <KpopVideoMode
+            onAddXp={handleAddXp}
           />
         )}
 

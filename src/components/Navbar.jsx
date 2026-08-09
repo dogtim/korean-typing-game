@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Flame, Award, BookOpen, Gamepad2, Zap, Keyboard } from 'lucide-react';
+import { Volume2, VolumeX, Flame, Award, BookOpen, Gamepad2, Zap, Tv } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -32,6 +32,14 @@ export default function Navbar({
         >
           <BookOpen className="tab-icon" size={18} />
           <span>Lessons</span>
+        </button>
+
+        <button
+          className={`tab-btn ${activeTab === 'kpop' ? 'active' : ''}`}
+          onClick={() => setActiveTab('kpop')}
+        >
+          <Tv className="tab-icon" size={18} />
+          <span>K-Pop Video</span>
         </button>
 
         <button
