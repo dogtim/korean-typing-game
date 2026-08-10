@@ -7,8 +7,8 @@ export const VIDEO_SRT_MAPPINGS = [
     artist: 'BABYMONSTER (베이비몬스터)',
     srtFilename: 'BABYMONSTER-DRIP.srt',
     srtPath: '/lyrics/BABYMONSTER-DRIP.srt',
-    youtubeIds: ['cxhqqpVk65Q'],
-    primaryUrl: 'https://www.youtube.com/watch?v=cxhqqpVk65Q',
+    youtubeIds: ['Zp-Jhuhq0bQ'],
+    primaryUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
     alternateUrls: [],
     description: 'BABYMONSTER - DRIP synchronized SRT subtitle lyrics'
   },

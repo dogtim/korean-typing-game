@@ -2,6 +2,15 @@
 
 export const PREPARED_SRT_LIBRARY = [
   {
+    id: 'babymonster_drip',
+    title: 'DRIP',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'Zp-Jhuhq0bQ',
+    filename: 'BABYMONSTER-DRIP.srt',
+    path: '/lyrics/BABYMONSTER-DRIP.srt',
+    description: 'BABYMONSTER DRIP full prepared SRT subtitle file.'
+  },
+  {
     id: 'super_shy',
     title: 'Super Shy',
     artist: 'NewJeans (뉴진스)',
@@ -45,14 +54,5 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'flower.srt',
     path: '/lyrics/flower.srt',
     description: 'Jisoo solo debut Flower prepared SRT subtitles.'
-  },
-  {
-    id: 'babymonster_drip',
-    title: 'DRIP',
-    artist: 'BABYMONSTER (베이비몬스터)',
-    youtubeId: 'cxhqqpVk65Q',
-    filename: 'BABYMONSTER-DRIP.srt',
-    path: '/lyrics/BABYMONSTER-DRIP.srt',
-    description: 'BABYMONSTER DRIP full prepared SRT subtitle file.'
   }
 ];

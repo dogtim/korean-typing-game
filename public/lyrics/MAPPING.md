@@ -8,7 +8,7 @@ This mapping table connects YouTube Music Video URLs / Video IDs directly with t
 
 | Song Title | Artist | YouTube Video URL | YouTube Video ID | Prepared SRT Subtitle File |
 | :--- | :--- | :--- | :--- | :--- |
-| **DRIP** | BABYMONSTER | `https://www.youtube.com/watch?v=cxhqqpVk65Q` | `cxhqqpVk65Q` | [`BABYMONSTER-DRIP.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-DRIP.srt) |
+| **DRIP** | BABYMONSTER | `https://www.youtube.com/watch?v=Zp-Jhuhq0bQ` | `Zp-Jhuhq0bQ` | [`BABYMONSTER-DRIP.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-DRIP.srt) |
 | **Super Shy** | NewJeans | `https://www.youtube.com/watch?v=cxhqqpVk65Q` | `cxhqqpVk65Q` | [`super_shy.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/super_shy.srt) |
 | **Dynamite** | BTS | `https://www.youtube.com/watch?v=gdZLi9oWNZg` | `gdZLi9oWNZg` | [`dynamite.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/dynamite.srt) |
 | **Magnetic** | ILLIT | `https://www.youtube.com/watch?v=Vk5-c_v4gMU` | `Vk5-c_v4gMU` | [`magnetic.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/magnetic.srt) |

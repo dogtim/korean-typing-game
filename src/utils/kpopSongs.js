@@ -2,7 +2,60 @@
 
 export const KPOP_SONG_PRESETS = [
   {
-    id: 'cxhqqpVk65Q', // User's requested video!
+    id: 'Zp-Jhuhq0bQ',
+    title: 'DRIP',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
+    thumbnail: 'https://img.youtube.com/vi/Zp-Jhuhq0bQ/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-DRIP.srt',
+    srtPath: '/lyrics/BABYMONSTER-DRIP.srt',
+    lyrics: [
+      {
+        start: 8,
+        end: 9,
+        ko: "When I dress I don't think so much",
+        rom: "When I dress I don't think so much",
+        en: "When I dress I don't think so much"
+      },
+      {
+        start: 9,
+        end: 10,
+        ko: "I could be the GOAT",
+        rom: "I could be the GOAT",
+        en: "I could be the GOAT"
+      },
+      {
+        start: 16,
+        end: 18,
+        ko: "Uh 찌릿찌릿, 끼리끼리 놀아볼까?",
+        rom: "Uh jji-rit-jji-rit, kki-ri-kki-ri no-ra-bol-kka?",
+        en: "Uh feel the thrill, shall we play together?"
+      },
+      {
+        start: 18,
+        end: 20,
+        ko: "kitty kitty yeah we gonna run this town",
+        rom: "kitty kitty yeah we gonna run this town",
+        en: "kitty kitty yeah we gonna run this town"
+      },
+      {
+        start: 25,
+        end: 28,
+        ko: "I'll be there 고민하지 마",
+        rom: "I'll be there go-min-ha-ji ma",
+        en: "I'll be there don't worry"
+      },
+      {
+        start: 29,
+        end: 32,
+        ko: "I'll be there 망설이지 마",
+        rom: "I'll be there mang-seol-i-ji ma",
+        en: "I'll be there don't hesitate"
+      }
+    ]
+  },
+  {
+    id: 'cxhqqpVk65Q',
     title: 'Super Shy',
     artist: 'NewJeans (뉴진스)',
     youtubeUrl: 'https://www.youtube.com/watch?v=cxhqqpVk65Q',

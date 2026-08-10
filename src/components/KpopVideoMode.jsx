@@ -6,7 +6,7 @@ import { parseSRTContent } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
@@ -35,6 +35,7 @@ export default function KpopVideoMode({ onAddXp }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [practiceMode, setPracticeMode] = useState(false);
+  const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
 
   // Typing practice state
   const [typedKeys, setTypedKeys] = useState('');
@@ -121,7 +122,7 @@ export default function KpopVideoMode({ onAddXp }) {
   };
 
   // Load Prepared SRT File from /lyrics/ folder & auto-play mapped video URL
-  const handleLoadPreparedSrt = async (item) => {
+  const handleLoadPreparedSrt = useCallback(async (item, silent = false) => {
     try {
       const srtPath = item.path || item.srtPath;
       const res = await fetch(srtPath);
@@ -131,32 +132,49 @@ export default function KpopVideoMode({ onAddXp }) {
       if (parsed.length > 0) {
         setCustomLyrics(parsed);
         setCustomTrackTitle(`${item.title} - ${item.artist}`);
-        setSelectedSongIdx(-1);
-        setActiveLineIdx(0);
-
+        
         // Lookup video mapping by ID or path
         const mapped = findMappingByVideoId(item.youtubeId) || 
                        VIDEO_SRT_MAPPINGS.find(m => m.srtPath === srtPath || m.srtFilename === item.filename || m.id === item.id);
         
         const targetVideoId = item.youtubeId || (mapped && mapped.youtubeIds && mapped.youtubeIds[0]);
 
+        const presetIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === targetVideoId || p.title.toLowerCase() === item.title.toLowerCase());
+        setSelectedSongIdx(presetIdx !== -1 ? presetIdx : 0);
+        setActiveLineIdx(0);
+
         if (targetVideoId) {
           setActiveVideoId(targetVideoId);
         }
 
         setShowLibraryModal(false);
-        sound.playCorrect();
-        alert(`✅ Loaded prepared SRT lyrics & switched video for "${item.title}" (${parsed.length} lines)!`);
+        if (!silent) {
+          sound.playCorrect();
+          alert(`✅ Loaded prepared SRT lyrics & switched video for "${item.title}" (${parsed.length} lines)!`);
+        }
       } else {
-        alert('Could not parse the prepared SRT file.');
+        if (!silent) alert('Could not parse the prepared SRT file.');
       }
     } catch (err) {
       console.error('Failed to load prepared SRT file:', err);
-      alert(`Could not load SRT file from ${item.path || item.srtPath}. Ensure it is present in public/lyrics/ folder.`);
+      if (!silent) alert(`Could not load SRT file from ${item.path || item.srtPath}. Ensure it is present in public/lyrics/ folder.`);
     }
-  };
+  }, []);
 
-  // Sync lyrics time ticker
+  // Auto-load default song (DRIP) video & full SRT subtitles on initial mount
+  useEffect(() => {
+    const dripItem = PREPARED_SRT_LIBRARY.find(item => item.id === 'babymonster_drip') || {
+      id: 'babymonster_drip',
+      title: 'DRIP',
+      artist: 'BABYMONSTER (베이비몬스터)',
+      youtubeId: 'Zp-Jhuhq0bQ',
+      path: '/lyrics/BABYMONSTER-DRIP.srt',
+      filename: 'BABYMONSTER-DRIP.srt'
+    };
+    handleLoadPreparedSrt(dripItem, true);
+  }, [handleLoadPreparedSrt]);
+
+  // Sync lyrics time ticker & sentence loop option
   useEffect(() => {
     let interval = null;
     if (isPlaying) {
@@ -165,17 +183,30 @@ export default function KpopVideoMode({ onAddXp }) {
           const time = playerRef.current.getCurrentTime();
           setCurrentTime(time);
 
-          const matchedIdx = song.lyrics.findIndex(line => time >= line.start && time < line.end);
-          if (matchedIdx !== -1 && matchedIdx !== activeLineIdx) {
-            setActiveLineIdx(matchedIdx);
-            setTypedKeys('');
-            setTypedText('');
+          if (isLineLoopEnabled) {
+            const activeLine = song.lyrics[activeLineIdx];
+            if (activeLine && typeof activeLine.start === 'number' && typeof activeLine.end === 'number') {
+              // If video reaches or exceeds line end (or jumps outside line range), loop back to start timestamp
+              if (time >= activeLine.end || time < activeLine.start - 0.5) {
+                playerRef.current.seekTo(activeLine.start, true);
+                setTypedKeys('');
+                setTypedText('');
+                return;
+              }
+            }
+          } else {
+            const matchedIdx = song.lyrics.findIndex(line => time >= line.start && time < line.end);
+            if (matchedIdx !== -1 && matchedIdx !== activeLineIdx) {
+              setActiveLineIdx(matchedIdx);
+              setTypedKeys('');
+              setTypedText('');
+            }
           }
         }
-      }, 300);
+      }, 200);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, song.lyrics, activeLineIdx]);
+  }, [isPlaying, song.lyrics, activeLineIdx, isLineLoopEnabled]);
 
   // Load YouTube IFrame API
   useEffect(() => {
@@ -305,12 +336,21 @@ export default function KpopVideoMode({ onAddXp }) {
             <button
               key={p.id}
               className={`preset-btn ${selectedSongIdx === idx ? 'active' : ''}`}
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.currentTarget.blur();
                 setSelectedSongIdx(idx);
                 setActiveVideoId(p.id);
-                setCustomLyrics(null);
                 setActiveLineIdx(0);
+
+                const mappedItem = PREPARED_SRT_LIBRARY.find(item => item.youtubeId === p.id || item.title.toLowerCase() === p.title.toLowerCase()) ||
+                                   (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
+                if (mappedItem) {
+                  await handleLoadPreparedSrt(mappedItem, true);
+                  setSelectedSongIdx(idx);
+                } else {
+                  setCustomLyrics(null);
+                  setCustomTrackTitle('');
+                }
               }}
             >
               <Music size={14} />
@@ -378,13 +418,16 @@ export default function KpopVideoMode({ onAddXp }) {
 
           {/* CC Style Subtitle Display Banner */}
           <div className="cc-subtitle-overlay">
-            <div className="cc-tag">CC SUBTITLES (CLOSED CAPTION)</div>
+            <div className="cc-tag">
+              CC SUBTITLES (CLOSED CAPTION)
+              {isLineLoopEnabled && <span className="loop-badge"> • REPEATING SENTENCE 🔂</span>}
+            </div>
             <div className="cc-hangul">{activeLine.ko}</div>
             <div className="cc-romanization">[{activeLine.rom}]</div>
             {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
           </div>
 
-          {/* Audio Pronounce & Practice Toggle */}
+          {/* Audio Pronounce, Loop & Practice Toggle Bar */}
           <div className="video-actions-bar">
             <button
               className="action-btn"
@@ -393,7 +436,25 @@ export default function KpopVideoMode({ onAddXp }) {
                 sound.speakKorean(activeLine.ko);
               }}
             >
-              <Volume2 size={18} /> Listen Pronunciation
+              <Volume2 size={18} /> Listen
+            </button>
+
+            <button
+              className={`action-btn ${isLineLoopEnabled ? 'active-green' : ''}`}
+              onClick={(e) => {
+                e.currentTarget.blur();
+                const nextLoopState = !isLineLoopEnabled;
+                setIsLineLoopEnabled(nextLoopState);
+                if (nextLoopState) {
+                  const currentLine = song.lyrics[activeLineIdx];
+                  if (currentLine && typeof currentLine.start === 'number') {
+                    seekToTime(currentLine.start);
+                  }
+                }
+              }}
+              title="Repeat the selected lyric sentence segment forever"
+            >
+              <Repeat size={18} /> {isLineLoopEnabled ? 'Loop Sentence ON' : 'Loop Sentence'}
             </button>
 
             <button
@@ -403,7 +464,7 @@ export default function KpopVideoMode({ onAddXp }) {
                 setPracticeMode(!practiceMode);
               }}
             >
-              <Type size={18} /> {practiceMode ? 'Typing Practice ON' : 'Practice Typing Lyric'}
+              <Type size={18} /> {practiceMode ? 'Typing Practice ON' : 'Practice Typing'}
             </button>
           </div>
         </div>
