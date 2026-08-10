@@ -1,26 +1,31 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs';
+import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
+import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
 import { parseSRTContent } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [customUrl, setCustomUrl] = useState('');
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
 
-  // Custom uploaded SRT lyrics state
+  // Custom uploaded or prepared SRT lyrics state
   const [customLyrics, setCustomLyrics] = useState(null);
+  const [customTrackTitle, setCustomTrackTitle] = useState('');
   const [showSrtModal, setShowSrtModal] = useState(false);
+  const [showLibraryModal, setShowLibraryModal] = useState(false);
+  const [libraryTab, setLibraryTab] = useState('grid'); // 'grid' | 'table'
   const [rawSrtText, setRawSrtText] = useState('');
 
   const currentPreset = KPOP_SONG_PRESETS[selectedSongIdx];
   const song = {
     id: activeVideoId,
-    title: customLyrics ? 'Custom SRT Lyrics Video' : (currentPreset ? currentPreset.title : 'YouTube Video'),
-    artist: customLyrics ? 'User Upload' : (currentPreset ? currentPreset.artist : 'K-Pop Track'),
+    title: customLyrics ? (customTrackTitle || 'Custom SRT Lyrics Video') : (currentPreset ? currentPreset.title : 'YouTube Video'),
+    artist: customLyrics ? 'SRT Lyrics' : (currentPreset ? currentPreset.artist : 'K-Pop Track'),
     lyrics: customLyrics || (currentPreset ? currentPreset.lyrics : [
       { start: 0, end: 10, ko: '한국어 가사 srt 파일 업로드 가능', rom: 'han-gug-eo ga-sa srt fa-il eop-ro-deu ga-neung', en: 'Upload your own SRT subtitle file!' }
     ])
@@ -46,12 +51,18 @@ export default function KpopVideoMode({ onAddXp }) {
     return match ? match[1] : url.trim();
   };
 
-  const handleLoadCustomUrl = (e) => {
+  const handleLoadCustomUrl = async (e) => {
     e.preventDefault();
     const id = extractVideoId(customUrl);
     if (id) {
       setActiveVideoId(id);
       setSelectedSongIdx(-1);
+
+      // Auto-match prepared SRT mapping if available
+      const mapped = findMappingByVideoId(id);
+      if (mapped) {
+        await handleLoadPreparedSrt(mapped);
+      }
     } else {
       alert('Please enter a valid YouTube URL');
     }
@@ -68,10 +79,24 @@ export default function KpopVideoMode({ onAddXp }) {
       const parsed = parseSRTContent(content);
       if (parsed.length > 0) {
         setCustomLyrics(parsed);
+        const fileNameClean = file.name.replace(/\.[^/.]+$/, "");
+        setCustomTrackTitle(fileNameClean);
         setSelectedSongIdx(-1);
         setActiveLineIdx(0);
+
+        // Auto-match video mapping by filename or title
+        const mapped = VIDEO_SRT_MAPPINGS.find(m => 
+          m.srtFilename.toLowerCase() === file.name.toLowerCase() ||
+          m.id.toLowerCase() === fileNameClean.toLowerCase() ||
+          fileNameClean.toLowerCase().includes(m.title.toLowerCase())
+        );
+
+        if (mapped && mapped.youtubeIds.length > 0) {
+          setActiveVideoId(mapped.youtubeIds[0]);
+        }
+
         sound.playCorrect();
-        alert(`✅ Successfully loaded ${parsed.length} lyric lines from ${file.name}!`);
+        alert(`✅ Loaded ${parsed.length} lyric lines from ${file.name}${mapped ? ` & switched video to "${mapped.title}"` : ''}!`);
       } else {
         alert('Could not parse SRT file. Please ensure it follows standard SRT format.');
       }
@@ -84,6 +109,7 @@ export default function KpopVideoMode({ onAddXp }) {
     const parsed = parseSRTContent(rawSrtText);
     if (parsed.length > 0) {
       setCustomLyrics(parsed);
+      setCustomTrackTitle('Pasted SRT Lyrics');
       setSelectedSongIdx(-1);
       setActiveLineIdx(0);
       setShowSrtModal(false);
@@ -91,6 +117,42 @@ export default function KpopVideoMode({ onAddXp }) {
       alert(`✅ Loaded ${parsed.length} lyric lines!`);
     } else {
       alert('Could not parse SRT text. Check timestamps format (e.g. 00:00:05,000 --> 00:00:10,000).');
+    }
+  };
+
+  // Load Prepared SRT File from /lyrics/ folder & auto-play mapped video URL
+  const handleLoadPreparedSrt = async (item) => {
+    try {
+      const srtPath = item.path || item.srtPath;
+      const res = await fetch(srtPath);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const parsed = parseSRTContent(text);
+      if (parsed.length > 0) {
+        setCustomLyrics(parsed);
+        setCustomTrackTitle(`${item.title} - ${item.artist}`);
+        setSelectedSongIdx(-1);
+        setActiveLineIdx(0);
+
+        // Lookup video mapping by ID or path
+        const mapped = findMappingByVideoId(item.youtubeId) || 
+                       VIDEO_SRT_MAPPINGS.find(m => m.srtPath === srtPath || m.srtFilename === item.filename || m.id === item.id);
+        
+        const targetVideoId = item.youtubeId || (mapped && mapped.youtubeIds && mapped.youtubeIds[0]);
+
+        if (targetVideoId) {
+          setActiveVideoId(targetVideoId);
+        }
+
+        setShowLibraryModal(false);
+        sound.playCorrect();
+        alert(`✅ Loaded prepared SRT lyrics & switched video for "${item.title}" (${parsed.length} lines)!`);
+      } else {
+        alert('Could not parse the prepared SRT file.');
+      }
+    } catch (err) {
+      console.error('Failed to load prepared SRT file:', err);
+      alert(`Could not load SRT file from ${item.path || item.srtPath}. Ensure it is present in public/lyrics/ folder.`);
     }
   };
 
@@ -273,8 +335,15 @@ export default function KpopVideoMode({ onAddXp }) {
             </button>
           </form>
 
-          {/* Upload SRT File Button */}
+          {/* Upload & Prepared SRT Buttons */}
           <div className="srt-upload-group">
+            <button
+              className="srt-btn library-btn"
+              onClick={() => setShowLibraryModal(true)}
+            >
+              <FolderOpen size={16} /> SRT Library
+            </button>
+
             <input
               type="file"
               ref={fileInputRef}
@@ -286,14 +355,14 @@ export default function KpopVideoMode({ onAddXp }) {
               className="srt-btn upload-file-btn"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload size={16} /> Upload .SRT File
+              <Upload size={16} /> Upload .SRT
             </button>
 
             <button
               className="srt-btn paste-text-btn"
               onClick={() => setShowSrtModal(true)}
             >
-              <FileText size={16} /> Paste SRT Text
+              <FileText size={16} /> Paste SRT
             </button>
           </div>
         </div>
@@ -476,6 +545,149 @@ export default function KpopVideoMode({ onAddXp }) {
               </button>
               <button className="card-nav-btn primary" onClick={handleParsePastedSrt}>
                 Apply Custom SRT Lyrics
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prepared SRT Library & Mapping Table Modal */}
+      {showLibraryModal && (
+        <div className="modal-overlay" onClick={() => setShowLibraryModal(false)}>
+          <div className="modal-content glassmorphism library-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title">
+                <FolderOpen size={24} className="accent-icon" />
+                <h3>Prepared SRT Lyrics & Mapping Table</h3>
+              </div>
+              <button className="close-btn" onClick={() => setShowLibraryModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Tabs Header */}
+            <div className="library-tabs-bar">
+              <button
+                className={`tab-toggle-btn ${libraryTab === 'grid' ? 'active' : ''}`}
+                onClick={() => setLibraryTab('grid')}
+              >
+                <FolderOpen size={15} /> Prepared Songs ({PREPARED_SRT_LIBRARY.length})
+              </button>
+              <button
+                className={`tab-toggle-btn ${libraryTab === 'table' ? 'active' : ''}`}
+                onClick={() => setLibraryTab('table')}
+              >
+                <Table size={15} /> Video & SRT Mapping Table ({VIDEO_SRT_MAPPINGS.length})
+              </button>
+            </div>
+
+            {libraryTab === 'grid' && (
+              <>
+                <p className="modal-instruction">
+                  Select any pre-formatted <code>.srt</code> subtitle file saved in the project's <code>/public/lyrics/</code> folder to practice synced typing!
+                </p>
+
+                <div className="prepared-srt-grid">
+                  {PREPARED_SRT_LIBRARY.map((item) => (
+                    <div key={item.id} className="prepared-srt-card glassmorphism">
+                      <div className="srt-card-header">
+                        <div className="srt-card-badge">.SRT</div>
+                        <h4>{item.title}</h4>
+                      </div>
+                      <p className="srt-card-artist">{item.artist}</p>
+                      <p className="srt-card-desc">{item.description}</p>
+                      <div className="srt-card-footer">
+                        <code className="srt-path-code">{item.filename}</code>
+                        <button
+                          className="card-nav-btn primary srt-load-card-btn"
+                          onClick={() => handleLoadPreparedSrt(item)}
+                        >
+                          Load SRT
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {libraryTab === 'table' && (
+              <div className="mapping-table-wrapper">
+                <p className="modal-instruction">
+                  Map of YouTube Video URLs / Video IDs to their prepared <code>.srt</code> subtitle files in <code>/public/lyrics/</code>.
+                </p>
+                <div className="table-scroll-container">
+                  <table className="srt-mapping-table">
+                    <thead>
+                      <tr>
+                        <th>Track / Artist</th>
+                        <th>YouTube Video URL</th>
+                        <th>Video ID</th>
+                        <th>SRT File</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {VIDEO_SRT_MAPPINGS.map((mapItem) => (
+                        <tr key={mapItem.id}>
+                          <td className="track-cell">
+                            <strong>{mapItem.title}</strong>
+                            <span className="artist-sub">{mapItem.artist}</span>
+                          </td>
+                          <td className="url-cell">
+                            <a
+                              href={mapItem.primaryUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="yt-link"
+                            >
+                              {mapItem.primaryUrl} <ExternalLink size={12} />
+                            </a>
+                            {mapItem.alternateUrls?.map((alt, idx) => (
+                              <div key={idx} className="alt-url">
+                                Alt: <a href={alt} target="_blank" rel="noreferrer" className="yt-link">{alt}</a>
+                              </div>
+                            ))}
+                          </td>
+                          <td className="id-cell">
+                            {mapItem.youtubeIds.map(id => (
+                              <code key={id} className="yt-id-badge">{id}</code>
+                            ))}
+                          </td>
+                          <td className="srt-cell">
+                            <code className="srt-path-badge">{mapItem.srtFilename}</code>
+                          </td>
+                          <td className="action-cell">
+                            <button
+                              className="card-nav-btn primary table-load-btn"
+                              onClick={() => handleLoadPreparedSrt({
+                                path: mapItem.srtPath,
+                                youtubeId: mapItem.youtubeIds[0],
+                                title: mapItem.title,
+                                artist: mapItem.artist
+                              })}
+                            >
+                              Load Pair
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            <div className="folder-tip-box">
+              <Folder size={18} />
+              <span>
+                <strong>Tip:</strong> You can add new video mappings in <code>src/utils/videoSrtMapping.js</code> or place <code>.srt</code> files into <code>/public/lyrics/</code>.
+              </span>
+            </div>
+
+            <div className="modal-actions">
+              <button className="card-nav-btn reset-btn" onClick={() => setShowLibraryModal(false)}>
+                Close
               </button>
             </div>
           </div>
