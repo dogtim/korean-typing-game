@@ -418,12 +418,7 @@ export default function KpopVideoMode({ onAddXp }) {
 
           {/* CC Style Subtitle Display Banner */}
           <div className="cc-subtitle-overlay">
-            <div className="cc-tag">
-              CC SUBTITLES (CLOSED CAPTION)
-              {isLineLoopEnabled && <span className="loop-badge"> • REPEATING SENTENCE 🔂</span>}
-            </div>
             <div className="cc-hangul">{activeLine.ko}</div>
-            <div className="cc-romanization">[{activeLine.rom}]</div>
             {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
           </div>
 
@@ -493,7 +488,6 @@ export default function KpopVideoMode({ onAddXp }) {
                   </div>
                   <div className="lyric-content">
                     <div className="lyric-ko">{line.ko}</div>
-                    {line.rom && <div className="lyric-rom">{line.rom}</div>}
                     {line.en && <div className="lyric-en">{line.en}</div>}
                   </div>
                 </div>

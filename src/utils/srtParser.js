@@ -56,12 +56,12 @@ export function parseSRTContent(srtText) {
     if (textLines[0].includes('|')) {
       const parts = textLines[0].split('|').map(p => p.trim());
       ko = parts[0] || '';
-      rom = parts[1] || parts[0];
-      en = parts[2] || '';
+      rom = parts.length > 2 ? parts[1] : '';
+      en = parts.length > 2 ? parts[2] : (parts[1] || '');
     } else {
-      ko = textLines[0] || '';
-      rom = textLines[1] || textLines[0];
-      en = textLines[2] || '';
+      ko = textLines.join(' ');
+      rom = '';
+      en = '';
     }
 
     results.push({ start, end, ko, rom, en });
