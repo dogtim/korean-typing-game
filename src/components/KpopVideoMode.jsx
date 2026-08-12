@@ -3,7 +3,7 @@ import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs
 import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
 import { parseSRTContent } from '../utils/srtParser';
-import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent } from '../utils/hangul';
+import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
 import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat } from 'lucide-react';
@@ -258,24 +258,35 @@ export default function KpopVideoMode({ onAddXp }) {
 
   const activeLine = song.lyrics[activeLineIdx] || song.lyrics[0] || { ko: '', rom: '', en: '' };
 
-  // Decompose Hangul into character breakdown & Vowels for Newbies
+  // Decompose Hangul into word-level & syllable-level breakdown for Beginners
   const getVowelBreakdown = (text) => {
     if (!text) return [];
+    // Split by words first
+    const words = text.trim().split(/\s+/);
     const tokens = [];
-    for (const char of text) {
-      if (char === ' ' || !char.trim()) continue;
-      const dec = decomposeHangulChar(char);
-      if (dec.jungseong) {
-        const guide = VOWEL_PRONUNCIATION_GUIDE[dec.jungseong] || { name: dec.jungseong, sound: dec.jungseong, color: '#8b5cf6' };
-        tokens.push({
-          char,
-          consonant: dec.choseong,
-          vowel: dec.jungseong,
-          batchim: dec.jongseong,
-          vowelName: guide.name,
-          vowelSound: guide.sound,
-          color: guide.color
-        });
+
+    for (const word of words) {
+      const wordRom = romanizeHangulWord(word);
+      for (let i = 0; i < word.length; i++) {
+        const char = word[i];
+        const dec = decomposeHangulChar(char);
+        if (dec.jungseong) {
+          const guide = VOWEL_PRONUNCIATION_GUIDE[dec.jungseong] || { name: dec.jungseong, sound: dec.jungseong, color: '#8b5cf6' };
+          const syllableRom = romanizeSyllable(char);
+          tokens.push({
+            char,
+            word,
+            wordRom,
+            isFirstInWord: i === 0,
+            consonant: dec.choseong,
+            vowel: dec.jungseong,
+            batchim: dec.jongseong,
+            syllableRom,
+            vowelName: guide.name,
+            vowelSound: guide.sound,
+            color: guide.color
+          });
+        }
       }
     }
     return tokens;
@@ -509,16 +520,19 @@ export default function KpopVideoMode({ onAddXp }) {
           </div>
         </div>
 
-        {/* Vowels List Tokens */}
+        {/* Vowels & Word Pronunciation List Tokens */}
         <div className="vowels-tokens-grid">
           {vowelTokens.map((token, idx) => (
             <div key={idx} className="vowel-token-box" style={{ borderColor: token.color }}>
               <div className="token-syllable">{token.char}</div>
               <div className="token-vowel-badge" style={{ backgroundColor: token.color }}>
-                Vowel: {token.vowel} ({token.vowelName})
+                {token.syllableRom} ({token.vowel})
               </div>
               <div className="token-details">
-                <span>Sound: <strong>{token.vowelSound}</strong></span>
+                {token.isFirstInWord && (
+                  <span className="word-pron-tag">Word: <strong>{token.wordRom}</strong></span>
+                )}
+                <span>Vowel Sound: <strong>{token.vowelSound}</strong></span>
                 {token.batchim && <span className="batchim-tag">Batchim: {token.batchim}</span>}
               </div>
             </div>

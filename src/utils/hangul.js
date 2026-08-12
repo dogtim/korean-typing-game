@@ -232,6 +232,109 @@ export function decomposeHangulChar(char) {
   return { choseong: cho, jungseong: jung, jongseong: jong, jamos, keys };
 }
 
+// Romanization map for Choseong (initial consonant)
+const CHO_ROM = {
+  'ㄱ': 'g', 'ㄲ': 'kk', 'ㄴ': 'n', 'ㄷ': 'd', 'ㄸ': 'tt', 'ㄹ': 'r', 'ㅁ': 'm',
+  'ㅂ': 'b', 'ㅃ': 'pp', 'ㅅ': 's', 'ㅆ': 'ss', 'ㅇ': '', 'ㅈ': 'j', 'ㅉ': 'jj',
+  'ㅊ': 'ch', 'ㅋ': 'k', 'ㅌ': 't', 'ㅍ': 'p', 'ㅎ': 'h'
+};
+
+// Romanization map for Jungseong (vowel)
+const JUNG_ROM = {
+  'ㅏ': 'a', 'ㅐ': 'ae', 'ㅑ': 'ya', 'ㅒ': 'yae', 'ㅓ': 'eo', 'ㅔ': 'e',
+  'ㅕ': 'yeo', 'ㅖ': 'ye', 'ㅗ': 'o', 'ㅘ': 'wa', 'ㅙ': 'wae', 'ㅚ': 'oe',
+  'ㅛ': 'yo', 'ㅜ': 'u', 'ㅝ': 'wo', 'ㅞ': 'we', 'ㅟ': 'wi', 'ㅠ': 'yu',
+  'ㅡ': 'eu', 'ㅢ': 'ui', 'ㅣ': 'i'
+};
+
+// Romanization map for Jongseong (final consonant / batchim)
+const JONG_ROM = {
+  '': '', 'ㄱ': 'k', 'ㄲ': 'k', 'ㄳ': 'k', 'ㄴ': 'n', 'ㄵ': 'n', 'ㄶ': 'n',
+  'ㄷ': 't', 'ㄹ': 'l', 'ㄺ': 'k', 'ㄻ': 'm', 'ㄼ': 'p', 'ㄽ': 'l', 'ㄾ': 'l',
+  'ㄿ': 'p', 'ㅀ': 'l', 'ㅁ': 'm', 'ㅂ': 'p', 'ㅄ': 'p', 'ㅅ': 't', 'ㅆ': 't',
+  'ㅇ': 'ng', 'ㅈ': 't', 'ㅊ': 't', 'ㅋ': 'k', 'ㅌ': 't', 'ㅍ': 'p', 'ㅎ': 't'
+};
+
+/**
+ * Romanize a single Hangul syllable character.
+ */
+export function romanizeSyllable(char) {
+  const dec = decomposeHangulChar(char);
+  if (!dec.jungseong) return char;
+  const cho = CHO_ROM[dec.choseong] ?? dec.choseong;
+  const jung = JUNG_ROM[dec.jungseong] ?? dec.jungseong;
+  const jong = JONG_ROM[dec.jongseong] ?? '';
+  return cho + jung + jong;
+}
+
+/**
+ * Romanizes full Hangul text with syllable-linking / liaison rules.
+ */
+export function romanizeHangulWord(word) {
+  if (!word) return '';
+  const syllables = [];
+  for (const char of word) {
+    const dec = decomposeHangulChar(char);
+    if (dec.jungseong) {
+      syllables.push(dec);
+    } else {
+      syllables.push({ isNonHangul: true, char });
+    }
+  }
+
+  let result = '';
+  for (let i = 0; i < syllables.length; i++) {
+    const cur = syllables[i];
+    if (cur.isNonHangul) {
+      result += cur.char;
+      continue;
+    }
+    const next = syllables[i + 1];
+
+    let choStr = CHO_ROM[cur.choseong] ?? cur.choseong;
+    let jungStr = JUNG_ROM[cur.jungseong] ?? cur.jungseong;
+    let jongStr = JONG_ROM[cur.jongseong] ?? '';
+
+    // Liaison rule: If current has batchim and next syllable starts with 'ㅇ' (silent initial),
+    // batchim carries over to initial consonant of next syllable!
+    if (cur.jongseong && next && !next.isNonHangul && next.choseong === 'ㅇ') {
+      // Transfer batchim sound to initial consonant of next syllable
+      if (cur.jongseong === 'ㄷ' || cur.jongseong === 'ㅅ' || cur.jongseong === 'ㅈ' || cur.jongseong === 'ㅊ' || cur.jongseong === 'ㅌ') {
+        // e.g. 뜻 + 이 -> 뜨 + 시/디 -> deu-si / deu-di
+        if (cur.jongseong === 'ㅅ') jongStr = ''; // move to next as 's'
+        else if (cur.jongseong === 'ㄷ') jongStr = '';
+        else jongStr = '';
+      } else if (cur.jongseong === 'ㄹ') {
+        // e.g. 알 + 아 -> a-ra
+        jongStr = '';
+      } else if (cur.jongseong === 'ㄱ' || cur.jongseong === 'ㄴ' || cur.jongseong === 'ㅁ' || cur.jongseong === 'ㅂ') {
+        jongStr = '';
+      }
+    }
+
+    // Adjust initial consonant if previous syllable carried over
+    const prev = i > 0 ? syllables[i - 1] : null;
+    if (prev && !prev.isNonHangul && prev.jongseong && cur.choseong === 'ㅇ') {
+      if (prev.jongseong === 'ㄹ') choStr = 'r';
+      else if (prev.jongseong === 'ㄱ') choStr = 'g';
+      else if (prev.jongseong === 'ㄷ') choStr = 'd';
+      else if (prev.jongseong === 'ㅂ') choStr = 'b';
+      else if (prev.jongseong === 'ㅅ') choStr = 's';
+      else if (prev.jongseong === 'ㅈ') choStr = 'j';
+      else if (prev.jongseong === 'ㄴ') choStr = 'n';
+      else if (prev.jongseong === 'ㅁ') choStr = 'm';
+    }
+
+    result += choStr + jungStr + jongStr;
+  }
+
+  // Capitalize first letter of word for readability
+  if (result.length > 0) {
+    return result.charAt(0).toUpperCase() + result.slice(1);
+  }
+  return result;
+}
+
 /**
  * Returns complete key sequence for a Hangul string.
  */
