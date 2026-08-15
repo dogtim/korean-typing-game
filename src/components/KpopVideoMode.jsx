@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs';
 import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
-import { parseSRTContent } from '../utils/srtParser';
+import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
@@ -41,6 +41,57 @@ export default function KpopVideoMode({ onAddXp }) {
   const [typedKeys, setTypedKeys] = useState('');
   const [typedText, setTypedText] = useState('');
   const [activeKeyPressed, setActiveKeyPressed] = useState([]);
+
+  // Timestamp editing state
+  const [editingLineIdx, setEditingLineIdx] = useState(-1);
+  const [editTimeValue, setEditTimeValue] = useState('');
+
+  // Format seconds into MM:SS.s display
+  const formatTimeMinutesSeconds = (sec) => {
+    const s = Math.max(0, sec || 0);
+    const m = Math.floor(s / 60);
+    const remainder = (s % 60).toFixed(1);
+    const parts = remainder.split('.');
+    const wholeSecs = String(parts[0]).padStart(2, '0');
+    return `${m}:${wholeSecs}${parts[1] && parts[1] !== '0' ? '.' + parts[1] : ''}`;
+  };
+
+  // Update timestamp in state
+  const updateLineTimestamp = (lineIdx, newStartSeconds) => {
+    const currentList = Array.from(song.lyrics);
+    if (!currentList[lineIdx]) return;
+    const targetLine = { ...currentList[lineIdx] };
+    const duration = (targetLine.end > targetLine.start) ? (targetLine.end - targetLine.start) : 3;
+    targetLine.start = Math.max(0, parseFloat(newStartSeconds) || 0);
+    targetLine.end = targetLine.start + duration;
+    currentList[lineIdx] = targetLine;
+
+    setCustomLyrics(currentList);
+  };
+
+  // Sync line timestamp to current video playback time
+  const handleSyncToCurrentTime = (e, lineIdx) => {
+    e.stopPropagation();
+    const roundedTime = Math.round(currentTime * 10) / 10;
+    updateLineTimestamp(lineIdx, roundedTime);
+    sound.playKeyPress();
+  };
+
+  // Export updated lyrics to downloadable SRT file
+  const handleExportSrt = () => {
+    const srtContent = exportLyricsToSRT(song.lyrics);
+    const blob = new Blob([srtContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const filename = (song.title || 'lyrics').toLowerCase().replace(/[^a-z0-9_-]/g, '_') + '.srt';
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    sound.playCorrect();
+  };
 
   const playerRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -478,13 +529,19 @@ export default function KpopVideoMode({ onAddXp }) {
         {/* Right Column: Time-synced Lyrics List */}
         <div className="lyrics-panel glassmorphism">
           <div className="panel-header">
-            <BookOpen size={18} className="purple-icon" />
-            <h3>Synced Lyrics ({song.title})</h3>
+            <div className="panel-header-left">
+              <BookOpen size={18} className="purple-icon" />
+              <h3>Synced Lyrics ({song.title})</h3>
+            </div>
+            <button className="export-srt-btn" onClick={handleExportSrt} title="Save and download updated .srt subtitle file">
+              <Download size={14} /> Export SRT
+            </button>
           </div>
 
           <div className="lyrics-scroll-list">
             {song.lyrics.map((line, idx) => {
               const isActive = idx === activeLineIdx;
+              const isEditingThisTime = editingLineIdx === idx;
               return (
                 <div
                   key={idx}
@@ -494,9 +551,59 @@ export default function KpopVideoMode({ onAddXp }) {
                     seekToTime(line.start);
                   }}
                 >
-                  <div className="time-badge">
-                    {Math.floor(line.start / 60)}:{String(Math.floor(line.start % 60)).padStart(2, '0')}
+                  <div className="time-badge-container" onClick={(e) => e.stopPropagation()}>
+                    {isEditingThisTime ? (
+                      <div className="time-badge-editor">
+                        <input
+                          type="text"
+                          className="time-edit-input"
+                          value={editTimeValue}
+                          onChange={(e) => setEditTimeValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              const parsedSec = parseSRTTimeToSeconds(editTimeValue);
+                              updateLineTimestamp(idx, parsedSec);
+                              setEditingLineIdx(-1);
+                            } else if (e.key === 'Escape') {
+                              setEditingLineIdx(-1);
+                            }
+                          }}
+                          autoFocus
+                        />
+                        <button
+                          className="time-save-btn"
+                          title="Save Timestamp"
+                          onClick={() => {
+                            const parsedSec = parseSRTTimeToSeconds(editTimeValue);
+                            updateLineTimestamp(idx, parsedSec);
+                            setEditingLineIdx(-1);
+                          }}
+                        >
+                          <Check size={12} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        className="time-badge"
+                        title="Click to edit timestamp manually"
+                        onClick={() => {
+                          setEditingLineIdx(idx);
+                          setEditTimeValue(formatTimeMinutesSeconds(line.start));
+                        }}
+                      >
+                        {formatTimeMinutesSeconds(line.start)}
+                        <Edit3 size={10} className="edit-time-icon" />
+                      </div>
+                    )}
+                    <button
+                      className="sync-now-btn"
+                      title="Sync timestamp to current video playback time"
+                      onClick={(e) => handleSyncToCurrentTime(e, idx)}
+                    >
+                      <Clock size={10} /> Sync
+                    </button>
                   </div>
+
                   <div className="lyric-content">
                     <div className="lyric-ko">{line.ko}</div>
                     {line.en && <div className="lyric-en">{line.en}</div>}

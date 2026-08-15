@@ -2,6 +2,17 @@
 
 export const VIDEO_SRT_MAPPINGS = [
   {
+    id: 'babymonster_choom',
+    title: 'CHOOM (춤)',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'choom.srt',
+    srtPath: '/lyrics/choom.srt',
+    youtubeIds: ['x3eqqoZPV_E'],
+    primaryUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
+    alternateUrls: [],
+    description: 'BABYMONSTER - CHOOM (춤) synchronized SRT subtitle lyrics'
+  },
+  {
     id: 'babymonster_drip',
     title: 'DRIP',
     artist: 'BABYMONSTER (베이비몬스터)',

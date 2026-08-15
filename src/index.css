@@ -963,7 +963,35 @@ body {
 .panel-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
+}
+
+.panel-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.export-srt-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--accent-purple);
+  color: #c084fc;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-srt-btn:hover {
+  background: var(--accent-purple);
+  color: white;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
 }
 
 .purple-icon { color: var(--accent-purple); }
@@ -997,14 +1025,89 @@ body {
   box-shadow: 0 0 14px rgba(139, 92, 246, 0.3);
 }
 
+.time-badge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 72px;
+}
+
 .time-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   font-weight: 700;
   color: var(--accent-cyan);
   background: rgba(6, 182, 212, 0.15);
   padding: 4px 8px;
   border-radius: 6px;
-  height: fit-content;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-badge:hover {
+  background: rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+}
+
+.edit-time-icon {
+  opacity: 0.6;
+}
+
+.time-badge:hover .edit-time-icon {
+  opacity: 1;
+}
+
+.time-badge-editor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.time-edit-input {
+  width: 54px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--accent-cyan);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.time-save-btn {
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 3px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sync-now-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fb923c;
+  background: rgba(249, 115, 22, 0.15);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sync-now-btn:hover {
+  background: rgba(249, 115, 22, 0.35);
+  border-color: #f97316;
 }
 
 .lyric-content {

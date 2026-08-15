@@ -8,6 +8,7 @@ This mapping table connects YouTube Music Video URLs / Video IDs directly with t
 
 | Song Title | Artist | YouTube Video URL | YouTube Video ID | Prepared SRT Subtitle File |
 | :--- | :--- | :--- | :--- | :--- |
+| **CHOOM (춤)** | BABYMONSTER | `https://www.youtube.com/watch?v=x3eqqoZPV_E` | `x3eqqoZPV_E` | [`choom.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/choom.srt) |
 | **DRIP** | BABYMONSTER | `https://www.youtube.com/watch?v=Zp-Jhuhq0bQ` | `Zp-Jhuhq0bQ` | [`BABYMONSTER-DRIP.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-DRIP.srt) |
 | **Super Shy** | NewJeans | `https://www.youtube.com/watch?v=cxhqqpVk65Q` | `cxhqqpVk65Q` | [`super_shy.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/super_shy.srt) |
 | **Dynamite** | BTS | `https://www.youtube.com/watch?v=gdZLi9oWNZg` | `gdZLi9oWNZg` | [`dynamite.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/dynamite.srt) |

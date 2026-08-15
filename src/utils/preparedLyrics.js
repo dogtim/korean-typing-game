@@ -2,6 +2,15 @@
 
 export const PREPARED_SRT_LIBRARY = [
   {
+    id: 'babymonster_choom',
+    title: 'CHOOM (춤)',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'x3eqqoZPV_E',
+    filename: 'choom.srt',
+    path: '/lyrics/choom.srt',
+    description: 'BABYMONSTER CHOOM (춤) synchronized SRT subtitle file.'
+  },
+  {
     id: 'babymonster_drip',
     title: 'DRIP',
     artist: 'BABYMONSTER (베이비몬스터)',

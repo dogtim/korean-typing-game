@@ -69,3 +69,35 @@ export function parseSRTContent(srtText) {
 
   return results;
 }
+
+/**
+ * Formats numeric seconds to SRT timestamp string (HH:MM:SS,mmm).
+ */
+export function formatSecondsToSRTTime(totalSeconds) {
+  const s = Math.max(0, parseFloat(totalSeconds) || 0);
+  const hrs = Math.floor(s / 3600);
+  const mins = Math.floor((s % 3600) / 60);
+  const secs = Math.floor(s % 60);
+  const millis = Math.floor((s % 1) * 1000);
+
+  const hh = String(hrs).padStart(2, '0');
+  const mm = String(mins).padStart(2, '0');
+  const ss = String(secs).padStart(2, '0');
+  const mmm = String(millis).padStart(3, '0');
+
+  return `${hh}:${mm}:${ss},${mmm}`;
+}
+
+/**
+ * Converts array of lyrics objects back into standard SRT string.
+ */
+export function exportLyricsToSRT(lyrics) {
+  if (!lyrics || !Array.isArray(lyrics) || lyrics.length === 0) return '';
+  return lyrics.map((line, idx) => {
+    const startStr = formatSecondsToSRTTime(line.start);
+    const endTime = (typeof line.end === 'number' && line.end > line.start) ? line.end : line.start + 3;
+    const endStr = formatSecondsToSRTTime(endTime);
+    const content = line.ko || '';
+    return `${idx + 1}\n${startStr} --> ${endStr}\n${content}\n`;
+  }).join('\n');
+}
