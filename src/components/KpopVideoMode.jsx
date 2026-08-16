@@ -6,7 +6,7 @@ import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT } from '../ut
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Volume2, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
@@ -484,17 +484,8 @@ export default function KpopVideoMode({ onAddXp }) {
             {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
           </div>
 
-          {/* Audio Pronounce, Loop & Practice Toggle Bar */}
+          {/* Loop & Practice Toggle Bar */}
           <div className="video-actions-bar">
-            <button
-              className="action-btn"
-              onClick={(e) => {
-                e.currentTarget.blur();
-                sound.speakKorean(activeLine.ko);
-              }}
-            >
-              <Volume2 size={18} /> Listen
-            </button>
 
             <button
               className={`action-btn ${isLineLoopEnabled ? 'active-green' : ''}`}
