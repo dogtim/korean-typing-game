@@ -6,7 +6,7 @@ import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT } from '../ut
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check, Locate } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
@@ -36,6 +36,7 @@ export default function KpopVideoMode({ onAddXp }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [practiceMode, setPracticeMode] = useState(false);
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
   // Typing practice state
   const [typedKeys, setTypedKeys] = useState('');
@@ -95,6 +96,27 @@ export default function KpopVideoMode({ onAddXp }) {
 
   const playerRef = useRef(null);
   const fileInputRef = useRef(null);
+  const lyricsContainerRef = useRef(null);
+  const activeRowRef = useRef(null);
+
+  // Auto-scroll lyrics container to center active line when activeLineIdx or autoScrollEnabled changes
+  useEffect(() => {
+    if (autoScrollEnabled && activeRowRef.current && lyricsContainerRef.current) {
+      const container = lyricsContainerRef.current;
+      const activeRow = activeRowRef.current;
+
+      const containerHeight = container.clientHeight;
+      const rowOffsetTop = activeRow.offsetTop;
+      const rowHeight = activeRow.clientHeight;
+
+      const targetScrollTop = rowOffsetTop - (containerHeight / 2) + (rowHeight / 2);
+
+      container.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior: 'smooth'
+      });
+    }
+  }, [activeLineIdx, autoScrollEnabled]);
 
   // Extract YouTube Video ID
   const extractVideoId = (url) => {
@@ -524,18 +546,28 @@ export default function KpopVideoMode({ onAddXp }) {
               <BookOpen size={18} className="purple-icon" />
               <h3>Synced Lyrics ({song.title})</h3>
             </div>
-            <button className="export-srt-btn" onClick={handleExportSrt} title="Save and download updated .srt subtitle file">
-              <Download size={14} /> Export SRT
-            </button>
+            <div className="header-actions">
+              <button
+                className={`auto-scroll-btn ${autoScrollEnabled ? 'active' : ''}`}
+                onClick={() => setAutoScrollEnabled(!autoScrollEnabled)}
+                title={autoScrollEnabled ? 'Auto-center lyrics to current timestamp (Click to disable)' : 'Auto-center lyrics to current timestamp (Click to enable)'}
+              >
+                <Locate size={14} /> {autoScrollEnabled ? 'Auto-Center ON' : 'Auto-Center OFF'}
+              </button>
+              <button className="export-srt-btn" onClick={handleExportSrt} title="Save and download updated .srt subtitle file">
+                <Download size={14} /> Export SRT
+              </button>
+            </div>
           </div>
 
-          <div className="lyrics-scroll-list">
+          <div className="lyrics-scroll-list" ref={lyricsContainerRef}>
             {song.lyrics.map((line, idx) => {
               const isActive = idx === activeLineIdx;
               const isEditingThisTime = editingLineIdx === idx;
               return (
                 <div
                   key={idx}
+                  ref={isActive ? activeRowRef : null}
                   className={`lyric-row-item ${isActive ? 'active-line' : ''}`}
                   onClick={() => {
                     setActiveLineIdx(idx);
