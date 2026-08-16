@@ -10,11 +10,6 @@ This mapping table connects YouTube Music Video URLs / Video IDs directly with t
 | :--- | :--- | :--- | :--- | :--- |
 | **CHOOM (춤)** | BABYMONSTER | `https://www.youtube.com/watch?v=x3eqqoZPV_E` | `x3eqqoZPV_E` | [`choom.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/choom.srt) |
 | **DRIP** | BABYMONSTER | `https://www.youtube.com/watch?v=Zp-Jhuhq0bQ` | `Zp-Jhuhq0bQ` | [`BABYMONSTER-DRIP.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-DRIP.srt) |
-| **Super Shy** | NewJeans | `https://www.youtube.com/watch?v=cxhqqpVk65Q` | `cxhqqpVk65Q` | [`super_shy.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/super_shy.srt) |
-| **Dynamite** | BTS | `https://www.youtube.com/watch?v=gdZLi9oWNZg` | `gdZLi9oWNZg` | [`dynamite.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/dynamite.srt) |
-| **Magnetic** | ILLIT | `https://www.youtube.com/watch?v=Vk5-c_v4gMU` | `Vk5-c_v4gMU` | [`magnetic.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/magnetic.srt) |
-| **Hype Boy** | NewJeans | `https://www.youtube.com/watch?v=aOKqWlsV0H0` | `aOKqWlsV0H0` | [`hype_boy.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/hype_boy.srt) |
-| **Flower (꽃)** | JISOO | `https://www.youtube.com/watch?v=Y8JFxS1HlDo` | `Y8JFxS1HlDo` | [`flower.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/flower.srt) |
 
 ---
 

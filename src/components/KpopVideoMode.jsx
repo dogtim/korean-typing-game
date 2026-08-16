@@ -450,7 +450,7 @@ export default function KpopVideoMode({ onAddXp }) {
             <input
               type="text"
               className="yt-url-input"
-              placeholder="Paste YouTube Link (e.g. https://www.youtube.com/watch?v=cxhqqpVk65Q)"
+              placeholder="Paste YouTube Link (e.g. https://www.youtube.com/watch?v=x3eqqoZPV_E)"
               value={customUrl}
               onChange={(e) => setCustomUrl(e.target.value)}
             />
