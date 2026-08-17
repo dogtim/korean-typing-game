@@ -6,7 +6,7 @@ import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT } from '../ut
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check, Locate } from 'lucide-react';
+import { Play, Tv, Music, Sparkles, BookOpen, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check, Locate, Mic, Square, Volume2 } from 'lucide-react';
 
 export default function KpopVideoMode({ onAddXp }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
@@ -32,6 +32,7 @@ export default function KpopVideoMode({ onAddXp }) {
   };
 
   const [activeLineIdx, setActiveLineIdx] = useState(0);
+  const activeLine = song.lyrics[activeLineIdx] || song.lyrics[0] || { ko: '', rom: '', en: '' };
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [practiceMode, setPracticeMode] = useState(false);
@@ -46,6 +47,206 @@ export default function KpopVideoMode({ onAddXp }) {
   // Timestamp editing state
   const [editingLineIdx, setEditingLineIdx] = useState(-1);
   const [editTimeValue, setEditTimeValue] = useState('');
+
+  // Voice recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedAudioUrl, setRecordedAudioUrl] = useState(null);
+  const [isPlayingRecordedAudio, setIsPlayingRecordedAudio] = useState(false);
+
+  // Web Speech API state (ko-KR)
+  const [speechTranscript, setSpeechTranscript] = useState('');
+  const [speechAccuracy, setSpeechAccuracy] = useState(null);
+  const recognitionRef = useRef(null);
+
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const recordedAudioRef = useRef(null);
+
+  // Revoke object URL and stop recognition on unmount or URL change
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
+      if (recordedAudioRef.current) {
+        recordedAudioRef.current.pause();
+      }
+      if (recordedAudioUrl) {
+        URL.revokeObjectURL(recordedAudioUrl);
+      }
+      stopSpeechRecognition();
+    };
+  }, [recordedAudioUrl]);
+
+  // Calculate Hangul character match percentage between target line and detected speech
+  const calculateSpeechAccuracy = (target, detected) => {
+    if (!target || !detected) return 0;
+    const cleanTarget = target.replace(/[^\uAC00-\uD7A3]/g, '');
+    const cleanDetected = detected.replace(/[^\uAC00-\uD7A3]/g, '');
+    if (!cleanTarget || !cleanDetected) return 0;
+
+    let matches = 0;
+    const targetChars = cleanTarget.split('');
+    const detectedChars = cleanDetected.split('');
+
+    let tIdx = 0;
+    for (let dChar of detectedChars) {
+      const foundIdx = targetChars.indexOf(dChar, tIdx);
+      if (foundIdx !== -1) {
+        matches++;
+        tIdx = foundIdx + 1;
+      }
+    }
+
+    const score = Math.round((matches / Math.max(targetChars.length, 1)) * 100);
+    return Math.min(100, score);
+  };
+
+  const startSpeechRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setSpeechTranscript('⚠️ Web Speech API is not supported in this browser. Please use Chrome, Edge, or Safari for voice recognition.');
+      return;
+    }
+
+    try {
+      stopSpeechRecognition();
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'ko-KR';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      setSpeechTranscript('');
+      setSpeechAccuracy(null);
+
+      recognition.onresult = (event) => {
+        let currentTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          currentTranscript += event.results[i][0].transcript;
+        }
+        setSpeechTranscript(currentTranscript);
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          setSpeechTranscript('⚠️ Microphone permission denied for speech recognition. Please allow microphone access in your browser settings.');
+        } else if (event.error === 'network') {
+          setSpeechTranscript('⚠️ Speech recognition network error. Please check your internet connection.');
+        } else if (event.error !== 'no-speech') {
+          setSpeechTranscript(`⚠️ Speech recognition notice: ${event.error}`);
+        }
+      };
+
+      recognition.start();
+      recognitionRef.current = recognition;
+    } catch (e) {
+      console.error('Failed to start speech recognition:', e);
+      setSpeechTranscript('⚠️ Unable to start voice detection. Please check browser microphone permissions.');
+    }
+  };
+
+  const stopSpeechRecognition = () => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {}
+      recognitionRef.current = null;
+    }
+  };
+
+  // Update accuracy score whenever speech transcript or target lyric line changes
+  useEffect(() => {
+    if (speechTranscript && activeLine?.ko) {
+      const acc = calculateSpeechAccuracy(activeLine.ko, speechTranscript);
+      setSpeechAccuracy(acc);
+    }
+  }, [speechTranscript, activeLine?.ko]);
+
+  const startVoiceRecording = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Your browser does not support audio recording (navigator.mediaDevices is unavailable). Please ensure you are opening this site on http://localhost or via HTTPS.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const url = URL.createObjectURL(audioBlob);
+        setRecordedAudioUrl((prevUrl) => {
+          if (prevUrl) URL.revokeObjectURL(prevUrl);
+          return url;
+        });
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      startSpeechRecognition();
+    } catch (err) {
+      console.error('Error accessing microphone:', err);
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        alert('Microphone access was denied. Please allow microphone permissions in your browser address bar (click the lock/camera icon near the URL) and try again.');
+      } else {
+        alert(`Could not open microphone: ${err.message || err.name || 'Unknown error'}. Make sure your microphone is plugged in.`);
+      }
+    }
+  };
+
+  const stopVoiceRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+    stopSpeechRecognition();
+  };
+
+  const toggleVoiceRecording = (e) => {
+    e?.currentTarget?.blur();
+    if (isRecording) {
+      stopVoiceRecording();
+    } else {
+      if (isPlayingRecordedAudio && recordedAudioRef.current) {
+        recordedAudioRef.current.pause();
+        setIsPlayingRecordedAudio(false);
+      }
+      startVoiceRecording();
+    }
+  };
+
+  const togglePlayRecordedAudio = (e) => {
+    e?.currentTarget?.blur();
+    if (!recordedAudioUrl) return;
+
+    if (isPlayingRecordedAudio && recordedAudioRef.current) {
+      recordedAudioRef.current.pause();
+      recordedAudioRef.current.currentTime = 0;
+      setIsPlayingRecordedAudio(false);
+    } else {
+      const audio = new Audio(recordedAudioUrl);
+      recordedAudioRef.current = audio;
+      audio.onended = () => setIsPlayingRecordedAudio(false);
+      audio.onerror = () => setIsPlayingRecordedAudio(false);
+      audio.play().then(() => {
+        setIsPlayingRecordedAudio(true);
+      }).catch((err) => {
+        console.error('Playback error:', err);
+        setIsPlayingRecordedAudio(false);
+      });
+    }
+  };
 
   // Format seconds into MM:SS.s display
   const formatTimeMinutesSeconds = (sec) => {
@@ -329,7 +530,6 @@ export default function KpopVideoMode({ onAddXp }) {
     }
   };
 
-  const activeLine = song.lyrics[activeLineIdx] || song.lyrics[0] || { ko: '', rom: '', en: '' };
 
   // Decompose Hangul into word-level & syllable-level breakdown for Beginners
   const getVowelBreakdown = (text) => {
@@ -536,7 +736,69 @@ export default function KpopVideoMode({ onAddXp }) {
             >
               <Type size={18} /> {practiceMode ? 'Typing Practice ON' : 'Practice Typing'}
             </button>
+
+            <button
+              className={`action-btn ${isRecording ? 'active-red' : ''}`}
+              onClick={toggleVoiceRecording}
+              title={isRecording ? "Click to stop and save voice recording" : "Click to start recording voice"}
+            >
+              {isRecording ? (
+                <>
+                  <Square size={18} fill="currentColor" /> Stop Recording
+                </>
+              ) : (
+                <>
+                  <Mic size={18} /> Record Voice
+                </>
+              )}
+            </button>
+
+            {recordedAudioUrl && (
+              <button
+                className={`action-btn ${isPlayingRecordedAudio ? 'active-blue' : ''}`}
+                onClick={togglePlayRecordedAudio}
+                title={isPlayingRecordedAudio ? "Click to stop playing voice recording" : "Click to play voice recording"}
+              >
+                {isPlayingRecordedAudio ? (
+                  <>
+                    <Square size={18} fill="currentColor" /> Stop Playback
+                  </>
+                ) : (
+                  <>
+                    <Volume2 size={18} /> Play Recording
+                  </>
+                )}
+              </button>
+            )}
           </div>
+
+          {/* Web Speech API Pronunciation Check Display */}
+          {(isRecording || speechTranscript) && (
+            <div className="speech-recognition-box">
+              <div className="speech-header">
+                <Sparkles size={16} className="sparkle-icon" />
+                <span>Korean Pronunciation Check (ko-KR)</span>
+                {isRecording && <span className="listening-badge">Listening...</span>}
+              </div>
+
+              <div className={`speech-transcript-area ${!speechTranscript ? 'placeholder' : ''}`}>
+                {speechTranscript || (isRecording ? 'Listening to your Korean pronunciation...' : 'No speech detected.')}
+              </div>
+
+              {activeLine?.ko && speechTranscript && (
+                <div className="speech-comparison">
+                  <div>
+                    Target Lyric: <span className="target-text">{activeLine.ko}</span>
+                  </div>
+                  {typeof speechAccuracy === 'number' && (
+                    <div className={`accuracy-badge ${speechAccuracy >= 70 ? 'high' : speechAccuracy >= 40 ? 'medium' : 'low'}`}>
+                      {speechAccuracy}% Match {speechAccuracy >= 70 ? '🎉 Great!' : speechAccuracy >= 40 ? '👍 Keep Going' : '💡 Try Again'}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right Column: Time-synced Lyrics List */}
