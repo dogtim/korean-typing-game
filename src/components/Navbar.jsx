@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Flame, Award, BookOpen, Gamepad2, Zap, Tv } from 'lucide-react';
+import { Volume2, VolumeX, Flame, Award, BookOpen, Tv } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -40,22 +40,6 @@ export default function Navbar({
         >
           <Tv className="tab-icon" size={18} />
           <span>K-Pop Video</span>
-        </button>
-
-        <button
-          className={`tab-btn ${activeTab === 'arcade' ? 'active' : ''}`}
-          onClick={() => setActiveTab('arcade')}
-        >
-          <Gamepad2 className="tab-icon" size={18} />
-          <span>Word Rain</span>
-        </button>
-
-        <button
-          className={`tab-btn ${activeTab === 'speed' ? 'active' : ''}`}
-          onClick={() => setActiveTab('speed')}
-        >
-          <Zap className="tab-icon" size={18} />
-          <span>Speed Test</span>
         </button>
       </nav>
 

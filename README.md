@@ -20,8 +20,6 @@ An interactive, gamified web application designed to master Korean typing (Hangu
   4. **Syllables with Batchim**: `강, 눈, 달, 맘, 법, 산, 방, 집, 밥, 꽃...`
   5. **Everyday Vocabulary**: `한국, 한글, 안녕, 사랑, 감사, 학교, 친구, 치킨...`
   6. **Conversational Phrases**: `안녕하세요, 감사합니다, 반갑습니다, 괜찮아요...`
-- **👾 Word Rain Arcade Mode**: Falling words typing game with score multipliers, combo streaks, and explosion effects.
-- **⚡ Speed Race Mode**: 30-second and 60-second time attack typing test with real-time CPM (Characters Per Minute), WPM, and accuracy metrics.
 - **🏆 Gamification & Achievements**: XP, Level progression, streak counters, and unlockable achievement badges.
 
 ---

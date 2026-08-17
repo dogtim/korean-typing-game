@@ -7,8 +7,8 @@ export const KPOP_SONG_PRESETS = [
     artist: 'BABYMONSTER (베이비몬스터)',
     youtubeUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
     thumbnail: 'https://img.youtube.com/vi/x3eqqoZPV_E/hqdefault.jpg',
-    srtFilename: 'choom.srt',
-    srtPath: '/lyrics/choom.srt',
+    srtFilename: 'BABYMONSTER-CHOOM.srt',
+    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
     lyrics: [
       { start: 25, end: 30, ko: "1, 2 heat is on", rom: "1, 2 heat is on", en: "1, 2 heat is on" },
       { start: 30, end: 34, ko: "Own it, burn it, kick it, flip that", rom: "Own it, burn it, kick it, flip that", en: "Own it, burn it, kick it, flip that" },

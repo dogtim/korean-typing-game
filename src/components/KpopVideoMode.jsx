@@ -644,9 +644,6 @@ export default function KpopVideoMode({ onAddXp }) {
           <Sparkles className="gold-icon" size={22} />
           <div>
             <h3>Vowel Breakdown Helper (for Newbies & Beginners)</h3>
-            <p className="subtitle">
-              Learn how vowels (모음) build each Korean word in this line!
-            </p>
           </div>
         </div>
 
@@ -657,13 +654,6 @@ export default function KpopVideoMode({ onAddXp }) {
               <div className="token-syllable">{token.char}</div>
               <div className="token-vowel-badge" style={{ backgroundColor: token.color }}>
                 {token.syllableRom} ({token.vowel})
-              </div>
-              <div className="token-details">
-                {token.isFirstInWord && (
-                  <span className="word-pron-tag">Word: <strong>{token.wordRom}</strong></span>
-                )}
-                <span>Vowel Sound: <strong>{token.vowelSound}</strong></span>
-                {token.batchim && <span className="batchim-tag">Batchim: {token.batchim}</span>}
               </div>
             </div>
           ))}

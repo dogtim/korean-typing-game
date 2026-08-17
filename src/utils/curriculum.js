@@ -135,7 +135,5 @@ export const ACHIEVEMENTS = [
   { id: 'streak_10', name: 'On Fire', desc: 'Reach a 10-key combo streak', icon: '🔥' },
   { id: 'streak_30', name: 'Lightning Typer', desc: 'Reach a 30-key combo streak', icon: '⚡' },
   { id: 'consonant_master', name: 'Consonants Master', desc: 'Complete all basic consonants lessons', icon: '🥇' },
-  { id: 'vowel_master', name: 'Vowels Master', desc: 'Complete all basic vowels lessons', icon: '🎨' },
-  { id: 'arcade_500', name: 'Rain Defender', desc: 'Score 500+ points in Falling Rain Arcade game', icon: '👾' },
-  { id: 'speed_demon', name: 'Speed Typer', desc: 'Reach 200+ CPM in Speed Race mode', icon: '🚀' }
+  { id: 'vowel_master', name: 'Vowels Master', desc: 'Complete all basic vowels lessons', icon: '🎨' }
 ];

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import LessonMode from './components/LessonMode';
-import ArcadeRainMode from './components/ArcadeRainMode';
-import SpeedRaceMode from './components/SpeedRaceMode';
 import BadgeModal from './components/BadgeModal';
 import { sound } from './utils/audio';
 
@@ -68,19 +66,6 @@ export default function App() {
 
         {activeTab === 'kpop' && (
           <KpopVideoMode
-            onAddXp={handleAddXp}
-          />
-        )}
-
-        {activeTab === 'arcade' && (
-          <ArcadeRainMode
-            onAddXp={handleAddXp}
-            soundMuted={soundMuted}
-          />
-        )}
-
-        {activeTab === 'speed' && (
-          <SpeedRaceMode
             onAddXp={handleAddXp}
           />
         )}
