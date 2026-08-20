@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Flame, Award, BookOpen, Tv } from 'lucide-react';
+import { Volume2, VolumeX, Flame, Award, BookOpen, Tv, Gamepad2 } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -11,7 +11,6 @@ export default function Navbar({
   onToggleSound,
   onOpenBadges
 }) {
-  const xpForNextLevel = level * 100;
   const currentLevelXp = xp % 100;
   const xpPercent = Math.min(100, Math.floor((currentLevelXp / 100) * 100));
 
@@ -21,7 +20,7 @@ export default function Navbar({
         <div className="brand-logo">한</div>
         <div className="brand-info">
           <h1 className="brand-title">Hangul Type Quest</h1>
-          <span className="brand-subtitle">Korean Typing Master</span>
+          <span className="brand-subtitle">Korean Typing & Listening Game</span>
         </div>
       </div>
 
@@ -39,7 +38,15 @@ export default function Navbar({
           onClick={() => setActiveTab('kpop')}
         >
           <Tv className="tab-icon" size={18} />
-          <span>K-Pop Video</span>
+          <span>K-Pop Practice</span>
+        </button>
+
+        <button
+          className={`tab-btn game-tab-highlight ${activeTab === 'kpop-game' ? 'active' : ''}`}
+          onClick={() => setActiveTab('kpop-game')}
+        >
+          <Gamepad2 className="tab-icon" size={18} />
+          <span>K-Pop Game</span>
         </button>
       </nav>
 

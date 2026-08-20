@@ -6,9 +6,32 @@ import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT } from '../ut
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
-import { Play, Tv, Music, Sparkles, BookOpen, Type, Upload, FileText, X, ChevronRight, FolderOpen, Folder, ExternalLink, Table, Repeat, Download, Edit3, Clock, Check, Locate, Mic, Square, Volume2 } from 'lucide-react';
+import {
+  Tv,
+  Music,
+  Sparkles,
+  BookOpen,
+  Type,
+  Upload,
+  FileText,
+  X,
+  FolderOpen,
+  Folder,
+  ExternalLink,
+  Table,
+  Repeat,
+  Download,
+  Edit3,
+  Clock,
+  Check,
+  Locate,
+  Mic,
+  Square,
+  Volume2,
+  Gamepad2
+} from 'lucide-react';
 
-export default function KpopVideoMode({ onAddXp }) {
+export default function KpopVideoMode({ onAddXp, onSwitchToGame }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [customUrl, setCustomUrl] = useState('');
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
@@ -40,7 +63,7 @@ export default function KpopVideoMode({ onAddXp }) {
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
   // Typing practice state
-  const [typedKeys, setTypedKeys] = useState('');
+  const [_typedKeys, setTypedKeys] = useState('');
   const [typedText, setTypedText] = useState('');
   const [activeKeyPressed, setActiveKeyPressed] = useState([]);
 
@@ -151,7 +174,7 @@ export default function KpopVideoMode({ onAddXp }) {
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
-      } catch (e) {}
+      } catch (_e) {}
       recognitionRef.current = null;
     }
   };
@@ -360,7 +383,7 @@ export default function KpopVideoMode({ onAddXp }) {
         setActiveLineIdx(0);
 
         // Auto-match video mapping by filename or title
-        const mapped = VIDEO_SRT_MAPPINGS.find(m => 
+        const mapped = VIDEO_SRT_MAPPINGS.find(m =>
           m.srtFilename.toLowerCase() === file.name.toLowerCase() ||
           m.id.toLowerCase() === fileNameClean.toLowerCase() ||
           fileNameClean.toLowerCase().includes(m.title.toLowerCase())
@@ -406,11 +429,11 @@ export default function KpopVideoMode({ onAddXp }) {
       if (parsed.length > 0) {
         setCustomLyrics(parsed);
         setCustomTrackTitle(`${item.title} - ${item.artist}`);
-        
+
         // Lookup video mapping by ID or path
-        const mapped = findMappingByVideoId(item.youtubeId) || 
-                       VIDEO_SRT_MAPPINGS.find(m => m.srtPath === srtPath || m.srtFilename === item.filename || m.id === item.id);
-        
+        const mapped = findMappingByVideoId(item.youtubeId) ||
+          VIDEO_SRT_MAPPINGS.find(m => m.srtPath === srtPath || m.srtFilename === item.filename || m.id === item.id);
+
         const targetVideoId = item.youtubeId || (mapped && mapped.youtubeIds && mapped.youtubeIds[0]);
 
         const presetIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === targetVideoId || p.title.toLowerCase() === item.title.toLowerCase());
@@ -458,11 +481,11 @@ export default function KpopVideoMode({ onAddXp }) {
           setCurrentTime(time);
 
           if (isLineLoopEnabled) {
-            const activeLine = song.lyrics[activeLineIdx];
-            if (activeLine && typeof activeLine.start === 'number' && typeof activeLine.end === 'number') {
+            const currentLine = song.lyrics[activeLineIdx];
+            if (currentLine && typeof currentLine.start === 'number' && typeof currentLine.end === 'number') {
               // If video reaches or exceeds line end (or jumps outside line range), loop back to start timestamp
-              if (time >= activeLine.end || time < activeLine.start - 0.5) {
-                playerRef.current.seekTo(activeLine.start, true);
+              if (time >= currentLine.end || time < currentLine.start - 0.5) {
+                playerRef.current.seekTo(currentLine.start, true);
                 setTypedKeys('');
                 setTypedText('');
                 return;
@@ -518,7 +541,7 @@ export default function KpopVideoMode({ onAddXp }) {
 
     return () => {
       if (playerRef.current && playerRef.current.destroy) {
-        try { playerRef.current.destroy(); } catch (e) {}
+        try { playerRef.current.destroy(); } catch (_e) {}
       }
     };
   }, [activeVideoId]);
@@ -530,11 +553,9 @@ export default function KpopVideoMode({ onAddXp }) {
     }
   };
 
-
   // Decompose Hangul into word-level & syllable-level breakdown for Beginners
   const getVowelBreakdown = (text) => {
     if (!text) return [];
-    // Split by words first
     const words = text.trim().split(/\s+/);
     const tokens = [];
 
@@ -627,7 +648,7 @@ export default function KpopVideoMode({ onAddXp }) {
                 setActiveLineIdx(0);
 
                 const mappedItem = PREPARED_SRT_LIBRARY.find(item => item.youtubeId === p.id || item.title.toLowerCase() === p.title.toLowerCase()) ||
-                                   (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
+                  (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
                 if (mappedItem) {
                   await handleLoadPreparedSrt(mappedItem, true);
                   setSelectedSongIdx(idx);
@@ -688,6 +709,16 @@ export default function KpopVideoMode({ onAddXp }) {
             >
               <FileText size={16} /> Paste SRT
             </button>
+
+            {onSwitchToGame && (
+              <button
+                className="srt-btn game-arena-shortcut-btn"
+                onClick={onSwitchToGame}
+                title="Enter K-Pop Game Arena for listening quizzes"
+              >
+                <Gamepad2 size={16} /> Play Game Mode
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -708,7 +739,6 @@ export default function KpopVideoMode({ onAddXp }) {
 
           {/* Loop & Practice Toggle Bar */}
           <div className="video-actions-bar">
-
             <button
               className={`action-btn ${isLineLoopEnabled ? 'active-green' : ''}`}
               onClick={(e) => {

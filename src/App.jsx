@@ -5,6 +5,7 @@ import BadgeModal from './components/BadgeModal';
 import { sound } from './utils/audio';
 
 import KpopVideoMode from './components/KpopVideoMode';
+import KpopGameMode from './components/KpopGameMode';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('lessons');
@@ -15,7 +16,7 @@ export default function App() {
   const [streak, setStreak] = useState(0);
   const [soundMuted, setSoundMuted] = useState(false);
   const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
-  const [unlockedBadges, setUnlockedBadges] = useState(['first_step']);
+  const [unlockedBadges] = useState(['first_step']);
 
   // Sync Level with XP
   useEffect(() => {
@@ -67,6 +68,14 @@ export default function App() {
         {activeTab === 'kpop' && (
           <KpopVideoMode
             onAddXp={handleAddXp}
+            onSwitchToGame={() => setActiveTab('kpop-game')}
+          />
+        )}
+
+        {activeTab === 'kpop-game' && (
+          <KpopGameMode
+            onAddXp={handleAddXp}
+            onSwitchToPractice={() => setActiveTab('kpop')}
           />
         )}
       </main>
