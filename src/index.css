@@ -765,41 +765,7 @@ body {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
-}
-
-.youtube-url-form {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  min-width: 280px;
-}
-
-.yt-icon { color: #ef4444; }
-
-.yt-url-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 13px;
-  outline: none;
-  font-family: inherit;
-}
-
-.load-url-btn {
-  padding: 8px 16px;
-  background: var(--accent-purple);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: white;
-  font-weight: 700;
-  font-size: 12px;
-  cursor: pointer;
+  justify-content: flex-end;
 }
 
 .srt-upload-group {
@@ -1361,27 +1327,6 @@ body {
 .auto-scroll-btn.active:hover {
   background: rgba(16, 185, 129, 0.3);
   box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
-}
-
-.export-srt-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(139, 92, 246, 0.2);
-  border: 1px solid var(--accent-purple);
-  color: #c084fc;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.export-srt-btn:hover {
-  background: var(--accent-purple);
-  color: white;
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
 }
 
 .purple-icon { color: var(--accent-purple); }

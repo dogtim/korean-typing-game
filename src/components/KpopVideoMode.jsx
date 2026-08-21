@@ -2,18 +2,16 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs';
 import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
-import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT } from '../utils/srtParser';
+import { parseSRTContent, parseSRTTimeToSeconds } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
 import {
-  Tv,
   Music,
   Sparkles,
   BookOpen,
   Type,
   Repeat,
-  Download,
   Edit3,
   Clock,
   Check,
@@ -34,7 +32,6 @@ export default function KpopVideoMode({
   missedCount = 0
 }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
-  const [customUrl, setCustomUrl] = useState('');
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
 
   // Custom uploaded or prepared SRT lyrics state
@@ -299,22 +296,6 @@ export default function KpopVideoMode({
     sound.playKeyPress();
   };
 
-  // Export updated lyrics to downloadable SRT file
-  const handleExportSrt = () => {
-    const srtContent = exportLyricsToSRT(song.lyrics);
-    const blob = new Blob([srtContent], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    const filename = (song.title || 'lyrics').toLowerCase().replace(/[^a-z0-9_-]/g, '_') + '.srt';
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    sound.playCorrect();
-  };
-
   const playerRef = useRef(null);
   const lyricsContainerRef = useRef(null);
   const activeRowRef = useRef(null);
@@ -337,30 +318,6 @@ export default function KpopVideoMode({
       });
     }
   }, [activeLineIdx, autoScrollEnabled]);
-
-  // Extract YouTube Video ID
-  const extractVideoId = (url) => {
-    if (!url) return null;
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-    return match ? match[1] : url.trim();
-  };
-
-  const handleLoadCustomUrl = async (e) => {
-    e.preventDefault();
-    const id = extractVideoId(customUrl);
-    if (id) {
-      setActiveVideoId(id);
-      setSelectedSongIdx(-1);
-
-      // Auto-match prepared SRT mapping if available
-      const mapped = findMappingByVideoId(id);
-      if (mapped) {
-        await handleLoadPreparedSrt(mapped);
-      }
-    } else {
-      alert('Please enter a valid YouTube URL');
-    }
-  };
 
   // Load Prepared SRT File from /lyrics/ folder & auto-play mapped video URL
   const handleLoadPreparedSrt = useCallback(async (item, silent = false) => {
@@ -648,22 +605,8 @@ export default function KpopVideoMode({
           ))}
         </div>
 
-        {/* Action Row: Custom YouTube URL & Review & Play Game Shortcut */}
+        {/* Action Row: Review & Play Game Shortcut */}
         <div className="controls-action-row">
-          <form className="youtube-url-form" onSubmit={handleLoadCustomUrl}>
-            <Tv className="yt-icon" size={18} />
-            <input
-              type="text"
-              className="yt-url-input"
-              placeholder="Paste YouTube Link (e.g. https://www.youtube.com/watch?v=x3eqqoZPV_E)"
-              value={customUrl}
-              onChange={(e) => setCustomUrl(e.target.value)}
-            />
-            <button type="submit" className="load-url-btn">
-              Load Video
-            </button>
-          </form>
-
           {/* Action Buttons: Review Notebook & Play Game Mode */}
           <div className="srt-upload-group">
             {onOpenReviewModal && (
@@ -841,9 +784,6 @@ export default function KpopVideoMode({
                 title={autoScrollEnabled ? 'Auto-center lyrics to current timestamp (Click to disable)' : 'Auto-center lyrics to current timestamp (Click to enable)'}
               >
                 <Locate size={14} /> {autoScrollEnabled ? 'Auto-Center ON' : 'Auto-Center OFF'}
-              </button>
-              <button className="export-srt-btn" onClick={handleExportSrt} title="Save and download updated .srt subtitle file">
-                <Download size={14} /> Export SRT
               </button>
             </div>
           </div>
