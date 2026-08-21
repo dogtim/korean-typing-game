@@ -1,19 +1,24 @@
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { Crosshair } from 'lucide-react';
-import { buildSyllableChunks, shuffleArray } from '../../utils/gameModes';
+import { buildBatchimTargets, shuffleArray } from '../../utils/gameModes';
 import { sound } from '../../utils/audio';
 
-// Six fixed screen regions (percentage rects) so syllables scatter into
-// distinct corners/edges instead of clumping together. Zone assignment is
-// shuffled independently of catch order, so screen position never hints at
-// which syllable comes next — the player has to actually track each one.
+// Six fixed screen regions (percentage rects), all placed below the fixed
+// header (floating mode/timer HUD + the "Catch the syllables..." target
+// bar) so drifting tokens never wander behind that fixed UI. SAFE_TOP_PX is
+// a pixel floor on top of the percentage — it's what actually protects
+// short/narrow arenas where the header's fixed pixel height would otherwise
+// eat a much bigger share of the stage. Zone assignment is shuffled
+// independently of catch order, so screen position never hints at which
+// syllable comes next — the player has to actually track each one.
+const SAFE_TOP_PX = 176;
 const ZONES = [
-  { top: [10, 22], left: [6, 24] },
-  { top: [10, 22], left: [70, 90] },
-  { top: [42, 54], left: [4, 20] },
-  { top: [42, 54], left: [76, 92] },
-  { top: [74, 86], left: [8, 26] },
-  { top: [74, 86], left: [68, 88] }
+  { top: [50, 60], left: [4, 20] },
+  { top: [50, 60], left: [42, 58] },
+  { top: [50, 60], left: [80, 96] },
+  { top: [76, 88], left: [6, 24] },
+  { top: [76, 88], left: [38, 62] },
+  { top: [76, 88], left: [76, 94] }
 ];
 
 function randomInRange([min, max]) {
@@ -21,13 +26,16 @@ function randomInRange([min, max]) {
 }
 
 // Independent random drift offsets per token, consumed by the shared
-// syllable-drift keyframes via CSS custom properties.
+// syllable-drift keyframes via CSS custom properties. Vertical drift is
+// kept smaller than horizontal so tokens near the top of their zone can't
+// wander back up into the reserved header band.
 function randomDrift() {
-  const px = () => `${Math.round((Math.random() - 0.5) * 120)}px`;
+  const dx = () => `${Math.round((Math.random() - 0.5) * 120)}px`;
+  const dy = () => `${Math.round((Math.random() - 0.5) * 56)}px`;
   return {
-    '--dx1': px(), '--dy1': px(),
-    '--dx2': px(), '--dy2': px(),
-    '--dx3': px(), '--dy3': px()
+    '--dx1': dx(), '--dy1': dy(),
+    '--dx2': dx(), '--dy2': dy(),
+    '--dx3': dx(), '--dy3': dy()
   };
 }
 
@@ -51,8 +59,12 @@ function buildFloatingTokens(chunks) {
 // Unlike ChoiceMode/WordOrder, this mode is fullBleed (see GAME_MODES) — it
 // positions its own elements across the whole stage rather than living
 // inside GameChallengeOverlay's centered challenge-card.
-export default function BatchimBuilderChallenge({ line, onAnswer }) {
-  const chunks = useMemo(() => buildSyllableChunks(line.ko), [line.ko]);
+//
+// `unit` ('syllable' | 'word') controls the chunking granularity — see
+// buildBatchimTargets() in utils/gameModes.js. Defaults to 'syllable' (the
+// harder option) if the player hasn't picked one.
+export default function BatchimBuilderChallenge({ line, unit = 'syllable', onAnswer }) {
+  const chunks = useMemo(() => buildBatchimTargets(line.ko, unit), [line.ko, unit]);
   const settledRef = useRef(false);
   const nextIdxRef = useRef(0);
 
@@ -101,16 +113,18 @@ export default function BatchimBuilderChallenge({ line, onAnswer }) {
     );
   }
 
+  const unitLabel = unit === 'word' ? 'words' : 'syllables';
+
   return (
     <div className="batchim-challenge-field">
       <div className="batchim-target-bar glassmorphism">
         <p className="challenge-prompt">
-          <Crosshair size={15} /> Catch the syllables in the correct order!
+          <Crosshair size={15} /> Catch the {unitLabel} in the correct order!
         </p>
         <div className="batchim-progress-row">
           {caught.map(tok => (
             <span key={tok.id} className="syllable-chip caught-chip">
-              {tok.char}
+              {tok.text}
               {tok.spaceAfter ? ' ' : ''}
             </span>
           ))}
@@ -122,9 +136,9 @@ export default function BatchimBuilderChallenge({ line, onAnswer }) {
         <button
           key={token.id}
           type="button"
-          className={`syllable-token ${token.wrongFlash ? 'wrong-flash' : ''}`}
+          className={`syllable-token ${unit === 'word' ? 'word-unit' : ''} ${token.wrongFlash ? 'wrong-flash' : ''}`}
           style={{
-            top: `${token.top}%`,
+            top: `max(${token.top}%, ${SAFE_TOP_PX}px)`,
             left: `${token.left}%`,
             animationDuration: `${token.duration}s`,
             animationDelay: `${token.delay}s`,
@@ -132,7 +146,7 @@ export default function BatchimBuilderChallenge({ line, onAnswer }) {
           }}
           onClick={() => handleTap(token)}
         >
-          {token.char}
+          {token.text}
         </button>
       ))}
     </div>

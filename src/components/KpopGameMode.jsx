@@ -26,6 +26,7 @@ import {
   Zap,
   Mic,
   Crosshair,
+  Type,
   Repeat,
   Clock,
   Bookmark,
@@ -91,7 +92,10 @@ export default function KpopGameMode({
   const koreanLinePool = useMemo(() => buildKoreanLinePool(song.lyrics), [song.lyrics]);
 
   // Game configuration
-  const [selectedGameMode, setSelectedGameMode] = useState('choice'); // 'choice' | 'wordorder' | 'sing' | 'mixed'
+  const [selectedGameMode, setSelectedGameMode] = useState('choice'); // 'choice' | 'wordorder' | 'sing' | 'batchim' | 'mixed'
+  // Batchim Builder chunking granularity — 'syllable' (harder, more scattered
+  // targets) or 'word' (easier, same granularity as Word Order Rebuild).
+  const [batchimUnit, setBatchimUnit] = useState('syllable');
   const [useHearts] = useState(true);
   const maxHearts = 3;
   const [hearts, setHearts] = useState(maxHearts);
@@ -597,6 +601,29 @@ export default function KpopGameMode({
             70% Standard ({Math.ceil(allKoreanLines.length * 0.7)})
           </button>
         </div>
+
+        {/* Batchim Builder Unit Selector — only relevant when that mode can trigger */}
+        {(selectedGameMode === 'batchim' || selectedGameMode === 'mixed') && (
+          <div className="game-coverage-toggle-group">
+            <span className="coverage-label" title="Chunking granularity for Batchim Builder rounds">
+              <Type size={14} /> Batchim Unit:
+            </span>
+            <button
+              className={`coverage-btn ${batchimUnit === 'syllable' ? 'active' : ''}`}
+              onClick={() => setBatchimUnit('syllable')}
+              title="Split into individual Hangul syllables — more scattered targets, harder"
+            >
+              By Syllable (Harder)
+            </button>
+            <button
+              className={`coverage-btn ${batchimUnit === 'word' ? 'active' : ''}`}
+              onClick={() => setBatchimUnit('word')}
+              title="Split into whole words — fewer scattered targets, easier"
+            >
+              By Word (Easier)
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Main Game HUD Bar */}
@@ -771,6 +798,7 @@ export default function KpopGameMode({
               mode={activeChallenge.mode || effectiveLineMode}
               line={song.lyrics[activeChallenge.lineIdx]}
               pool={koreanLinePool}
+              batchimUnit={batchimUnit}
               onComplete={handleChallengeComplete}
             />
           )}

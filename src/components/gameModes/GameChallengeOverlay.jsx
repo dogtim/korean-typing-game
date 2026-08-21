@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { getGameModeConfig } from '../../utils/gameModes';
+import { getGameModeConfig, computeTimeLimitSec } from '../../utils/gameModes';
 import ChoiceModeChallenge from './ChoiceModeChallenge';
 import WordOrderChallenge from './WordOrderChallenge';
 import SingTheWordsChallenge from './SingTheWordsChallenge';
@@ -15,9 +15,9 @@ const CHALLENGE_COMPONENTS = {
   batchim: BatchimBuilderChallenge
 };
 
-export default function GameChallengeOverlay({ mode, line, pool, onComplete }) {
+export default function GameChallengeOverlay({ mode, line, pool, batchimUnit, onComplete }) {
   const modeConfig = getGameModeConfig(mode);
-  const timeLimitSec = modeConfig?.timeLimitSec || 15;
+  const timeLimitSec = computeTimeLimitSec(mode, line, batchimUnit);
   const [timeLeft, setTimeLeft] = useState(timeLimitSec);
   const settledRef = useRef(false);
 
@@ -51,7 +51,7 @@ export default function GameChallengeOverlay({ mode, line, pool, onComplete }) {
   );
 
   const body = ChallengeComponent ? (
-    <ChallengeComponent line={line} pool={pool} onAnswer={settle} />
+    <ChallengeComponent line={line} pool={pool} unit={batchimUnit} onAnswer={settle} />
   ) : (
     <p className="challenge-prompt">Unknown game mode: {mode}</p>
   );

@@ -34,6 +34,9 @@ export const GAME_MODES = [
     id: 'batchim',
     label: 'Batchim Builder',
     icon: Crosshair,
+    // Fallback only — actual time limit scales with syllable count via
+    // computeTimeLimitSec() below, since more scattered targets need more
+    // time to catch.
     timeLimitSec: 25,
     xpReward: 45,
     // Tells GameChallengeOverlay to skip the centered challenge-card and let
@@ -45,6 +48,19 @@ export const GAME_MODES = [
 
 export function getGameModeConfig(id) {
   return GAME_MODES.find(m => m.id === id) || null;
+}
+
+// Countdown time limit (seconds) for a challenge. Batchim Builder scales
+// with how many targets are actually scattered on screen — 7s minimum,
+// +1.5s per target — since more targets means more to track and catch.
+// `unit` ('syllable' | 'word') must match whatever BatchimBuilderChallenge
+// is using, since a word-level round has far fewer targets than syllable
+// level for the same line. Other modes use their static GAME_MODES.timeLimitSec.
+export function computeTimeLimitSec(modeId, line, unit = 'syllable') {
+  if (modeId === 'batchim' && line?.ko) {
+    return Math.ceil(7 + buildBatchimTargets(line.ko, unit).length * 1.5);
+  }
+  return getGameModeConfig(modeId)?.timeLimitSec || 15;
 }
 
 // Only lines containing actual Hangul syllables are eligible for gameplay —
@@ -209,15 +225,31 @@ export function maskHangulTokens(text) {
 // only individual 음절 (syllable) characters become catchable targets. Each
 // chunk remembers whether a space followed it in the source text, so the
 // caught-so-far preview can reinsert word breaks correctly.
-export function buildSyllableChunks(text) {
+//
+// unit: 'syllable' (default) splits into individual Hangul 음절 characters —
+// harder, more targets to track. 'word' splits on whitespace instead — each
+// whole word is one target, same granularity as Word Order Rebuild, but
+// still scattered/drifting rather than in a static tray.
+export function buildBatchimTargets(text, unit = 'syllable') {
   if (!text) return [];
+
+  if (unit === 'word') {
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    return words.map((word, idx) => ({
+      id: `${idx}-${word}`,
+      text: word,
+      order: idx,
+      spaceAfter: idx < words.length - 1
+    }));
+  }
+
   const chars = Array.from(text.trim());
   const chunks = [];
   chars.forEach((ch, i) => {
     if (/[가-힣]/.test(ch)) {
       chunks.push({
         id: `${chunks.length}-${ch}-${i}`,
-        char: ch,
+        text: ch,
         order: chunks.length,
         spaceAfter: chars[i + 1] === ' '
       });

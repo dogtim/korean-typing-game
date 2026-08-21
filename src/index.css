@@ -4060,6 +4060,18 @@ body {
   border-color: var(--accent-cyan);
 }
 
+/* Word-unit targets hold a whole word instead of one syllable — switch from
+   a fixed circle to a pill so longer words don't get clipped. */
+.syllable-token.word-unit {
+  width: auto;
+  min-width: 52px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 22px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
 .syllable-token.wrong-flash {
   border-color: var(--accent-red);
   background: rgba(239, 68, 68, 0.5);
