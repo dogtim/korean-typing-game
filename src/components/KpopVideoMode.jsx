@@ -6,8 +6,8 @@ import { parseSRTContent, parseSRTTimeToSeconds } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
+import VideoSelectModal from './VideoSelectModal';
 import {
-  Music,
   Sparkles,
   BookOpen,
   Type,
@@ -20,7 +20,9 @@ import {
   Square,
   Volume2,
   Gamepad2,
-  Bookmark
+  Bookmark,
+  Film,
+  ChevronDown
 } from 'lucide-react';
 
 export default function KpopVideoMode({
@@ -33,6 +35,7 @@ export default function KpopVideoMode({
 }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   // Custom uploaded or prepared SRT lyrics state
   const [customLyrics, setCustomLyrics] = useState(null);
@@ -572,37 +575,46 @@ export default function KpopVideoMode({
     return () => window.removeEventListener('keydown', handleGlobalKeyDown, true);
   }, [handleGlobalKeyDown]);
 
+  const handleSelectSongPreset = useCallback(async (p, idx) => {
+    setSelectedSongIdx(idx);
+    setActiveVideoId(p.id);
+    setActiveLineIdx(0);
+
+    const mappedItem = PREPARED_SRT_LIBRARY.find(
+      item => item.youtubeId === p.id || item.title.toLowerCase() === p.title.toLowerCase()
+    ) || (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
+
+    if (mappedItem) {
+      await handleLoadPreparedSrt(mappedItem, true);
+      setSelectedSongIdx(idx);
+    } else {
+      setCustomLyrics(null);
+      setCustomTrackTitle('');
+    }
+  }, [handleLoadPreparedSrt]);
+
   return (
     <div className="kpop-mode-container">
       {/* Header Controls & YouTube URL Loader */}
       <div className="kpop-controls-bar glassmorphism">
         <div className="song-presets-group">
-          <span className="preset-label">Featured K-Pop Videos:</span>
-          {KPOP_SONG_PRESETS.map((p, idx) => (
-            <button
-              key={p.id}
-              className={`preset-btn ${selectedSongIdx === idx ? 'active' : ''}`}
-              onClick={async (e) => {
-                e.currentTarget.blur();
-                setSelectedSongIdx(idx);
-                setActiveVideoId(p.id);
-                setActiveLineIdx(0);
-
-                const mappedItem = PREPARED_SRT_LIBRARY.find(item => item.youtubeId === p.id || item.title.toLowerCase() === p.title.toLowerCase()) ||
-                  (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
-                if (mappedItem) {
-                  await handleLoadPreparedSrt(mappedItem, true);
-                  setSelectedSongIdx(idx);
-                } else {
-                  setCustomLyrics(null);
-                  setCustomTrackTitle('');
-                }
-              }}
-            >
-              <Music size={14} />
-              <span>{p.title} - {p.artist}</span>
-            </button>
-          ))}
+          <button
+            type="button"
+            className="select-video-trigger-btn"
+            onClick={() => setIsVideoModalOpen(true)}
+            title="Choose a K-Pop video to practice"
+          >
+            <div className="trigger-icon-wrap">
+              <Film size={16} />
+            </div>
+            <div className="trigger-text-wrap">
+              <span className="trigger-label">Select Video:</span>
+              <span className="trigger-current-song">
+                {song.title} <span className="trigger-artist">({song.artist})</span>
+              </span>
+            </div>
+            <ChevronDown size={16} className="trigger-chevron" />
+          </button>
         </div>
 
         {/* Action Row: Review & Play Game Shortcut */}
@@ -917,6 +929,15 @@ export default function KpopVideoMode({
           />
         </div>
       )}
+
+      {/* Video Selection Modal Popup */}
+      <VideoSelectModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        onSelectSong={handleSelectSongPreset}
+        selectedSongIdx={selectedSongIdx}
+        activeVideoId={activeVideoId}
+      />
     </div>
   );
 }

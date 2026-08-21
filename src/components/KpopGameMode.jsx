@@ -7,13 +7,13 @@ import { parseSRTContent, formatSrtTimestampRange } from '../utils/srtParser';
 import { GAME_MODES, getGameModeConfig, containsKorean, buildKoreanLinePool, pickChoiceOptions, shuffleWords } from '../utils/gameModes';
 import { sound } from '../utils/audio';
 import GameChallengeOverlay from './gameModes/GameChallengeOverlay';
+import VideoSelectModal from './VideoSelectModal';
 import {
   Trophy,
   Flame,
   Heart,
   RotateCcw,
   Sparkles,
-  Music,
   ListChecks,
   Shuffle,
   Dices,
@@ -27,7 +27,9 @@ import {
   Mic,
   Repeat,
   Clock,
-  Bookmark
+  Bookmark,
+  Film,
+  ChevronDown
 } from 'lucide-react';
 
 export default function KpopGameMode({
@@ -41,6 +43,7 @@ export default function KpopGameMode({
   // Song selection
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [customLyrics, setCustomLyrics] = useState(null);
   const [customTrackTitle, setCustomTrackTitle] = useState('');
 
@@ -486,37 +489,45 @@ export default function KpopGameMode({
   const activeModeConfig = getGameModeConfig(selectedGameMode) || { label: 'Mixed Challenges', icon: Dices };
   const ModeIcon = activeModeConfig.icon || Dices;
 
+  const handleSelectSongPreset = useCallback(async (p, idx) => {
+    setSelectedSongIdx(idx);
+    setActiveVideoId(p.id);
+
+    const mappedItem = PREPARED_SRT_LIBRARY.find(
+      item => item.youtubeId === p.id || item.title.toLowerCase() === p.title.toLowerCase()
+    ) || (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
+
+    if (mappedItem) {
+      await handleLoadPreparedSrt(mappedItem);
+    } else {
+      setCustomLyrics(null);
+      setCustomTrackTitle('');
+    }
+    resetToReady();
+  }, [handleLoadPreparedSrt, resetToReady]);
+
   return (
     <div className="kpop-game-arena-container">
       {/* Top Game Bar: Presets & Mode Selector & Coverage Selector */}
       <div className="game-top-bar glassmorphism">
         <div className="song-presets-group">
-          <span className="preset-label"><Music size={14} /> Choose Song:</span>
-          {KPOP_SONG_PRESETS.map((p, idx) => (
-            <button
-              key={p.id}
-              className={`preset-btn ${selectedSongIdx === idx ? 'active' : ''}`}
-              onClick={async (e) => {
-                e.currentTarget.blur();
-                setSelectedSongIdx(idx);
-                setActiveVideoId(p.id);
-
-                const mappedItem = PREPARED_SRT_LIBRARY.find(
-                  item => item.youtubeId === p.id || item.title.toLowerCase() === p.title.toLowerCase()
-                ) || (p.srtPath ? { path: p.srtPath, title: p.title, artist: p.artist, youtubeId: p.id } : null);
-
-                if (mappedItem) {
-                  await handleLoadPreparedSrt(mappedItem);
-                } else {
-                  setCustomLyrics(null);
-                  setCustomTrackTitle('');
-                }
-                resetToReady();
-              }}
-            >
-              <span>{p.title} - {p.artist}</span>
-            </button>
-          ))}
+          <button
+            type="button"
+            className="select-video-trigger-btn"
+            onClick={() => setIsVideoModalOpen(true)}
+            title="Choose a K-Pop video for game challenges"
+          >
+            <div className="trigger-icon-wrap">
+              <Film size={16} />
+            </div>
+            <div className="trigger-text-wrap">
+              <span className="trigger-label">Select Video:</span>
+              <span className="trigger-current-song">
+                {song.title} <span className="trigger-artist">({song.artist})</span>
+              </span>
+            </div>
+            <ChevronDown size={16} className="trigger-chevron" />
+          </button>
         </div>
 
         {/* Game Mode Selector */}
@@ -851,6 +862,15 @@ export default function KpopGameMode({
           </div>
         </div>
       )}
+
+      {/* Video Selection Modal Popup */}
+      <VideoSelectModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        onSelectSong={handleSelectSongPreset}
+        selectedSongIdx={selectedSongIdx}
+        activeVideoId={activeVideoId}
+      />
     </div>
   );
 }
