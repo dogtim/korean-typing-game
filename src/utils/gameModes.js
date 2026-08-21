@@ -3,7 +3,7 @@
 // entry here and register its challenge component in
 // components/gameModes/GameChallengeOverlay.jsx's CHALLENGE_COMPONENTS map.
 
-import { ListChecks, Shuffle, Mic } from 'lucide-react';
+import { ListChecks, Shuffle, Mic, Crosshair } from 'lucide-react';
 
 export const GAME_MODES = [
   {
@@ -29,6 +29,17 @@ export const GAME_MODES = [
     timeLimitSec: 15,
     xpReward: 35,
     description: 'Sing or pronounce the missing Korean words into your mic (70%+ match to pass).'
+  },
+  {
+    id: 'batchim',
+    label: 'Batchim Builder',
+    icon: Crosshair,
+    timeLimitSec: 25,
+    xpReward: 45,
+    // Tells GameChallengeOverlay to skip the centered challenge-card and let
+    // this mode's component freely position elements across the full stage.
+    fullBleed: true,
+    description: 'Catch the scattered, drifting Hangul syllables in the correct order to rebuild the sentence.'
   }
 ];
 
@@ -57,7 +68,7 @@ export function buildKoreanLinePool(lyrics) {
   return pool;
 }
 
-function shuffleArray(arr) {
+export function shuffleArray(arr) {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -191,6 +202,28 @@ export function maskHangulTokens(text) {
     hangulTarget: hangulWords.join(' '),
     hasKorean: hangulWords.length > 0
   };
+}
+
+// Splits Korean text into ordered Hangul-syllable "chunks" for Batchim
+// Builder — spaces/punctuation/non-Hangul characters are dropped entirely,
+// only individual 음절 (syllable) characters become catchable targets. Each
+// chunk remembers whether a space followed it in the source text, so the
+// caught-so-far preview can reinsert word breaks correctly.
+export function buildSyllableChunks(text) {
+  if (!text) return [];
+  const chars = Array.from(text.trim());
+  const chunks = [];
+  chars.forEach((ch, i) => {
+    if (/[가-힣]/.test(ch)) {
+      chunks.push({
+        id: `${chunks.length}-${ch}-${i}`,
+        char: ch,
+        order: chunks.length,
+        spaceAfter: chars[i + 1] === ' '
+      });
+    }
+  });
+  return chunks;
 }
 
 // Calculate Hangul character match percentage between target line and detected speech (Korean only)

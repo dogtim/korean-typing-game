@@ -25,6 +25,7 @@ import {
   HelpCircle,
   Zap,
   Mic,
+  Crosshair,
   Repeat,
   Clock,
   Bookmark,
@@ -552,6 +553,13 @@ export default function KpopGameMode({
             title="Sing or pronounce missing Korean words into your mic (70%+ match to pass)"
           >
             <Mic size={15} /> Sing the Words!
+          </button>
+          <button
+            className={`game-nav-btn ${selectedGameMode === 'batchim' ? 'active' : ''}`}
+            onClick={() => { setSelectedGameMode('batchim'); resetToReady(); }}
+            title="Catch the scattered, drifting Hangul syllables in the correct order"
+          >
+            <Crosshair size={15} /> Batchim Builder
           </button>
           <button
             className={`game-nav-btn ${selectedGameMode === 'mixed' ? 'active' : ''}`}

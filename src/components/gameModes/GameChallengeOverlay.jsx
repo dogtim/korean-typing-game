@@ -3,6 +3,7 @@ import { getGameModeConfig } from '../../utils/gameModes';
 import ChoiceModeChallenge from './ChoiceModeChallenge';
 import WordOrderChallenge from './WordOrderChallenge';
 import SingTheWordsChallenge from './SingTheWordsChallenge';
+import BatchimBuilderChallenge from './BatchimBuilderChallenge';
 
 // Add new modes here — the id must match a GAME_MODES entry in utils/gameModes.js.
 // Every component in this map must accept { line, pool, onAnswer } and call
@@ -10,7 +11,8 @@ import SingTheWordsChallenge from './SingTheWordsChallenge';
 const CHALLENGE_COMPONENTS = {
   choice: ChoiceModeChallenge,
   wordorder: WordOrderChallenge,
-  sing: SingTheWordsChallenge
+  sing: SingTheWordsChallenge,
+  batchim: BatchimBuilderChallenge
 };
 
 export default function GameChallengeOverlay({ mode, line, pool, onComplete }) {
@@ -39,21 +41,38 @@ export default function GameChallengeOverlay({ mode, line, pool, onComplete }) {
   const ChallengeComponent = CHALLENGE_COMPONENTS[mode];
   const ModeIcon = modeConfig.icon;
 
+  const header = (
+    <div className="challenge-header">
+      <span className="challenge-mode-label">
+        {ModeIcon && <ModeIcon size={15} />} {modeConfig.label}
+      </span>
+      <span className={`challenge-timer ${timeLeft <= 3 ? 'urgent' : ''}`}>{timeLeft}s</span>
+    </div>
+  );
+
+  const body = ChallengeComponent ? (
+    <ChallengeComponent line={line} pool={pool} onAnswer={settle} />
+  ) : (
+    <p className="challenge-prompt">Unknown game mode: {mode}</p>
+  );
+
+  // fullBleed modes (e.g. Batchim Builder) need the entire stage area to
+  // scatter moving elements across — they skip the centered, width-capped
+  // challenge-card and position the header as a small floating HUD instead.
+  if (modeConfig.fullBleed) {
+    return (
+      <div className="game-challenge-overlay">
+        <div className="challenge-floating-hud glassmorphism">{header}</div>
+        {body}
+      </div>
+    );
+  }
+
   return (
     <div className="game-challenge-overlay">
       <div className="challenge-card glassmorphism">
-        <div className="challenge-header">
-          <span className="challenge-mode-label">
-            {ModeIcon && <ModeIcon size={15} />} {modeConfig.label}
-          </span>
-          <span className={`challenge-timer ${timeLeft <= 3 ? 'urgent' : ''}`}>{timeLeft}s</span>
-        </div>
-
-        {ChallengeComponent ? (
-          <ChallengeComponent line={line} pool={pool} onAnswer={settle} />
-        ) : (
-          <p className="challenge-prompt">Unknown game mode: {mode}</p>
-        )}
+        {header}
+        {body}
       </div>
     </div>
   );
