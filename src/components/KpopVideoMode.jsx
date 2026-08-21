@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs';
 import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
@@ -28,10 +28,18 @@ import {
   Mic,
   Square,
   Volume2,
-  Gamepad2
+  Gamepad2,
+  Bookmark
 } from 'lucide-react';
 
-export default function KpopVideoMode({ onAddXp, onSwitchToGame }) {
+export default function KpopVideoMode({
+  onAddXp,
+  onSwitchToGame,
+  loopTarget,
+  onClearLoopTarget,
+  onOpenReviewModal,
+  missedCount = 0
+}) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [customUrl, setCustomUrl] = useState('');
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
@@ -45,14 +53,14 @@ export default function KpopVideoMode({ onAddXp, onSwitchToGame }) {
   const [rawSrtText, setRawSrtText] = useState('');
 
   const currentPreset = KPOP_SONG_PRESETS[selectedSongIdx];
-  const song = {
+  const song = useMemo(() => ({
     id: activeVideoId,
     title: customLyrics ? (customTrackTitle || 'Custom SRT Lyrics Video') : (currentPreset ? currentPreset.title : 'YouTube Video'),
     artist: customLyrics ? 'SRT Lyrics' : (currentPreset ? currentPreset.artist : 'K-Pop Track'),
     lyrics: customLyrics || (currentPreset ? currentPreset.lyrics : [
       { start: 0, end: 10, ko: '한국어 가사 srt 파일 업로드 가능', rom: 'han-gug-eo ga-sa srt fa-il eop-ro-deu ga-neung', en: 'Upload your own SRT subtitle file!' }
     ])
-  };
+  }), [activeVideoId, customLyrics, customTrackTitle, currentPreset]);
 
   const [activeLineIdx, setActiveLineIdx] = useState(0);
   const activeLine = song.lyrics[activeLineIdx] || song.lyrics[0] || { ko: '', rom: '', en: '' };
@@ -471,6 +479,47 @@ export default function KpopVideoMode({ onAddXp, onSwitchToGame }) {
     handleLoadPreparedSrt(dripItem, true);
   }, [handleLoadPreparedSrt]);
 
+  // Handle Review Loop Target: automatically load song, jump to timestamp, and loop sentence
+  useEffect(() => {
+    if (!loopTarget) return;
+
+    const applyLoopTarget = async () => {
+      const targetVideoId = loopTarget.youtubeId || loopTarget.songId;
+      if (targetVideoId && targetVideoId !== activeVideoId) {
+        const presetIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === targetVideoId);
+        if (presetIdx !== -1) {
+          setSelectedSongIdx(presetIdx);
+        }
+        setActiveVideoId(targetVideoId);
+
+        const mappedItem = PREPARED_SRT_LIBRARY.find(item => item.youtubeId === targetVideoId || item.id === targetVideoId) ||
+          (loopTarget.srtPath ? { path: loopTarget.srtPath, youtubeId: targetVideoId, title: loopTarget.songTitle, artist: loopTarget.artist } : null);
+        if (mappedItem) {
+          await handleLoadPreparedSrt(mappedItem, true);
+        }
+      }
+
+      // Activate Line Loop
+      setIsLineLoopEnabled(true);
+
+      // Find matching line by start timestamp or text
+      const targetStart = loopTarget.start;
+      const matchedIdx = song.lyrics.findIndex(l => Math.abs(l.start - targetStart) < 0.6 || (l.ko && l.ko.trim() === loopTarget.ko.trim()));
+      const finalIdx = matchedIdx !== -1 ? matchedIdx : (loopTarget.lineIdx || 0);
+      setActiveLineIdx(finalIdx);
+
+      // Seek & Play
+      if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
+        playerRef.current.seekTo(targetStart, true);
+        if (typeof playerRef.current.playVideo === 'function') {
+          playerRef.current.playVideo();
+        }
+      }
+    };
+
+    applyLoopTarget();
+  }, [loopTarget, activeVideoId, handleLoadPreparedSrt, song.lyrics]);
+
   // Sync lyrics time ticker & sentence loop option
   useEffect(() => {
     let interval = null;
@@ -680,8 +729,19 @@ export default function KpopVideoMode({ onAddXp, onSwitchToGame }) {
             </button>
           </form>
 
-          {/* Upload & Prepared SRT Buttons */}
+          {/* Upload & Prepared SRT & Review Buttons */}
           <div className="srt-upload-group">
+            {onOpenReviewModal && (
+              <button
+                type="button"
+                className={`srt-btn review-notebook-btn ${missedCount > 0 ? 'has-missed' : ''}`}
+                onClick={onOpenReviewModal}
+                title="Open Incorrect Answers Review Notebook"
+              >
+                <Bookmark size={16} /> Review Missed ({missedCount})
+              </button>
+            )}
+
             <button
               className="srt-btn library-btn"
               onClick={() => setShowLibraryModal(true)}
@@ -722,6 +782,35 @@ export default function KpopVideoMode({ onAddXp, onSwitchToGame }) {
           </div>
         </div>
       </div>
+
+      {/* Active Loop Review Notification Banner */}
+      {loopTarget && isLineLoopEnabled && (
+        <div className="active-loop-review-banner glassmorphism">
+          <div className="loop-banner-info">
+            <Repeat size={18} className="loop-banner-icon rotating" />
+            <div className="loop-banner-texts">
+              <div className="loop-banner-title">
+                <strong>Looping Missed Review Sentence:</strong> {loopTarget.songTitle && <span className="song-sub">({loopTarget.songTitle})</span>}
+              </div>
+              <div className="loop-banner-text">"{loopTarget.ko}"</div>
+              <div className="loop-banner-time">
+                <Clock size={12} /> {loopTarget.timestampStr || `${loopTarget.start}s - ${loopTarget.end}s`}
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="loop-banner-dismiss-btn"
+            onClick={() => {
+              setIsLineLoopEnabled(false);
+              if (onClearLoopTarget) onClearLoopTarget();
+            }}
+            title="Stop looping review sentence"
+          >
+            Stop Looping
+          </button>
+        </div>
+      )}
 
       {/* Main Grid: YouTube Video + Sync Lyrics CC Overlay */}
       <div className="kpop-main-grid">

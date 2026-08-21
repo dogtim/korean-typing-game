@@ -89,6 +89,16 @@ export function formatSecondsToSRTTime(totalSeconds) {
 }
 
 /**
+ * Formats start and end seconds into standard SRT timestamp range string (e.g. 00:01:00,393 --> 00:01:03,813).
+ */
+export function formatSrtTimestampRange(start, end) {
+  const startStr = formatSecondsToSRTTime(start);
+  const endSec = (typeof end === 'number' && end > start) ? end : start + 3;
+  const endStr = formatSecondsToSRTTime(endSec);
+  return `${startStr} --> ${endStr}`;
+}
+
+/**
  * Converts array of lyrics objects back into standard SRT string.
  */
 export function exportLyricsToSRT(lyrics) {
@@ -101,3 +111,4 @@ export function exportLyricsToSRT(lyrics) {
     return `${idx + 1}\n${startStr} --> ${endStr}\n${content}\n`;
   }).join('\n');
 }
+

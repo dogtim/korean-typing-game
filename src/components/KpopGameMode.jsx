@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 import { KPOP_SONG_PRESETS } from '../utils/kpopSongs';
 import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
-import { parseSRTContent } from '../utils/srtParser';
+import { parseSRTContent, formatSrtTimestampRange } from '../utils/srtParser';
 import { GAME_MODES, getGameModeConfig, containsKorean, buildKoreanLinePool, pickChoiceOptions, shuffleWords } from '../utils/gameModes';
 import { sound } from '../utils/audio';
 import GameChallengeOverlay from './gameModes/GameChallengeOverlay';
@@ -24,10 +24,20 @@ import {
   Play,
   HelpCircle,
   Zap,
-  Mic
+  Mic,
+  Repeat,
+  Clock,
+  Bookmark
 } from 'lucide-react';
 
-export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
+export default function KpopGameMode({
+  onAddXp,
+  onSwitchToPractice,
+  onSaveMissed,
+  onLoopSentence,
+  onOpenReviewModal,
+  missedCount = 0
+}) {
   // Song selection
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
@@ -35,12 +45,12 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
   const [customTrackTitle, setCustomTrackTitle] = useState('');
 
   const currentPreset = KPOP_SONG_PRESETS[selectedSongIdx];
-  const song = {
+  const song = useMemo(() => ({
     id: activeVideoId,
     title: customLyrics ? (customTrackTitle || 'Custom Song') : (currentPreset ? currentPreset.title : 'K-Pop Video'),
     artist: customLyrics ? 'SRT Lyrics' : (currentPreset ? currentPreset.artist : 'K-Pop Track'),
     lyrics: customLyrics || (currentPreset ? currentPreset.lyrics : [])
-  };
+  }), [activeVideoId, customLyrics, customTrackTitle, currentPreset]);
 
   // Extract all Korean lines from the song lyrics
   const allKoreanLines = useMemo(() => {
@@ -77,7 +87,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
   const koreanLinePool = useMemo(() => buildKoreanLinePool(song.lyrics), [song.lyrics]);
 
   // Game configuration
-  const [selectedGameMode, setSelectedGameMode] = useState('choice'); // 'choice' | 'wordorder' | 'mixed'
+  const [selectedGameMode, setSelectedGameMode] = useState('choice'); // 'choice' | 'wordorder' | 'sing' | 'mixed'
   const [useHearts] = useState(true);
   const maxHearts = 3;
   const [hearts, setHearts] = useState(maxHearts);
@@ -85,9 +95,9 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
   // Pre-extracted Exam Questions Map (populated during pre-action)
   const [_preparedExamMap, setPreparedExamMap] = useState({});
 
-  // Game state: 'ready' (awaiting user click on Ready) | 'preparing' (pre-action & countdown) | 'playing' | 'victory' | 'gameover'
+  // Game state: 'ready' | 'preparing' | 'playing' | 'victory' | 'gameover'
   const [gameState, setGameState] = useState('ready');
-  const [countdown, setCountdown] = useState(null); // 3 | 2 | 1 | 'START!'
+  const [countdown, setCountdown] = useState(null); // 3 | 2 | 1 | 'GO!'
 
   // Game runtime stats
   const [score, setScore] = useState(0);
@@ -97,6 +107,9 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [totalXpEarned, setTotalXpEarned] = useState(0);
   const [recentScorePopup, setRecentScorePopup] = useState(null);
+
+  // Missed sentences recorded in current session
+  const [sessionMissed, setSessionMissed] = useState([]);
 
   // Reactive state for challenged indices (ensures HUD progress updates in real time)
   const [challengedIndices, setChallengedIndices] = useState(() => new Set());
@@ -154,6 +167,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
     setTotalAnswered(0);
     setTotalXpEarned(0);
     setHearts(maxHearts);
+    setSessionMissed([]);
     setGameState('ready');
     setCountdown(null);
     setRecentScorePopup(null);
@@ -164,7 +178,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
     }
   }, [maxHearts]);
 
-  // When song or lyrics change, return to Ready state
+  // When song, lyrics, or coverage change, return to Ready state
   useEffect(() => {
     challengedSetRef.current = new Set();
     setChallengedIndices(new Set());
@@ -176,6 +190,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
     setTotalAnswered(0);
     setTotalXpEarned(0);
     setHearts(maxHearts);
+    setSessionMissed([]);
     setGameState('ready');
     setCountdown(null);
   }, [song.lyrics, activeVideoId, maxHearts, coverageRate]);
@@ -354,6 +369,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
   // Challenge Complete Handler
   const handleChallengeComplete = useCallback((result) => {
     const isCorrect = !!result?.correct;
+    const challengeLine = activeChallenge?.line || (activeChallenge && song.lyrics[activeChallenge.lineIdx]);
     setActiveChallenge(null);
     setTotalAnswered(prev => prev + 1);
 
@@ -387,6 +403,31 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
     } else {
       sound.playError();
       setCombo(0);
+
+      // Record wrong answer to review notebook
+      if (challengeLine) {
+        const missedItem = {
+          id: `${song.id}-${challengeLine.originalIdx !== undefined ? challengeLine.originalIdx : activeChallenge?.lineIdx}-${Date.now()}`,
+          songId: song.id,
+          songTitle: song.title,
+          artist: song.artist,
+          youtubeId: activeVideoId,
+          srtPath: currentPreset?.srtPath || null,
+          lineIdx: challengeLine.originalIdx !== undefined ? challengeLine.originalIdx : activeChallenge?.lineIdx,
+          ko: challengeLine.ko,
+          en: challengeLine.en || '',
+          start: challengeLine.start,
+          end: challengeLine.end,
+          timestampStr: formatSrtTimestampRange(challengeLine.start, challengeLine.end),
+          mode: result?.mode || effectiveLineMode,
+          date: new Date().toLocaleDateString()
+        };
+
+        setSessionMissed(prev => [missedItem, ...prev]);
+        if (onSaveMissed) {
+          onSaveMissed(missedItem);
+        }
+      }
 
       setRecentScorePopup({
         text: 'MISS! 💔 COMBO RESET',
@@ -428,7 +469,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
     if (gameState === 'playing' && playerRef.current && typeof playerRef.current.playVideo === 'function') {
       playerRef.current.playVideo();
     }
-  }, [combo, effectiveLineMode, onAddXp, useHearts, gameState, challengeLines.length]);
+  }, [combo, effectiveLineMode, onAddXp, useHearts, gameState, challengeLines.length, activeChallenge, song, activeVideoId, currentPreset, onSaveMissed]);
 
   // Accuracy calculation
   const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
@@ -593,6 +634,17 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
 
         {/* Action Controls */}
         <div className="hud-actions">
+          {onOpenReviewModal && (
+            <button
+              className={`hud-btn review-hud-btn ${missedCount > 0 ? 'has-missed' : ''}`}
+              onClick={onOpenReviewModal}
+              title="Open Review Notebook of missed sentences"
+            >
+              <Bookmark size={15} />
+              <span>Review ({missedCount})</span>
+            </button>
+          )}
+
           {gameState === 'playing' ? (
             <button
               className="hud-btn restart-btn"
@@ -610,6 +662,7 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
               <Play size={15} /> Start Challenge
             </button>
           )}
+
           {onSwitchToPractice && (
             <button
               className="hud-btn practice-switch-btn"
@@ -751,6 +804,39 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
                 <span className="stat-val highlight-purple">+{totalXpEarned} XP</span>
               </div>
             </div>
+
+            {/* Missed Sentences Review Section */}
+            {sessionMissed.length > 0 && (
+              <div className="result-missed-section">
+                <div className="result-missed-header">
+                  <Bookmark size={16} className="gold" />
+                  <span>Missed Sentences to Review & Loop ({sessionMissed.length})</span>
+                </div>
+                <div className="result-missed-list">
+                  {sessionMissed.map((item) => (
+                    <div key={item.id} className="result-missed-row">
+                      <div className="missed-row-text-group">
+                        <span className="missed-ko-text">{item.ko}</span>
+                        <span className="missed-time-chip">
+                          <Clock size={11} /> {item.timestampStr}
+                        </span>
+                      </div>
+                      {onLoopSentence && (
+                        <button
+                          type="button"
+                          className="missed-loop-btn"
+                          onClick={() => onLoopSentence(item)}
+                          title="Open Practice Mode and loop this exact timestamp segment"
+                        >
+                          <Repeat size={13} />
+                          <span>Loop Segment</span>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="result-modal-actions">
               <button className="result-btn primary-btn" onClick={resetToReady}>

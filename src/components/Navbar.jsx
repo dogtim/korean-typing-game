@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Flame, Award, BookOpen, Tv, Gamepad2 } from 'lucide-react';
+import { Volume2, VolumeX, Flame, Award, BookOpen, Tv, Gamepad2, Bookmark } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -9,7 +9,9 @@ export default function Navbar({
   streak,
   soundMuted,
   onToggleSound,
-  onOpenBadges
+  onOpenBadges,
+  onOpenReviewModal,
+  missedCount = 0
 }) {
   const currentLevelXp = xp % 100;
   const xpPercent = Math.min(100, Math.floor((currentLevelXp / 100) * 100));
@@ -51,6 +53,18 @@ export default function Navbar({
       </nav>
 
       <div className="navbar-stats">
+        {/* Review Notebook Button */}
+        {onOpenReviewModal && (
+          <button
+            className={`icon-btn review-nav-btn ${missedCount > 0 ? 'has-missed' : ''}`}
+            onClick={onOpenReviewModal}
+            title={missedCount > 0 ? `Incorrect Answers Review Notebook (${missedCount} saved)` : 'Review Notebook (0 saved)'}
+          >
+            <Bookmark size={19} />
+            {missedCount > 0 && <span className="nav-badge-count">{missedCount}</span>}
+          </button>
+        )}
+
         {/* Streak */}
         <div className="stat-badge streak-badge" title="Current Typing Combo Streak">
           <Flame className="stat-icon flame" size={18} />
