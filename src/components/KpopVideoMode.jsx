@@ -886,18 +886,6 @@ export default function KpopVideoMode({
             </div>
           ))}
         </div>
-
-        {/* Vowels Cheat Sheet Reference Bar */}
-        <div className="vowel-cheatsheet-bar">
-          <span className="cheatsheet-title">Basic Vowels Guide:</span>
-          {Object.entries(VOWEL_PRONUNCIATION_GUIDE).slice(0, 10).map(([vChar, info]) => (
-            <div key={vChar} className="vowel-pill-item" style={{ backgroundColor: `${info.color}22`, borderColor: info.color }}>
-              <span className="v-char" style={{ color: info.color }}>{vChar}</span>
-              <span className="v-name">[{info.name}]</span>
-              <span className="v-sound">{info.sound.split(' ')[0]}</span>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Optional Lyric Typing Trainer */}

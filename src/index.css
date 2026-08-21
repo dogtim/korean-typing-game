@@ -1521,37 +1521,6 @@ body {
   margin-bottom: 2px;
 }
 
-.vowel-cheatsheet-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow-x: auto;
-  padding-top: 10px;
-  border-top: 1px dashed var(--border-light);
-}
-
-.cheatsheet-title {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.vowel-pill-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border: 1px solid;
-  border-radius: 16px;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.v-char { font-weight: 900; }
-.v-name { color: var(--text-muted); font-weight: 600; }
-.v-sound { color: white; font-size: 11px; }
-
 /* Typing Trainer for Lyrics */
 .lyric-typing-trainer {
   padding: 24px;
