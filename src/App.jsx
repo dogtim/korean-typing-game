@@ -94,25 +94,12 @@ export default function App() {
     setStreak(newStreak);
   };
 
-  const handleToggleSound = () => {
-    const isMuted = sound.toggleMute();
-    setSoundMuted(isMuted);
-  };
-
   return (
     <div className="app-container">
       {/* Top Header */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        xp={xp}
-        level={level}
-        streak={streak}
-        soundMuted={soundMuted}
-        onToggleSound={handleToggleSound}
-        onOpenBadges={() => setIsBadgeModalOpen(true)}
-        onOpenReviewModal={() => setIsReviewModalOpen(true)}
-        missedCount={missedSentences.length}
       />
 
       {/* Main Tab Content */}
