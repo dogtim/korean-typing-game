@@ -1,9 +1,10 @@
 import React from 'react';
-import { BookOpen, Tv, Gamepad2 } from 'lucide-react';
+import { BookOpen, Tv, Gamepad2, Wrench } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
-  setActiveTab
+  setActiveTab,
+  showAdminTab = false
 }) {
   return (
     <header className="navbar-container">
@@ -39,6 +40,17 @@ export default function Navbar({
           <Gamepad2 className="tab-icon" size={18} />
           <span>K-Pop Game</span>
         </button>
+
+        {showAdminTab && (
+          <button
+            className={`tab-btn admin-tab-btn ${activeTab === 'admin' ? 'active' : ''}`}
+            onClick={() => setActiveTab('admin')}
+            title="Local dev-only tool for syncing & registering new songs"
+          >
+            <Wrench className="tab-icon" size={18} />
+            <span>Admin</span>
+          </button>
+        )}
       </nav>
     </header>
   );

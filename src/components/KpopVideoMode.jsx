@@ -31,7 +31,9 @@ export default function KpopVideoMode({
   loopTarget,
   onClearLoopTarget,
   onOpenReviewModal,
-  missedCount = 0
+  missedCount = 0,
+  autoPlayVideoId = null,
+  onAutoPlayHandled
 }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(0);
   const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
@@ -592,6 +594,17 @@ export default function KpopVideoMode({
       setCustomTrackTitle('');
     }
   }, [handleLoadPreparedSrt]);
+
+  // Auto-load a song just registered from the Admin page (freshly written to
+  // KPOP_SONG_PRESETS via the local admin API + Vite HMR) and start playing it
+  useEffect(() => {
+    if (!autoPlayVideoId) return;
+    const idx = KPOP_SONG_PRESETS.findIndex(p => p.id === autoPlayVideoId);
+    if (idx !== -1) {
+      handleSelectSongPreset(KPOP_SONG_PRESETS[idx], idx);
+    }
+    onAutoPlayHandled?.();
+  }, [autoPlayVideoId, handleSelectSongPreset, onAutoPlayHandled]);
 
   return (
     <div className="kpop-mode-container">

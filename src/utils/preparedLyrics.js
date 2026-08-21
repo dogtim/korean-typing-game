@@ -36,5 +36,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'ILLIT-ITS-ME.srt',
     path: '/lyrics/ILLIT-ITS-ME.srt',
     description: "ILLIT It's Me full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_sugar_honey_ice_tea',
+    title: "SUGAR HONEY ICE TEA",
+    artist: 'BabyMonster',
+    youtubeId: 'naoGk-Zjc1s',
+    filename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    path: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    description: "BabyMonster SUGAR HONEY ICE TEA full prepared SRT subtitle file."
   }
 ];

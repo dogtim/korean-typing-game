@@ -92,6 +92,16 @@ export const KPOP_SONG_PRESETS = [
     srtFilename: 'ILLIT-ITS-ME.srt',
     srtPath: '/lyrics/ILLIT-ITS-ME.srt',
     lyrics: []
+  },
+  {
+    id: 'naoGk-Zjc1s',
+    title: "SUGAR HONEY ICE TEA",
+    artist: 'BabyMonster',
+    youtubeUrl: 'https://www.youtube.com/watch?v=naoGk-Zjc1s',
+    thumbnail: 'https://img.youtube.com/vi/naoGk-Zjc1s/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    srtPath: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    lyrics: []
   }
 ];
 

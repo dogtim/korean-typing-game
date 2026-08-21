@@ -7,9 +7,11 @@ import { sound } from './utils/audio';
 
 import KpopVideoMode from './components/KpopVideoMode';
 import KpopGameMode from './components/KpopGameMode';
+import AdminSyncPage from './components/AdminSyncPage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('lessons');
+  const [autoPlayVideoId, setAutoPlayVideoId] = useState(null);
 
   // Gamification state
   const [xp, setXp] = useState(() => parseInt(localStorage.getItem('hangul_xp') || '0', 10));
@@ -86,6 +88,12 @@ export default function App() {
     setActiveTab('kpop');
   }, []);
 
+  // Jump to K-Pop Practice and auto-load a just-registered song from the Admin page
+  const handlePlayNow = useCallback((videoId) => {
+    setAutoPlayVideoId(videoId);
+    setActiveTab('kpop');
+  }, []);
+
   const handleAddXp = (amount) => {
     setXp(prev => prev + amount);
   };
@@ -100,6 +108,7 @@ export default function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        showAdminTab={import.meta.env.DEV}
       />
 
       {/* Main Tab Content */}
@@ -120,7 +129,13 @@ export default function App() {
             onClearLoopTarget={() => setLoopTarget(null)}
             onOpenReviewModal={() => setIsReviewModalOpen(true)}
             missedCount={missedSentences.length}
+            autoPlayVideoId={autoPlayVideoId}
+            onAutoPlayHandled={() => setAutoPlayVideoId(null)}
           />
+        )}
+
+        {activeTab === 'admin' && import.meta.env.DEV && (
+          <AdminSyncPage onPlayNow={handlePlayNow} />
         )}
 
         {activeTab === 'kpop-game' && (

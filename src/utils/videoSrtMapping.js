@@ -46,6 +46,17 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
     alternateUrls: [],
     description: "ILLIT - It's Me synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'babymonster_sugar_honey_ice_tea',
+    title: "SUGAR HONEY ICE TEA",
+    artist: 'BabyMonster',
+    srtFilename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    srtPath: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    youtubeIds: ['naoGk-Zjc1s'],
+    primaryUrl: 'https://www.youtube.com/watch?v=naoGk-Zjc1s',
+    alternateUrls: [],
+    description: "BabyMonster - SUGAR HONEY ICE TEA synchronized SRT subtitle lyrics"
   }
 ];
 
