@@ -3,7 +3,7 @@
 // entry here and register its challenge component in
 // components/gameModes/GameChallengeOverlay.jsx's CHALLENGE_COMPONENTS map.
 
-import { ListChecks, Shuffle } from 'lucide-react';
+import { ListChecks, Shuffle, Mic } from 'lucide-react';
 
 export const GAME_MODES = [
   {
@@ -21,6 +21,14 @@ export const GAME_MODES = [
     timeLimitSec: 20,
     xpReward: 30,
     description: 'Tap the scrambled words back into the correct order.'
+  },
+  {
+    id: 'sing',
+    label: 'Sing the Words!',
+    icon: Mic,
+    timeLimitSec: 15,
+    xpReward: 35,
+    description: 'Sing or pronounce the missing Korean words into your mic (70%+ match to pass).'
   }
 ];
 
@@ -130,9 +138,7 @@ function makeNearMissDistractor(correctTokens, wordBank, usedResults) {
 // Builds a shuffled set of Choice Mode options: the correct sentence plus
 // (count - 1) near-miss distractors — the same sentence with a couple of its
 // Korean words swapped out, so the player has to actually read the sentence
-// rather than pattern-match its overall shape against unrelated lines. Falls
-// back to scrambled word order if the vocabulary pool is too small (e.g. a
-// song with very few Korean lines) to produce enough distinct near-misses.
+// rather than pattern-match its overall shape against unrelated lines.
 export function pickChoiceOptions(correctText, pool = [], count = 3) {
   const correctTokens = tokenize(correctText);
   const wordBank = buildWordBank([correctText, ...pool]);
@@ -159,4 +165,54 @@ export function pickChoiceOptions(correctText, pool = [], count = 3) {
   }
 
   return shuffleArray([correctText, ...distractors]);
+}
+
+// Splits a line into tokens and identifies Hangul vs non-Hangul parts for Sing the Words mode
+export function maskHangulTokens(text) {
+  if (!text) return { tokens: [], hangulTarget: '', hasKorean: false };
+  const rawWords = text.trim().split(/\s+/);
+  const hangulWords = [];
+  const tokens = [];
+
+  rawWords.forEach((word, idx) => {
+    const isKorean = containsKorean(word);
+    if (isKorean) {
+      hangulWords.push(word);
+    }
+    tokens.push({
+      id: `${idx}-${word}`,
+      text: word,
+      isKorean
+    });
+  });
+
+  return {
+    tokens,
+    hangulTarget: hangulWords.join(' '),
+    hasKorean: hangulWords.length > 0
+  };
+}
+
+// Calculate Hangul character match percentage between target line and detected speech (Korean only)
+export function calculateHangulAccuracy(target, detected) {
+  if (!target || !detected) return 0;
+  const cleanTarget = target.replace(/[^\uAC00-\uD7A3]/g, '');
+  const cleanDetected = detected.replace(/[^\uAC00-\uD7A3]/g, '');
+  if (!cleanTarget || !cleanDetected) return 0;
+
+  let matches = 0;
+  const targetChars = cleanTarget.split('');
+  const detectedChars = cleanDetected.split('');
+
+  let tIdx = 0;
+  for (const dChar of detectedChars) {
+    const foundIdx = targetChars.indexOf(dChar, tIdx);
+    if (foundIdx !== -1) {
+      matches++;
+      tIdx = foundIdx + 1;
+    }
+  }
+
+  const score = Math.round((matches / Math.max(targetChars.length, 1)) * 100);
+  return Math.min(100, score);
 }

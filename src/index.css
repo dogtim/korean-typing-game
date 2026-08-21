@@ -2666,4 +2666,293 @@ body {
   }
 }
 
+/* ==========================================================================
+   SING THE WORDS! CHALLENGE MODE STYLING
+   ========================================================================== */
+
+.sing-words-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.sing-challenge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.passing-target-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+/* Masked sentence with blank Korean tokens */
+.masked-sentence-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  min-height: 64px;
+}
+
+.non-korean-word {
+  font-size: 17px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+}
+
+.korean-mask-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.korean-mask-chip.masked {
+  background: rgba(245, 158, 11, 0.15);
+  border: 2px dashed #f59e0b;
+  color: #fef08a;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+  animation: pulse-border 2s infinite ease-in-out;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: #f59e0b; }
+  50% { border-color: #fbbf24; box-shadow: 0 0 18px rgba(245, 158, 11, 0.5); }
+}
+
+.blank-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.blank-mic-icon {
+  color: #f59e0b;
+}
+
+.blank-dashes {
+  letter-spacing: 2px;
+  font-family: var(--font-mono);
+}
+
+.korean-mask-chip.revealed-correct {
+  background: rgba(34, 197, 94, 0.25);
+  border: 2px solid #22c55e;
+  color: #86efac;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+  transform: scale(1.05);
+}
+
+.chip-check-icon {
+  color: #22c55e;
+}
+
+/* Recording Status Box */
+.sing-recording-box {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.3s ease;
+}
+
+.sing-recording-box.passed {
+  border-color: #22c55e;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+}
+
+.sing-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mic-indicator-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mic-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mic-dot.live {
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: mic-pulse 1s infinite ease-in-out;
+}
+
+.mic-dot.idle {
+  background: #64748b;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+.mic-status-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.accuracy-live-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.acc-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.acc-val {
+  font-size: 13px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.acc-val.high {
+  color: #4ade80;
+}
+
+.acc-val.med {
+  color: #fbbf24;
+}
+
+.acc-val.low {
+  color: #94a3b8;
+}
+
+/* Transcript Display */
+.sing-transcript-display {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: white;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.sing-transcript-display.placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.sing-target-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.hint-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.hint-target {
+  color: #fef08a;
+  font-weight: 700;
+}
+
+.listen-target-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #d8b4fe;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.listen-target-btn:hover {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: #a855f7;
+}
+
+.sing-mic-error {
+  font-size: 11px;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.15);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Actions Row */
+.sing-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.sing-sub-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sing-sub-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: white;
+}
+
+.sing-sub-btn.skip-btn {
+  color: var(--text-muted);
+}
+
+
 

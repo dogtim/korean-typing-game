@@ -2,18 +2,20 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { getGameModeConfig } from '../../utils/gameModes';
 import ChoiceModeChallenge from './ChoiceModeChallenge';
 import WordOrderChallenge from './WordOrderChallenge';
+import SingTheWordsChallenge from './SingTheWordsChallenge';
 
 // Add new modes here — the id must match a GAME_MODES entry in utils/gameModes.js.
 // Every component in this map must accept { line, pool, onAnswer } and call
 // onAnswer(correct: boolean) exactly once.
 const CHALLENGE_COMPONENTS = {
   choice: ChoiceModeChallenge,
-  wordorder: WordOrderChallenge
+  wordorder: WordOrderChallenge,
+  sing: SingTheWordsChallenge
 };
 
 export default function GameChallengeOverlay({ mode, line, pool, onComplete }) {
   const modeConfig = getGameModeConfig(mode);
-  const timeLimitSec = modeConfig?.timeLimitSec || 10;
+  const timeLimitSec = modeConfig?.timeLimitSec || 15;
   const [timeLeft, setTimeLeft] = useState(timeLimitSec);
   const settledRef = useRef(false);
 

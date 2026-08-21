@@ -23,7 +23,8 @@ import {
   Target,
   Play,
   HelpCircle,
-  Zap
+  Zap,
+  Mic
 } from 'lucide-react';
 
 export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
@@ -492,6 +493,13 @@ export default function KpopGameMode({ onAddXp, onSwitchToPractice }) {
             title="Assemble scrambled words into the correct order"
           >
             <Shuffle size={15} /> Word Order Rebuild
+          </button>
+          <button
+            className={`game-nav-btn ${selectedGameMode === 'sing' ? 'active' : ''}`}
+            onClick={() => { setSelectedGameMode('sing'); resetToReady(); }}
+            title="Sing or pronounce missing Korean words into your mic (70%+ match to pass)"
+          >
+            <Mic size={15} /> Sing the Words!
           </button>
           <button
             className={`game-nav-btn ${selectedGameMode === 'mixed' ? 'active' : ''}`}
