@@ -82,6 +82,16 @@ export const KPOP_SONG_PRESETS = [
     srtFilename: 'BABYMONSTER-SHEESH.srt',
     srtPath: '/lyrics/BABYMONSTER-SHEESH.srt',
     lyrics: []
+  },
+  {
+    id: 'bMhDJ0S0OBA',
+    title: "It's Me",
+    artist: 'ILLIT (아일릿)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
+    thumbnail: 'https://img.youtube.com/vi/bMhDJ0S0OBA/hqdefault.jpg',
+    srtFilename: 'ILLIT-ITS-ME.srt',
+    srtPath: '/lyrics/ILLIT-ITS-ME.srt',
+    lyrics: []
   }
 ];
 

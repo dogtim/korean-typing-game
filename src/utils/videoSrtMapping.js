@@ -35,6 +35,17 @@ export const VIDEO_SRT_MAPPINGS = [
       'https://www.youtube.com/watch?v=0k5G6F0pWoc'
     ],
     description: 'BABYMONSTER - SHEESH synchronized SRT subtitle lyrics'
+  },
+  {
+    id: 'illit_its_me',
+    title: "It's Me",
+    artist: 'ILLIT (아일릿)',
+    srtFilename: 'ILLIT-ITS-ME.srt',
+    srtPath: '/lyrics/ILLIT-ITS-ME.srt',
+    youtubeIds: ['bMhDJ0S0OBA'],
+    primaryUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
+    alternateUrls: [],
+    description: "ILLIT - It's Me synchronized SRT subtitle lyrics"
   }
 ];
 

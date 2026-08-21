@@ -27,5 +27,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'BABYMONSTER-SHEESH.srt',
     path: '/lyrics/BABYMONSTER-SHEESH.srt',
     description: 'BABYMONSTER SHEESH full prepared SRT subtitle file.'
+  },
+  {
+    id: 'illit_its_me',
+    title: "It's Me",
+    artist: 'ILLIT (아일릿)',
+    youtubeId: 'bMhDJ0S0OBA',
+    filename: 'ILLIT-ITS-ME.srt',
+    path: '/lyrics/ILLIT-ITS-ME.srt',
+    description: "ILLIT It's Me full prepared SRT subtitle file."
   }
 ];
