@@ -22,6 +22,19 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
     alternateUrls: [],
     description: 'BABYMONSTER - DRIP synchronized SRT subtitle lyrics'
+  },
+  {
+    id: 'babymonster_sheesh',
+    title: 'SHEESH',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-SHEESH.srt',
+    srtPath: '/lyrics/BABYMONSTER-SHEESH.srt',
+    youtubeIds: ['2wA_b6YHjqQ', '0k5G6F0pWoc'],
+    primaryUrl: 'https://www.youtube.com/watch?v=2wA_b6YHjqQ',
+    alternateUrls: [
+      'https://www.youtube.com/watch?v=0k5G6F0pWoc'
+    ],
+    description: 'BABYMONSTER - SHEESH synchronized SRT subtitle lyrics'
   }
 ];
 

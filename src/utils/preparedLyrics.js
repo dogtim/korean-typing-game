@@ -18,5 +18,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'BABYMONSTER-DRIP.srt',
     path: '/lyrics/BABYMONSTER-DRIP.srt',
     description: 'BABYMONSTER DRIP full prepared SRT subtitle file.'
+  },
+  {
+    id: 'babymonster_sheesh',
+    title: 'SHEESH',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: '2wA_b6YHjqQ',
+    filename: 'BABYMONSTER-SHEESH.srt',
+    path: '/lyrics/BABYMONSTER-SHEESH.srt',
+    description: 'BABYMONSTER SHEESH full prepared SRT subtitle file.'
   }
 ];

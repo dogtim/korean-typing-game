@@ -72,6 +72,16 @@ export const KPOP_SONG_PRESETS = [
         en: "I'll be there don't hesitate"
       }
     ]
+  },
+  {
+    id: '2wA_b6YHjqQ',
+    title: 'SHEESH',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=2wA_b6YHjqQ',
+    thumbnail: 'https://img.youtube.com/vi/2wA_b6YHjqQ/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-SHEESH.srt',
+    srtPath: '/lyrics/BABYMONSTER-SHEESH.srt',
+    lyrics: []
   }
 ];
 
