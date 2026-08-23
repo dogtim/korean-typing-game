@@ -18,5 +18,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'BABYMONSTER-DRIP.srt',
     path: '/lyrics/BABYMONSTER-DRIP.srt',
     description: 'BABYMONSTER DRIP full prepared SRT subtitle file.'
+  },
+  {
+    id: 'babymonster_psycho',
+    title: 'PSYCHO',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'yd_uG3TtREs',
+    filename: 'BABYMONSTER-PSYCHO.srt',
+    path: '/lyrics/BABYMONSTER-PSYCHO.srt',
+    description: 'BABYMONSTER PSYCHO synchronized SRT subtitle file.'
   }
 ];

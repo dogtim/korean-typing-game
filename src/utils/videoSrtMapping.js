@@ -22,6 +22,17 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
     alternateUrls: [],
     description: 'BABYMONSTER - DRIP synchronized SRT subtitle lyrics'
+  },
+  {
+    id: 'babymonster_psycho',
+    title: 'PSYCHO',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-PSYCHO.srt',
+    srtPath: '/lyrics/BABYMONSTER-PSYCHO.srt',
+    youtubeIds: ['yd_uG3TtREs'],
+    primaryUrl: 'https://www.youtube.com/watch?v=yd_uG3TtREs',
+    alternateUrls: [],
+    description: 'BABYMONSTER - PSYCHO synchronized SRT subtitle lyrics'
   }
 ];
 
