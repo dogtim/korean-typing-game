@@ -45,5 +45,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
     path: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
     description: "BabyMonster SUGAR HONEY ICE TEA full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_psycho',
+    title: 'PSYCHO',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'yd_uG3TtREs',
+    filename: 'BABYMONSTER-PSYCHO.srt',
+    path: '/lyrics/BABYMONSTER-PSYCHO.srt',
+    description: 'BABYMONSTER PSYCHO synchronized SRT subtitle file.'
   }
 ];

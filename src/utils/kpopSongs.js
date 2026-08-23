@@ -102,6 +102,52 @@ export const KPOP_SONG_PRESETS = [
     srtFilename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
     srtPath: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
     lyrics: []
+  },
+  {
+    id: 'yd_uG3TtREs',
+    title: 'PSYCHO',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=yd_uG3TtREs',
+    thumbnail: 'https://img.youtube.com/vi/yd_uG3TtREs/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-PSYCHO.srt',
+    srtPath: '/lyrics/BABYMONSTER-PSYCHO.srt',
+    lyrics: [
+      {
+        start: 9,
+        end: 11,
+        ko: "너는 너무 말이 많아",
+        rom: "neo-neun neo-mu mal-i man-a",
+        en: "You talk too much"
+      },
+      {
+        start: 12,
+        end: 15,
+        ko: "빈 수레가 요란할 뿐",
+        rom: "bin su-re-ga yo-ran-hal ppun",
+        en: "An empty cart only makes noise"
+      },
+      {
+        start: 20,
+        end: 22,
+        ko: "난 치타처럼 달려 나가",
+        rom: "nan chi-ta-cheo-reom dal-ryeo na-ga",
+        en: "I run out like a cheetah"
+      },
+      {
+        start: 23,
+        end: 25,
+        ko: "독수리처럼 날아올라",
+        rom: "dok-su-ri-cheo-reom nal-a-ol-ra",
+        en: "Fly up like an eagle"
+      },
+      {
+        start: 48,
+        end: 53,
+        ko: "우린 모두 Psycho",
+        rom: "u-rin mo-du Psycho",
+        en: "We are all Psycho"
+      }
+    ]
   }
 ];
 
