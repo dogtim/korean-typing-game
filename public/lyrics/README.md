@@ -6,7 +6,7 @@ Welcome to the **SRT Lyrics Directory**! You can save prepared `.srt` subtitle f
 
 ## 📁 Folder Structure
 
-Place your `.srt` subtitle files in this directory (`public/lyrics/` or `lyrics/`).
+Place your `.srt` subtitle files in this directory (`public/lyrics/`).
 Any file saved here can be loaded in the app or parsed using standard SRT subtitle syntax.
 
 ---

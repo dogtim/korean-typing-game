@@ -64,7 +64,7 @@ A built-in Node.js CLI tool suite and developer UI for fetching, calibrating, sh
 - **Browser Admin Page**: Test YouTube video embeds and auto-load custom `.srt` files directly in development mode (`npm run dev`).
 - **CLI Commands (`npm run tool -- <command>`)**:
   - `align`: Auto-align YouTube audio and caption streams into `.srt`.
-  - `shift`: Shift timestamps forward (`+seconds`) or backward (`-seconds`) in place across both `public/lyrics/` and `lyrics/`.
+  - `shift`: Shift timestamps forward (`+seconds`) or backward (`-seconds`) in place in `public/lyrics/`.
   - `sync`: Calculate intro delay offsets between YouTube playback and SRT start times.
   - `convert`: Convert raw `.lrc` lyric files into timestamped `.srt` format.
   - `register`: 1-command registration that updates video mappings, lyric loaders, and song presets.
@@ -137,8 +137,7 @@ npm run tool -- validate --file public/lyrics/SONG.srt
 ```
 korean-typing-game/
 ├── public/
-│   └── lyrics/                 # Static SRT subtitle files served for video playback
-├── lyrics/                     # Subtitle source files and mapping documentation
+│   └── lyrics/                 # Static SRT subtitle files served for video playback & mapping docs
 ├── src/
 │   ├── components/
 │   │   ├── gameModes/          # Mini-game challenge components

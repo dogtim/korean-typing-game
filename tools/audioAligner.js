@@ -86,15 +86,12 @@ export async function syncVideoLyrics({
     }
   }
 
-  // Save to target destination
+  // Save to target destination (public/lyrics)
   const targetPublic = path.join(rootDir, 'public', 'lyrics', outputFilename);
-  const targetLyrics = path.join(rootDir, 'lyrics', outputFilename);
-
-  fs.writeFileSync(targetPublic, finalSrtContent, 'utf-8');
-  if (!fs.existsSync(path.dirname(targetLyrics))) {
-    fs.mkdirSync(path.dirname(targetLyrics), { recursive: true });
+  if (!fs.existsSync(path.dirname(targetPublic))) {
+    fs.mkdirSync(path.dirname(targetPublic), { recursive: true });
   }
-  fs.writeFileSync(targetLyrics, finalSrtContent, 'utf-8');
+  fs.writeFileSync(targetPublic, finalSrtContent, 'utf-8');
 
   console.log(`💾 Synced SRT saved to: ${targetPublic}`);
   return {

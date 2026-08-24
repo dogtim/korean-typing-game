@@ -26,7 +26,7 @@ node tools/cli.js align --video bMhDJ0S0OBA --output ILLIT-ITS-ME.srt
 ---
 
 ### 2. Shift SRT Timestamps (`shift`)
-Shifts all timestamps forward (`+seconds`) or backward (`-seconds`) in place and syncs to both `public/lyrics/` and `lyrics/`.
+Shifts all timestamps forward (`+seconds`) or backward (`-seconds`) in place in `public/lyrics/`.
 
 ```bash
 # Shift forward by 4.5 seconds

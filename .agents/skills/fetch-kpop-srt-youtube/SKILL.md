@@ -70,9 +70,8 @@ This skill defines the standardized automated SOP for fetching authentic Korean 
    - Millisecond-accurate timestamps (`00:00:04,500 --> 00:00:08,200`).
    - Incrementing line numbers (`1, 2, 3...`).
    - Over 70% of lines contain Korean Hangul syllables (`/[가-힣]/`).
-3. Save the formatted `.srt` file to both:
+3. Save the formatted `.srt` file to:
    - `public/lyrics/<ARTIST>-<SONG>.srt`
-   - `lyrics/<ARTIST>-<SONG>.srt`
 
 ---
 

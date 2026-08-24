@@ -61,7 +61,7 @@ Commands:
              Options:
                --file <path>         Path to SRT file (e.g. public/lyrics/SONG.srt)
                --offset <seconds>    Time in seconds to shift (e.g. +4.5 or -2.0)
-               --output <path>       (Optional) Output path. If omitted, overwrites in place & syncs lyrics/
+               --output <path>       (Optional) Output path. If omitted, overwrites in place
 
   sync       Align SRT to a YouTube video's first vocal timestamp
              Options:
@@ -108,17 +108,10 @@ function resolveFilePath(relOrAbs) {
   return path.resolve(rootDir, relOrAbs);
 }
 
-function syncToLyricsFolder(targetPath, content) {
+function saveSrtFile(targetPath, content) {
+  const dir = path.dirname(targetPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(targetPath, content, 'utf-8');
-  
-  // If written to public/lyrics, also update root lyrics/ directory for backup
-  if (targetPath.includes('public/lyrics/')) {
-    const filename = path.basename(targetPath);
-    const backupDir = path.join(rootDir, 'lyrics');
-    if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
-    const backupPath = path.join(backupDir, filename);
-    fs.writeFileSync(backupPath, content, 'utf-8');
-  }
 }
 
 async function main() {
@@ -149,7 +142,7 @@ async function main() {
         const shifted = shiftSRT(raw, offset);
         const outPath = options.output ? resolveFilePath(options.output) : filePath;
 
-        syncToLyricsFolder(outPath, shifted);
+        saveSrtFile(outPath, shifted);
         console.log(`✅ Successfully shifted ${path.basename(filePath)} by ${offset >= 0 ? `+${offset}` : offset}s!`);
         console.log(`💾 Saved to: ${outPath}`);
         break;
@@ -174,7 +167,7 @@ async function main() {
         const { offset, content } = alignAnchor(raw, srtStart, videoStart);
         const outPath = options.output ? resolveFilePath(options.output) : srtPath;
 
-        syncToLyricsFolder(outPath, content);
+        saveSrtFile(outPath, content);
         console.log(`✅ Aligned anchor (${srtStart} ➔ ${videoStart}, offset: ${offset >= 0 ? `+${offset}` : offset}s)`);
         console.log(`💾 Saved to: ${outPath}`);
         break;
@@ -202,7 +195,7 @@ async function main() {
           srtContent = shiftSRT(srtContent, offset);
         }
 
-        syncToLyricsFolder(outputPath, srtContent);
+        saveSrtFile(outputPath, srtContent);
         console.log(`✅ Successfully converted ${path.basename(inputPath)} to SRT!`);
         console.log(`💾 Saved to: ${outputPath}`);
         break;
