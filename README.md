@@ -69,6 +69,7 @@ A built-in Node.js CLI tool suite and developer UI for fetching, calibrating, sh
   - `convert`: Convert raw `.lrc` lyric files into timestamped `.srt` format.
   - `register`: 1-command registration that updates video mappings, lyric loaders, and song presets.
   - `validate`: Validate sequential timestamp integrity, detect overlaps, and check token statistics.
+  - `frame`: Extract high-resolution frames from YouTube videos at exact timestamps with custom intervals.
 
 ---
 
@@ -128,6 +129,9 @@ npm run tool -- register --video <YOUTUBE_ID> --srt SONG.srt --title "Song Title
 
 # 5. Validate SRT formatting and timestamp sequence
 npm run tool -- validate --file public/lyrics/SONG.srt
+
+# 6. Extract high-res frames at timestamps (e.g. 3 frames starting at 10s with 0.25s interval)
+npm run tool -- frame --video choom --start 10 --count 3 --duration 0.25
 ```
 
 ---

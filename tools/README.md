@@ -80,3 +80,19 @@ Inspects sequential timestamp correctness, overlap errors, total track duration,
 ```bash
 node tools/cli.js validate --file public/lyrics/ILLIT-ITS-ME.srt
 ```
+
+---
+
+### 6. Extract High-Res Video Frames (`frame`)
+Extracts one or multiple video frames at exact timestamps with custom intervals from YouTube videos (using ID, URL, or song preset name) or local video files.
+
+```bash
+# Extract 3 frames starting at 10 seconds with 0.25s interval (10.0s, 10.25s, 10.5s)
+npm run tool -- frame --video choom --start 10 --count 3 --duration 0.25
+
+# Extract a single frame at timestamp 00:45.2
+npm run tool -- frame --video x3eqqoZPV_E --start 00:45.2
+
+# Custom output directory and image format
+npm run tool -- frame --video "https://www.youtube.com/watch?v=bMhDJ0S0OBA" --start 12.5 --count 5 --duration 0.5 --output output/my_frames --format png
+```

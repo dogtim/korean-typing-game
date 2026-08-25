@@ -83,6 +83,16 @@ Commands:
                --artist <artist>     Artist Name (e.g. "ILLIT (아일릿)")
                --id <unique_id>      (Optional) Custom song ID
 
+  frame      Extract video frames at specified timestamp(s) from YouTube or local video
+             Options:
+               --video <id/url/song> Video source (e.g. "choom", "x3eqqoZPV_E", or YouTube URL)
+               --start <seconds/time> Starting timestamp (e.g. 10 or 00:10.500)
+               --count <number>      (Optional) Number of frames to extract (default: 1)
+               --duration <seconds>  (Optional) Time interval between frames (default: 0.25s)
+               --output <dir>        (Optional) Output directory (default: output/frames)
+               --format <fmt>        (Optional) Image format: jpg, png, webp (default: jpg)
+               --resolution <res>    (Optional) Resolution: 1080p, 720p, best (default: 1080p)
+
   align      Download & extract audio/captions directly from YouTube video and align to lyrics
              Options:
                --video <id>          YouTube Video ID or URL
@@ -94,6 +104,8 @@ Commands:
                --file <path>         Path to SRT file
 
 Examples:
+  node tools/cli.js frame --video choom --start 10 --count 3 --duration 0.25
+  node tools/cli.js frame --video x3eqqoZPV_E --start 00:10 --count 3 --duration 0.25
   node tools/cli.js align --video bMhDJ0S0OBA --output ILLIT-ITS-ME.srt
   node tools/cli.js shift --file public/lyrics/ILLIT-ITS-ME.srt --offset +4.0
   node tools/cli.js sync --srt public/lyrics/SONG.srt --video-start 00:05.2 --srt-start 00:01.2
@@ -276,6 +288,44 @@ async function main() {
           videoId,
           lyricsText,
           outputFilename: cleanFilename
+        });
+        break;
+      }
+
+      case 'frame':
+      case 'extract-frame':
+      case 'extract-frames': {
+        const video = options.video || options.v || options.input || options.i;
+        const start = options.start ?? options.s ?? options.time ?? options.t ?? 0;
+        const count = options.count ?? options.c ?? options.n ?? 1;
+        const duration = options.duration ?? options.d ?? options.interval ?? options.step ?? 0.25;
+        const outputDir = options.output ?? options.o ?? options['output-dir'] ?? options.dir;
+        const format = options.format ?? options.fmt ?? 'jpg';
+        const resolution = options.resolution ?? options.r ?? '1080p';
+        const quality = options.quality ?? options.q ?? 2;
+        const prefix = options.prefix ?? options.name;
+
+        if (!video) {
+          console.error('❌ Error: --video <id/url/song> is required. (e.g. --video choom or --video x3eqqoZPV_E)');
+          process.exit(1);
+        }
+
+        const { extractVideoFrames } = await import('./frameExtractor.js');
+        const result = await extractVideoFrames({
+          video,
+          start,
+          count,
+          duration,
+          outputDir,
+          format,
+          resolution,
+          quality,
+          prefix
+        });
+
+        console.log('\n📦 Summary of Extracted Frames:');
+        result.frames.forEach(f => {
+          console.log(`   [#${f.index}] ${f.timeString} (${f.timestamp.toFixed(3)}s) ➔ ${f.outputPath} (${(f.sizeBytes / 1024).toFixed(1)} KB)`);
         });
         break;
       }
