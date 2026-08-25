@@ -64,16 +64,50 @@ function adminSyncApiPlugin() {
 
             const cleanFilename = srtFilename.endsWith('.srt') ? srtFilename : `${srtFilename}.srt`
             const publicDir = path.join(rootDir, 'public', 'lyrics')
-            const backupDir = path.join(rootDir, 'lyrics')
             fs.mkdirSync(publicDir, { recursive: true })
-            fs.mkdirSync(backupDir, { recursive: true })
             fs.writeFileSync(path.join(publicDir, cleanFilename), srtContent, 'utf-8')
-            fs.writeFileSync(path.join(backupDir, cleanFilename), srtContent, 'utf-8')
 
             const songId = id || `${artist}_${title}`.toLowerCase().replace(/[^a-z0-9_]+/g, '_')
             const { registerSong } = await import('./tools/autoRegister.js')
             const result = registerSong({ id: songId, title, artist, srtFilename: cleanFilename, youtubeIds })
             return sendJson(res, 200, result)
+          }
+
+          if (req.url === '/api/admin/extract-frames') {
+            const { video, start, count, duration, format, resolution, quality } = body
+            if (!video) {
+              return sendJson(res, 400, { error: 'video (URL, Video ID, or Song Name) is required.' })
+            }
+            const { extractVideoFrames } = await import('./tools/frameExtractor.js')
+            const result = await extractVideoFrames({
+              video,
+              start: start ?? 0,
+              count: count ?? 1,
+              duration: duration ?? 0.25,
+              format: format || 'jpg',
+              resolution: resolution || '1080p',
+              quality: quality || 2,
+              outputDir: path.join(rootDir, 'output', 'frames')
+            })
+
+            // Attach base64 data URLs for instant rendering in the browser
+            const framesWithData = result.frames.map(f => {
+              let dataUrl = null
+              try {
+                const buffer = fs.readFileSync(f.outputPath)
+                const mime = f.filename.endsWith('.png') ? 'image/png' : f.filename.endsWith('.webp') ? 'image/webp' : 'image/jpeg'
+                dataUrl = `data:${mime};base64,${buffer.toString('base64')}`
+              } catch (_e) {}
+              return {
+                ...f,
+                dataUrl
+              }
+            })
+
+            return sendJson(res, 200, {
+              ...result,
+              frames: framesWithData
+            })
           }
 
           return sendJson(res, 404, { error: `Unknown admin endpoint: ${req.url}` })
