@@ -178,12 +178,12 @@ export async function extractVideoFrames({
 
     console.log(`📥 Downloading video slice [${minSec.toFixed(2)}s - ${maxSec.toFixed(2)}s] via yt-dlp...`);
 
-    // Resolution format selector
-    let formatSelector = 'bestvideo[height<=1080]+bestaudio/best[height<=1080]/best';
+    // Video-only format selector prioritizing direct HTTP DASH formats over HLS playlists
+    let formatSelector = 'bestvideo[protocol^=http][height<=1080]/bestvideo[height<=1080][ext=mp4]/bestvideo[height<=1080]/137/bestvideo';
     if (resolution === '720p') {
-      formatSelector = 'bestvideo[height<=720]+bestaudio/best[height<=720]/best';
+      formatSelector = 'bestvideo[protocol^=http][height<=720]/bestvideo[height<=720][ext=mp4]/bestvideo[height<=720]/136/bestvideo';
     } else if (resolution === 'best' || resolution === '4k' || resolution === '2160p') {
-      formatSelector = 'bestvideo+bestaudio/best';
+      formatSelector = 'bestvideo[protocol^=http]/bestvideo[ext=mp4]/bestvideo/best';
     }
 
     const downloadCmd = `yt-dlp --no-warnings --download-sections "*${minSec.toFixed(3)}-${maxSec.toFixed(3)}" --force-keyframes-at-cuts -f "${formatSelector}" -o "${tempVideoPrefix}.%(ext)s" "${videoSource.url}"`;
@@ -192,12 +192,12 @@ export async function extractVideoFrames({
       execSync(downloadCmd, { stdio: 'pipe' });
     } catch (_err) {
       console.warn('⚠️ Standard slice download failed, retrying with fallback stream...');
-      const fallbackCmd = `yt-dlp --no-warnings --download-sections "*${minSec.toFixed(3)}-${maxSec.toFixed(3)}" -f "best" -o "${tempVideoPrefix}.%(ext)s" "${videoSource.url}"`;
+      const fallbackCmd = `yt-dlp --no-warnings --download-sections "*${minSec.toFixed(3)}-${maxSec.toFixed(3)}" -f "bestvideo/best" -o "${tempVideoPrefix}.%(ext)s" "${videoSource.url}"`;
       execSync(fallbackCmd, { stdio: 'pipe' });
     }
 
     // Locate the downloaded slice file
-    const matchedFiles = fs.readdirSync(tempDir).filter(f => f.startsWith(path.basename(tempVideoPrefix)));
+    const matchedFiles = fs.readdirSync(tempDir).filter(f => f.startsWith(path.basename(tempVideoPrefix)) && !f.endsWith('.part'));
     if (!matchedFiles || matchedFiles.length === 0) {
       throw new Error(`Failed to download video slice for ${videoSource.url}`);
     }
@@ -218,8 +218,8 @@ export async function extractVideoFrames({
 
       console.log(`📸 [${i + 1}/${frameCount}] Extracting frame at ${targetSec.toFixed(3)}s ➔ ${filename}`);
 
-      // ffmpeg frame extraction with high visual quality
-      const ffmpegCmd = `ffmpeg -y -ss ${offsetInSlice.toFixed(3)} -i "${videoFilePath}" -frames:v 1 -q:v ${quality} "${outputPath}"`;
+      // ffmpeg frame extraction with robust demuxer analysis and high visual quality
+      const ffmpegCmd = `ffmpeg -y -analyzeduration 50M -probesize 50M -ss ${offsetInSlice.toFixed(3)} -i "${videoFilePath}" -frames:v 1 -q:v ${quality} "${outputPath}"`;
       execSync(ffmpegCmd, { stdio: 'pipe' });
 
       if (fs.existsSync(outputPath)) {
