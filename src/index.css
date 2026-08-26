@@ -1727,6 +1727,186 @@ body {
   box-shadow: 0 0 14px rgba(139, 92, 246, 0.3);
 }
 
+/* Multi-Line Range Selection Styles */
+.lyric-row-item.in-loop-range {
+  background: rgba(124, 58, 237, 0.12);
+  border-left: 3px solid #a855f7;
+  border-color: rgba(168, 85, 247, 0.3);
+  margin-bottom: 2px;
+  border-radius: 4px;
+}
+
+.lyric-row-item.in-loop-range:hover {
+  background: rgba(124, 58, 237, 0.2);
+}
+
+.lyric-row-item.in-loop-range.range-start {
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  border-top: 1px solid rgba(168, 85, 247, 0.5);
+}
+
+.lyric-row-item.in-loop-range.range-end {
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.5);
+  margin-bottom: 8px;
+}
+
+.lyric-row-item.in-loop-range.active-line {
+  background: rgba(139, 92, 246, 0.3);
+  border-left: 4px solid #c084fc;
+  border-color: #a855f7;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+}
+
+.lyric-ko-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.range-badge-pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.range-badge-pill.start {
+  background: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+.range-badge-pill.end {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fde047;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
+
+.lyrics-header-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.lyrics-header-hint kbd {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-family: inherit;
+  color: #e2e8f0;
+}
+
+/* Multi-Line Range Loop Banner */
+.multi-range-loop-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22), rgba(30, 27, 75, 0.4));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.2s ease;
+}
+
+.range-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.range-loop-icon {
+  color: #c084fc;
+  flex-shrink: 0;
+}
+
+.range-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.range-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.range-count-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  background: rgba(168, 85, 247, 0.35);
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  color: #e9d5ff;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.range-details {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.range-banner-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.range-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.range-btn.replay {
+  background: rgba(168, 85, 247, 0.25);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #e9d5ff;
+}
+
+.range-btn.replay:hover {
+  background: rgba(168, 85, 247, 0.45);
+  color: white;
+  border-color: #c084fc;
+}
+
+.range-btn.clear {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+}
+
+.range-btn.clear:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
 .time-badge-container {
   display: flex;
   flex-direction: column;

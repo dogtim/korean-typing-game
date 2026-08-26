@@ -12,6 +12,8 @@ import {
   BookOpen,
   Type,
   Repeat,
+  RotateCcw,
+  X,
   Edit3,
   Clock,
   Check,
@@ -60,6 +62,10 @@ export default function KpopVideoMode({
   const [practiceMode, setPracticeMode] = useState(false);
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+
+  // Multi-line selection and consecutive range loop state
+  const [selectedRange, setSelectedRange] = useState(null); // [startIdx, endIdx] or null
+  const [anchorLineIdx, setAnchorLineIdx] = useState(0);
 
   // Typing practice state
   const [_typedKeys, setTypedKeys] = useState('');
@@ -417,7 +423,7 @@ export default function KpopVideoMode({
     applyLoopTarget();
   }, [loopTarget, activeVideoId, handleLoadPreparedSrt, song.lyrics]);
 
-  // Sync lyrics time ticker & sentence loop option
+  // Sync lyrics time ticker & sentence/range loop option
   useEffect(() => {
     let interval = null;
     if (isPlaying) {
@@ -427,14 +433,38 @@ export default function KpopVideoMode({
           setCurrentTime(time);
 
           if (isLineLoopEnabled) {
-            const currentLine = song.lyrics[activeLineIdx];
-            if (currentLine && typeof currentLine.start === 'number' && typeof currentLine.end === 'number') {
-              // If video reaches or exceeds line end (or jumps outside line range), loop back to start timestamp
-              if (time >= currentLine.end || time < currentLine.start - 0.5) {
-                playerRef.current.seekTo(currentLine.start, true);
+            const isMulti = selectedRange && selectedRange[0] < selectedRange[1];
+            const rangeStartIdx = isMulti ? selectedRange[0] : activeLineIdx;
+            const rangeEndIdx = isMulti ? selectedRange[1] : activeLineIdx;
+
+            const startLine = song.lyrics[rangeStartIdx];
+            const endLine = song.lyrics[rangeEndIdx];
+
+            if (startLine && endLine && typeof startLine.start === 'number') {
+              const loopStart = startLine.start;
+              const loopEnd = (typeof endLine.end === 'number' && endLine.end > loopStart)
+                ? endLine.end
+                : (endLine.start + 3);
+
+              // If video reaches or exceeds loop range end (or jumps outside range), loop back to start
+              if (time >= loopEnd || time < loopStart - 0.5) {
+                playerRef.current.seekTo(loopStart, true);
+                setActiveLineIdx(rangeStartIdx);
                 setTypedKeys('');
                 setTypedText('');
                 return;
+              }
+
+              // Follow progression of lines within the selected multi-line range
+              if (isMulti) {
+                const matchedIdx = song.lyrics.findIndex((line, lIdx) =>
+                  lIdx >= rangeStartIdx && lIdx <= rangeEndIdx && time >= line.start && time < (line.end || line.start + 3)
+                );
+                if (matchedIdx !== -1 && matchedIdx !== activeLineIdx) {
+                  setActiveLineIdx(matchedIdx);
+                  setTypedKeys('');
+                  setTypedText('');
+                }
               }
             }
           } else {
@@ -449,7 +479,7 @@ export default function KpopVideoMode({
       }, 200);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, song.lyrics, activeLineIdx, isLineLoopEnabled]);
+  }, [isPlaying, song.lyrics, activeLineIdx, isLineLoopEnabled, selectedRange]);
 
   // Load YouTube IFrame API
   useEffect(() => {
@@ -710,15 +740,21 @@ export default function KpopVideoMode({
                 const nextLoopState = !isLineLoopEnabled;
                 setIsLineLoopEnabled(nextLoopState);
                 if (nextLoopState) {
-                  const currentLine = song.lyrics[activeLineIdx];
+                  const targetStartIdx = isMultiSelected ? selectedRange[0] : activeLineIdx;
+                  const currentLine = song.lyrics[targetStartIdx];
                   if (currentLine && typeof currentLine.start === 'number') {
                     seekToTime(currentLine.start);
+                    setActiveLineIdx(targetStartIdx);
                   }
                 }
               }}
-              title="Repeat the selected lyric sentence segment forever"
+              title={isMultiSelected
+                ? `Repeat selected ${rangeCount}-line loop range forever`
+                : "Repeat the selected lyric sentence segment forever"}
             >
-              <Repeat size={18} /> {isLineLoopEnabled ? 'Loop Sentence ON' : 'Loop Sentence'}
+              <Repeat size={18} /> {isLineLoopEnabled
+                ? (isMultiSelected ? `Loop Range ON (${rangeCount} lines)` : 'Loop Sentence ON')
+                : (isMultiSelected ? `Loop Range (${rangeCount} lines)` : 'Loop Sentence')}
             </button>
 
             <button
@@ -800,7 +836,12 @@ export default function KpopVideoMode({
           <div className="panel-header">
             <div className="panel-header-left">
               <BookOpen size={18} className="purple-icon" />
-              <h3>Synced Lyrics ({song.title})</h3>
+              <div>
+                <h3>Synced Lyrics ({song.title})</h3>
+                <span className="lyrics-header-hint">
+                  💡 <kbd>Shift</kbd> + <kbd>Click</kbd> to select &amp; loop multiple consecutive lines
+                </span>
+              </div>
             </div>
             <div className="header-actions">
               <button
@@ -813,19 +854,90 @@ export default function KpopVideoMode({
             </div>
           </div>
 
+          {/* Multi-Line Range Loop Banner */}
+          {isMultiSelected && (
+            <div className="multi-range-loop-banner glassmorphism">
+              <div className="range-banner-info">
+                <Repeat size={16} className={`range-loop-icon ${isLineLoopEnabled ? 'rotating' : ''}`} />
+                <div className="range-banner-text">
+                  <div className="range-title">
+                    {isLineLoopEnabled ? '🔁 Multi-Line Loop Active' : '⏸️ Multi-Line Range Selected'}
+                    <span className="range-count-tag">{rangeCount} lines</span>
+                  </div>
+                  <div className="range-details">
+                    Lines <strong>#{selectedRange[0] + 1}</strong> ~ <strong>#{selectedRange[1] + 1}</strong> ({formatTimeMinutesSeconds(song.lyrics[selectedRange[0]]?.start)} ~ {formatTimeMinutesSeconds(song.lyrics[selectedRange[1]]?.end || song.lyrics[selectedRange[1]]?.start + 3)})
+                  </div>
+                </div>
+              </div>
+              <div className="range-banner-buttons">
+                <button
+                  type="button"
+                  className="range-btn replay"
+                  onClick={() => {
+                    const startLine = song.lyrics[selectedRange[0]];
+                    if (startLine && typeof startLine.start === 'number') {
+                      seekToTime(startLine.start);
+                      setActiveLineIdx(selectedRange[0]);
+                    }
+                    if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+                      playerRef.current.playVideo();
+                    }
+                  }}
+                  title="Replay from start of the selected loop range"
+                >
+                  <RotateCcw size={12} /> Replay
+                </button>
+                <button
+                  type="button"
+                  className="range-btn clear"
+                  onClick={() => {
+                    setSelectedRange([activeLineIdx, activeLineIdx]);
+                  }}
+                  title="Clear multi-line selection"
+                >
+                  <X size={12} /> Clear Range
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="lyrics-scroll-list" ref={lyricsContainerRef}>
             {song.lyrics.map((line, idx) => {
               const isActive = idx === activeLineIdx;
               const isEditingThisTime = editingLineIdx === idx;
+              const isInRange = isMultiSelected && idx >= selectedRange[0] && idx <= selectedRange[1];
+              const isRangeStart = isMultiSelected && idx === selectedRange[0];
+              const isRangeEnd = isMultiSelected && idx === selectedRange[1];
+
               return (
                 <div
                   key={idx}
                   ref={isActive ? activeRowRef : null}
-                  className={`lyric-row-item ${isActive ? 'active-line' : ''}`}
-                  onClick={() => {
-                    setActiveLineIdx(idx);
-                    seekToTime(line.start);
+                  className={`lyric-row-item ${isActive ? 'active-line' : ''} ${isInRange ? 'in-loop-range' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''}`}
+                  onClick={(e) => {
+                    if (e.shiftKey) {
+                      // Multi-line selection with Shift + Click
+                      const anchor = (typeof anchorLineIdx === 'number' && anchorLineIdx >= 0) ? anchorLineIdx : activeLineIdx;
+                      const start = Math.min(anchor, idx);
+                      const end = Math.max(anchor, idx);
+                      setSelectedRange([start, end]);
+                      setIsLineLoopEnabled(true); // Automatically loop the selected range
+                      setActiveLineIdx(start);
+                      if (song.lyrics[start] && typeof song.lyrics[start].start === 'number') {
+                        seekToTime(song.lyrics[start].start);
+                      }
+                      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+                        playerRef.current.playVideo();
+                      }
+                    } else {
+                      // Single line click
+                      setAnchorLineIdx(idx);
+                      setSelectedRange([idx, idx]);
+                      setActiveLineIdx(idx);
+                      seekToTime(line.start);
+                    }
                   }}
+                  title="Click to play · Shift + Click to select multiple consecutive lyrics to loop"
                 >
                   <div className="time-badge-container" onClick={(e) => e.stopPropagation()}>
                     {isEditingThisTime ? (
@@ -881,7 +993,11 @@ export default function KpopVideoMode({
                   </div>
 
                   <div className="lyric-content">
-                    <div className="lyric-ko">{line.ko}</div>
+                    <div className="lyric-ko-row">
+                      <div className="lyric-ko">{line.ko}</div>
+                      {isRangeStart && <span className="range-badge-pill start">🔁 Loop Start</span>}
+                      {isRangeEnd && <span className="range-badge-pill end">🔁 Loop End</span>}
+                    </div>
                     {line.en && <div className="lyric-en">{line.en}</div>}
                   </div>
                 </div>
