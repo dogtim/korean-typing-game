@@ -66,6 +66,8 @@ export default function KpopVideoMode({
   // Multi-line selection and consecutive range loop state
   const [selectedRange, setSelectedRange] = useState(null); // [startIdx, endIdx] or null
   const [anchorLineIdx, setAnchorLineIdx] = useState(0);
+  const isMultiSelected = selectedRange && selectedRange[0] < selectedRange[1];
+  const rangeCount = isMultiSelected ? (selectedRange[1] - selectedRange[0] + 1) : 1;
 
   // Typing practice state
   const [_typedKeys, setTypedKeys] = useState('');
