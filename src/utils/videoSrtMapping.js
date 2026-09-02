@@ -68,6 +68,17 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=yd_uG3TtREs',
     alternateUrls: [],
     description: 'BABYMONSTER - PSYCHO synchronized SRT subtitle lyrics'
+  },
+  {
+    id: 'illit_magnetic',
+    title: "Magnetic",
+    artist: 'ILLIT (아일릿)',
+    srtFilename: 'ILLIT-MAGNETIC.srt',
+    srtPath: '/lyrics/ILLIT-MAGNETIC.srt',
+    youtubeIds: ['Vk5-c_v4gMU'],
+    primaryUrl: 'https://www.youtube.com/watch?v=Vk5-c_v4gMU',
+    alternateUrls: [],
+    description: "ILLIT (아일릿) - Magnetic synchronized SRT subtitle lyrics"
   }
 ];
 

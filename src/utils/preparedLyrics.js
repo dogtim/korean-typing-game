@@ -54,5 +54,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'BABYMONSTER-PSYCHO.srt',
     path: '/lyrics/BABYMONSTER-PSYCHO.srt',
     description: 'BABYMONSTER PSYCHO synchronized SRT subtitle file.'
+  },
+  {
+    id: 'illit_magnetic',
+    title: "Magnetic",
+    artist: 'ILLIT (아일릿)',
+    youtubeId: 'Vk5-c_v4gMU',
+    filename: 'ILLIT-MAGNETIC.srt',
+    path: '/lyrics/ILLIT-MAGNETIC.srt',
+    description: "ILLIT (아일릿) Magnetic full prepared SRT subtitle file."
   }
 ];

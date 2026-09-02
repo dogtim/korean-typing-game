@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import { shiftSRT, alignAnchor, validateSRT } from './srtEngine.js';
 import { convertLrcToSrtString } from './lrcConverter.js';
 import { registerSong } from './autoRegister.js';
+import { fetchSongPipeline } from './songFetcher.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +58,14 @@ Usage:
   node tools/cli.js <command> [options]
 
 Commands:
+  fetch      Find YouTube video, retrieve/generate synchronized SRT, and optionally register
+             Options:
+               --song <query>        Song name and/or artist (e.g. "ILLIT Magnetic" or "aespa Supernova")
+               --artist <artist>     (Optional) Artist name override
+               --title <title>       (Optional) Song title override
+               --register            (Optional) Automatically register into game registries
+               --video <id>          (Optional) Specific YouTube Video ID to use
+
   shift      Shift all timestamps in an SRT file by +/- seconds
              Options:
                --file <path>         Path to SRT file (e.g. public/lyrics/SONG.srt)
@@ -136,6 +145,39 @@ async function main() {
 
   try {
     switch (command) {
+      case 'fetch':
+      case 'find': {
+        const query = options.song || options.query || options.s || options.q || positional[1];
+        if (!query) {
+          console.error('❌ Error: --song <query> is required. (e.g. node tools/cli.js fetch --song "ILLIT Magnetic")');
+          process.exit(1);
+        }
+
+        const shouldRegister = Boolean(options.register || options.r);
+        const customVideo = options.video || options.v;
+        const offset = options.offset ? parseFloat(options.offset) : 0;
+        const result = await fetchSongPipeline({
+          query,
+          artist: options.artist || options.a,
+          title: options.title || options.t,
+          register: shouldRegister,
+          customVideoId: customVideo,
+          customOffset: offset
+        });
+
+        console.log('\n✨ Fetch Summary:');
+        console.log(`   • Song: ${result.title} (${result.artist})`);
+        console.log(`   • YouTube URL: ${result.videoUrl}`);
+        console.log(`   • Subtitles Found: ${result.hasSubtitles ? `✅ (${result.source})` : '❌'}`);
+        if (result.hasSubtitles) {
+          console.log(`   • SRT File: public/lyrics/${result.srtFilename}`);
+        }
+        if (result.registered) {
+          console.log(`   • Game Status: 🎮 Registered and ready to play in K-Pop Practice!`);
+        }
+        break;
+      }
+
       case 'shift': {
         const filePath = resolveFilePath(options.file || options.f);
         const offset = parseFloat(options.offset || options.o);

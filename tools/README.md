@@ -15,6 +15,19 @@ node tools/cli.js --help
 
 ## 🛠️ Commands & Usage
 
+### 0. 1-Command YouTube Video Search & Subtitle Fetch (`fetch` / `find`)
+Given just a song name (and optional artist), automatically finds the best official YouTube music video URL, extracts or generates synchronized Korean `.srt` subtitles, and optionally auto-registers the song into the game.
+
+```bash
+# Search, fetch official synchronized Korean SRT, and register into game
+node tools/cli.js fetch --song "ILLIT Magnetic" --register
+
+# Or search without registering
+node tools/cli.js fetch --song "aespa Supernova"
+```
+
+---
+
 ### 1. Direct YouTube Audio & Caption Auto-Align (`align`)
 Directly extracts official / timed audio and caption streams from YouTube videos and aligns them with the provided lyrics string into standard `.srt`.
 

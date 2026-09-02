@@ -148,6 +148,16 @@ export const KPOP_SONG_PRESETS = [
         en: "We are all Psycho"
       }
     ]
+  },
+  {
+    id: 'Vk5-c_v4gMU',
+    title: "Magnetic",
+    artist: 'ILLIT (아일릿)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=Vk5-c_v4gMU',
+    thumbnail: 'https://img.youtube.com/vi/Vk5-c_v4gMU/hqdefault.jpg',
+    srtFilename: 'ILLIT-MAGNETIC.srt',
+    srtPath: '/lyrics/ILLIT-MAGNETIC.srt',
+    lyrics: []
   }
 ];
 
