@@ -8,6 +8,7 @@ import { sound } from './utils/audio';
 import KpopVideoMode from './components/KpopVideoMode';
 import KpopGameMode from './components/KpopGameMode';
 import AdminSyncPage from './components/AdminSyncPage';
+import LyricsReferencePage from './components/LyricsReferencePage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('lessons');
@@ -136,6 +137,13 @@ export default function App() {
 
         {activeTab === 'admin' && import.meta.env.DEV && (
           <AdminSyncPage onPlayNow={handlePlayNow} />
+        )}
+
+        {activeTab === 'lyrics-ref' && (
+          <LyricsReferencePage
+            onSelectSongForPractice={handlePlayNow}
+            onSwitchToAdmin={() => setActiveTab('admin')}
+          />
         )}
 
         {activeTab === 'kpop-game' && (

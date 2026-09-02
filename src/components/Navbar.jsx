@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Tv, Gamepad2, Wrench } from 'lucide-react';
+import { BookOpen, Tv, Gamepad2, BookMarked, Wrench } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -39,6 +39,15 @@ export default function Navbar({
         >
           <Gamepad2 className="tab-icon" size={18} />
           <span>K-Pop Game</span>
+        </button>
+
+        <button
+          className={`tab-btn ${activeTab === 'lyrics-ref' ? 'active' : ''}`}
+          onClick={() => setActiveTab('lyrics-ref')}
+          title="K-Pop Lyrics & Subtitle Reference Hub (k-lyrics & RentAnAdviser)"
+        >
+          <BookMarked className="tab-icon" size={18} />
+          <span>Lyrics Hub</span>
         </button>
 
         {showAdminTab && (
