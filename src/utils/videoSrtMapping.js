@@ -1,27 +1,17 @@
 // Video to SRT Subtitle Mapping Table Utility
 
 export const VIDEO_SRT_MAPPINGS = [
+  // --- BABYMONSTER (Ordered by Release Date) ---
   {
-    id: 'babymonster_choom',
-    title: 'CHOOM (춤)',
+    id: 'babymonster_stuck_in_the_middle',
+    title: "Stuck In The Middle",
     artist: 'BABYMONSTER (베이비몬스터)',
-    srtFilename: 'BABYMONSTER-CHOOM.srt',
-    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
-    youtubeIds: ['x3eqqoZPV_E'],
-    primaryUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
-    alternateUrls: [],
-    description: 'BABYMONSTER - CHOOM (춤) synchronized SRT subtitle lyrics'
-  },
-  {
-    id: 'babymonster_drip',
-    title: 'DRIP',
-    artist: 'BABYMONSTER (베이비몬스터)',
-    srtFilename: 'BABYMONSTER-DRIP.srt',
-    srtPath: '/lyrics/BABYMONSTER-DRIP.srt',
-    youtubeIds: ['Zp-Jhuhq0bQ'],
-    primaryUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
-    alternateUrls: [],
-    description: 'BABYMONSTER - DRIP synchronized SRT subtitle lyrics'
+    srtFilename: 'BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
+    srtPath: '/lyrics/BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
+    youtubeIds: ['GsV1i0QHi-o', 'u1GVtUHb2TM'],
+    primaryUrl: 'https://www.youtube.com/watch?v=GsV1i0QHi-o',
+    alternateUrls: ['https://www.youtube.com/watch?v=u1GVtUHb2TM'],
+    description: "BABYMONSTER (베이비몬스터) - Stuck In The Middle synchronized SRT subtitle lyrics"
   },
   {
     id: 'babymonster_sheesh',
@@ -37,15 +27,59 @@ export const VIDEO_SRT_MAPPINGS = [
     description: 'BABYMONSTER - SHEESH synchronized SRT subtitle lyrics'
   },
   {
-    id: 'illit_its_me',
-    title: "It's Me",
-    artist: 'ILLIT (아일릿)',
-    srtFilename: 'ILLIT-ITS-ME.srt',
-    srtPath: '/lyrics/ILLIT-ITS-ME.srt',
-    youtubeIds: ['bMhDJ0S0OBA'],
-    primaryUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
+    id: 'babymonster_like_that',
+    title: "LIKE THAT",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-LIKE-THAT.srt',
+    srtPath: '/lyrics/BABYMONSTER-LIKE-THAT.srt',
+    youtubeIds: ['M8r3x4Re8-I'],
+    primaryUrl: 'https://www.youtube.com/watch?v=M8r3x4Re8-I',
     alternateUrls: [],
-    description: "ILLIT - It's Me synchronized SRT subtitle lyrics"
+    description: "BABYMONSTER (베이비몬스터) - LIKE THAT synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'babymonster_batter_up',
+    title: "BATTER UP (7 ver.)",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-BATTER-UP.srt',
+    srtPath: '/lyrics/BABYMONSTER-BATTER-UP.srt',
+    youtubeIds: ['olDWm2veCrM', 'UAIWgiJYi8s'],
+    primaryUrl: 'https://www.youtube.com/watch?v=olDWm2veCrM',
+    alternateUrls: ['https://www.youtube.com/watch?v=UAIWgiJYi8s'],
+    description: "BABYMONSTER (베이비몬스터) - BATTER UP (7 ver.) synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'babymonster_dream',
+    title: "DREAM",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-DREAM.srt',
+    srtPath: '/lyrics/BABYMONSTER-DREAM.srt',
+    youtubeIds: ['ynOtYmpZxak'],
+    primaryUrl: 'https://www.youtube.com/watch?v=ynOtYmpZxak',
+    alternateUrls: [],
+    description: "BABYMONSTER (베이비몬스터) - DREAM synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'babymonster_drip',
+    title: 'DRIP',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-DRIP.srt',
+    srtPath: '/lyrics/BABYMONSTER-DRIP.srt',
+    youtubeIds: ['Zp-Jhuhq0bQ'],
+    primaryUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
+    alternateUrls: [],
+    description: 'BABYMONSTER - DRIP synchronized SRT subtitle lyrics'
+  },
+  {
+    id: 'babymonster_choom',
+    title: 'CHOOM (춤)',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-CHOOM.srt',
+    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
+    youtubeIds: ['x3eqqoZPV_E'],
+    primaryUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
+    alternateUrls: [],
+    description: 'BABYMONSTER - CHOOM (춤) synchronized SRT subtitle lyrics'
   },
   {
     id: 'babymonster_sugar_honey_ice_tea',
@@ -69,6 +103,8 @@ export const VIDEO_SRT_MAPPINGS = [
     alternateUrls: [],
     description: 'BABYMONSTER - PSYCHO synchronized SRT subtitle lyrics'
   },
+
+  // --- ILLIT ---
   {
     id: 'illit_magnetic',
     title: "Magnetic",
@@ -79,6 +115,17 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=Vk5-c_v4gMU',
     alternateUrls: [],
     description: "ILLIT (아일릿) - Magnetic synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'illit_its_me',
+    title: "It's Me",
+    artist: 'ILLIT (아일릿)',
+    srtFilename: 'ILLIT-ITS-ME.srt',
+    srtPath: '/lyrics/ILLIT-ITS-ME.srt',
+    youtubeIds: ['bMhDJ0S0OBA'],
+    primaryUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
+    alternateUrls: [],
+    description: "ILLIT - It's Me synchronized SRT subtitle lyrics"
   }
 ];
 

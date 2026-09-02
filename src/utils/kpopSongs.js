@@ -1,24 +1,56 @@
 // K-Pop Songs Dataset with Timed Lyrics, Romanization, English Translation & Vowel Data
 
 export const KPOP_SONG_PRESETS = [
+  // --- BABYMONSTER (Ordered by Release Date) ---
   {
-    id: 'x3eqqoZPV_E',
-    title: 'CHOOM (춤)',
+    id: 'GsV1i0QHi-o',
+    title: "Stuck In The Middle",
     artist: 'BABYMONSTER (베이비몬스터)',
-    youtubeUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
-    thumbnail: 'https://img.youtube.com/vi/x3eqqoZPV_E/hqdefault.jpg',
-    srtFilename: 'BABYMONSTER-CHOOM.srt',
-    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
-    lyrics: [
-      { start: 25, end: 30, ko: "1, 2 heat is on", rom: "1, 2 heat is on", en: "1, 2 heat is on" },
-      { start: 30, end: 34, ko: "Own it, burn it, kick it, flip that", rom: "Own it, burn it, kick it, flip that", en: "Own it, burn it, kick it, flip that" },
-      { start: 34, end: 37, ko: "3, 4 BABYMON", rom: "3, 4 BABYMON", en: "3, 4 BABYMON" },
-      { start: 37, end: 41, ko: "We gon' get this party started", rom: "We gon' get this party started", en: "We gon' get this party started" },
-      { start: 73, end: 77, ko: "Oh my, oh my, my 지금 이 순간", rom: "Oh my, oh my, my ji-geum i sun-gan", en: "Oh my right now at this moment" },
-      { start: 133, end: 138, ko: "리듬을 삼켜 보자 춤", rom: "ri-deum-eul sam-kyeo bo-ja chum", en: "Let's swallow the rhythm, dance!" },
-      { start: 143, end: 148, ko: "월, 화, 수, 목, 금, 토 모두 다 함께 취해 보자 춤", rom: "wol, hwa, su, mok, geum, to mo-du da ham-kke chwi-hae bo-ja chum", en: "Mon, Tue, Wed, Thu, Fri, Sat, let's all get drunk together, dance!" },
-      { start: 148, end: 153, ko: "춤, 춤, 춤, 춤, 춤", rom: "chum, chum, chum, chum, chum", en: "Dance, dance, dance, dance, dance" }
-    ]
+    youtubeUrl: 'https://www.youtube.com/watch?v=GsV1i0QHi-o',
+    thumbnail: 'https://img.youtube.com/vi/GsV1i0QHi-o/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
+    srtPath: '/lyrics/BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
+    lyrics: []
+  },
+  {
+    id: '2wA_b6YHjqQ',
+    title: 'SHEESH',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=2wA_b6YHjqQ',
+    thumbnail: 'https://img.youtube.com/vi/2wA_b6YHjqQ/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-SHEESH.srt',
+    srtPath: '/lyrics/BABYMONSTER-SHEESH.srt',
+    lyrics: []
+  },
+  {
+    id: 'M8r3x4Re8-I',
+    title: "LIKE THAT",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=M8r3x4Re8-I',
+    thumbnail: 'https://img.youtube.com/vi/M8r3x4Re8-I/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-LIKE-THAT.srt',
+    srtPath: '/lyrics/BABYMONSTER-LIKE-THAT.srt',
+    lyrics: []
+  },
+  {
+    id: 'olDWm2veCrM',
+    title: "BATTER UP (7 ver.)",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=olDWm2veCrM',
+    thumbnail: 'https://img.youtube.com/vi/olDWm2veCrM/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-BATTER-UP.srt',
+    srtPath: '/lyrics/BABYMONSTER-BATTER-UP.srt',
+    lyrics: []
+  },
+  {
+    id: 'ynOtYmpZxak',
+    title: "DREAM",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=ynOtYmpZxak',
+    thumbnail: 'https://img.youtube.com/vi/ynOtYmpZxak/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-DREAM.srt',
+    srtPath: '/lyrics/BABYMONSTER-DREAM.srt',
+    lyrics: []
   },
   {
     id: 'Zp-Jhuhq0bQ',
@@ -74,24 +106,23 @@ export const KPOP_SONG_PRESETS = [
     ]
   },
   {
-    id: '2wA_b6YHjqQ',
-    title: 'SHEESH',
+    id: 'x3eqqoZPV_E',
+    title: 'CHOOM (춤)',
     artist: 'BABYMONSTER (베이비몬스터)',
-    youtubeUrl: 'https://www.youtube.com/watch?v=2wA_b6YHjqQ',
-    thumbnail: 'https://img.youtube.com/vi/2wA_b6YHjqQ/hqdefault.jpg',
-    srtFilename: 'BABYMONSTER-SHEESH.srt',
-    srtPath: '/lyrics/BABYMONSTER-SHEESH.srt',
-    lyrics: []
-  },
-  {
-    id: 'bMhDJ0S0OBA',
-    title: "It's Me",
-    artist: 'ILLIT (아일릿)',
-    youtubeUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
-    thumbnail: 'https://img.youtube.com/vi/bMhDJ0S0OBA/hqdefault.jpg',
-    srtFilename: 'ILLIT-ITS-ME.srt',
-    srtPath: '/lyrics/ILLIT-ITS-ME.srt',
-    lyrics: []
+    youtubeUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
+    thumbnail: 'https://img.youtube.com/vi/x3eqqoZPV_E/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-CHOOM.srt',
+    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
+    lyrics: [
+      { start: 25, end: 30, ko: "1, 2 heat is on", rom: "1, 2 heat is on", en: "1, 2 heat is on" },
+      { start: 30, end: 34, ko: "Own it, burn it, kick it, flip that", rom: "Own it, burn it, kick it, flip that", en: "Own it, burn it, kick it, flip that" },
+      { start: 34, end: 37, ko: "3, 4 BABYMON", rom: "3, 4 BABYMON", en: "3, 4 BABYMON" },
+      { start: 37, end: 41, ko: "We gon' get this party started", rom: "We gon' get this party started", en: "We gon' get this party started" },
+      { start: 73, end: 77, ko: "Oh my, oh my, my 지금 이 순간", rom: "Oh my, oh my, my ji-geum i sun-gan", en: "Oh my right now at this moment" },
+      { start: 133, end: 138, ko: "리듬을 삼켜 보자 춤", rom: "ri-deum-eul sam-kyeo bo-ja chum", en: "Let's swallow the rhythm, dance!" },
+      { start: 143, end: 148, ko: "월, 화, 수, 목, 금, 토 모두 다 함께 취해 보자 춤", rom: "wol, hwa, su, mok, geum, to mo-du da ham-kke chwi-hae bo-ja chum", en: "Mon, Tue, Wed, Thu, Fri, Sat, let's all get drunk together, dance!" },
+      { start: 148, end: 153, ko: "춤, 춤, 춤, 춤, 춤", rom: "chum, chum, chum, chum, chum", en: "Dance, dance, dance, dance, dance" }
+    ]
   },
   {
     id: 'naoGk-Zjc1s',
@@ -149,6 +180,8 @@ export const KPOP_SONG_PRESETS = [
       }
     ]
   },
+
+  // --- ILLIT ---
   {
     id: 'Vk5-c_v4gMU',
     title: "Magnetic",
@@ -157,6 +190,16 @@ export const KPOP_SONG_PRESETS = [
     thumbnail: 'https://img.youtube.com/vi/Vk5-c_v4gMU/hqdefault.jpg',
     srtFilename: 'ILLIT-MAGNETIC.srt',
     srtPath: '/lyrics/ILLIT-MAGNETIC.srt',
+    lyrics: []
+  },
+  {
+    id: 'bMhDJ0S0OBA',
+    title: "It's Me",
+    artist: 'ILLIT (아일릿)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
+    thumbnail: 'https://img.youtube.com/vi/bMhDJ0S0OBA/hqdefault.jpg',
+    srtFilename: 'ILLIT-ITS-ME.srt',
+    srtPath: '/lyrics/ILLIT-ITS-ME.srt',
     lyrics: []
   }
 ];
