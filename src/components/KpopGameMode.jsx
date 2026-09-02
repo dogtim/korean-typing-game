@@ -526,7 +526,7 @@ export default function KpopGameMode({
               <Film size={16} />
             </div>
             <div className="trigger-text-wrap">
-              <span className="trigger-label">Select Video:</span>
+              <span className="trigger-label">Select Video</span>
               <span className="trigger-current-song">
                 {song.title} <span className="trigger-artist">({song.artist})</span>
               </span>
@@ -706,16 +706,6 @@ export default function KpopGameMode({
               title="Extract exam and start playing"
             >
               <Play size={15} /> Start Challenge
-            </button>
-          )}
-
-          {onSwitchToPractice && (
-            <button
-              className="hud-btn practice-switch-btn"
-              onClick={onSwitchToPractice}
-              title="Switch to Practice Mode to study lyrics"
-            >
-              <BookOpen size={15} /> Practice Mode
             </button>
           )}
         </div>

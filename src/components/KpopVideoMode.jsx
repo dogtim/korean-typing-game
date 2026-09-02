@@ -28,7 +28,7 @@ import {
 
 export default function KpopVideoMode({
   onAddXp,
-  onSwitchToGame,
+  onSwitchToGame: _onSwitchToGame,
   loopTarget,
   onClearLoopTarget,
   onOpenReviewModal,
@@ -639,7 +639,7 @@ export default function KpopVideoMode({
 
   return (
     <div className="kpop-mode-container">
-      {/* Header Controls & YouTube URL Loader */}
+      {/* Header Controls Bar */}
       <div className="kpop-controls-bar glassmorphism">
         <div className="song-presets-group">
           <button
@@ -649,10 +649,10 @@ export default function KpopVideoMode({
             title="Choose a K-Pop video to practice"
           >
             <div className="trigger-icon-wrap">
-              <Film size={16} />
+              <Film size={17} />
             </div>
             <div className="trigger-text-wrap">
-              <span className="trigger-label">Select Video:</span>
+              <span className="trigger-label">Select Video</span>
               <span className="trigger-current-song">
                 {song.title} <span className="trigger-artist">({song.artist})</span>
               </span>
@@ -661,22 +661,25 @@ export default function KpopVideoMode({
           </button>
         </div>
 
-        {/* Action Row: Review Notebook */}
-        <div className="controls-action-row">
-          {/* Action Buttons: Review Notebook */}
-          <div className="srt-upload-group">
-            {onOpenReviewModal && (
-              <button
-                type="button"
-                className={`srt-btn review-notebook-btn ${missedCount > 0 ? 'has-missed' : ''}`}
-                onClick={onOpenReviewModal}
-                title="Open Incorrect Answers Review Notebook"
-              >
-                <Bookmark size={16} /> Review Missed ({missedCount})
-              </button>
-            )}
+        {/* Action Controls: Review Notebook */}
+        {onOpenReviewModal && (
+          <div className="kpop-controls-actions">
+            <button
+              type="button"
+              className={`kpop-review-btn ${missedCount > 0 ? 'has-missed' : ''}`}
+              onClick={onOpenReviewModal}
+              title="Open Incorrect Answers Review Notebook"
+            >
+              <div className="kpop-review-icon-wrap">
+                <Bookmark size={15} />
+              </div>
+              <span className="kpop-review-text">Review Missed</span>
+              <span className="kpop-review-count-badge">
+                {missedCount}
+              </span>
+            </button>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Active Loop Review Notification Banner */}
