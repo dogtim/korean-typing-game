@@ -1,7 +1,11 @@
 // Registry of Prepared SRT Files stored in the /lyrics/ folder
 
 export const PREPARED_SRT_LIBRARY = [
-  // --- BABYMONSTER (Ordered by Release Date) ---
+  // ==========================================
+  // BABYMONSTER (Chronological by Release Date)
+  // ==========================================
+
+  // 1. 2024.02.01：先行單曲
   {
     id: 'babymonster_stuck_in_the_middle',
     title: "Stuck In The Middle",
@@ -11,6 +15,8 @@ export const PREPARED_SRT_LIBRARY = [
     path: '/lyrics/BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
     description: "BABYMONSTER (베이비몬스터) Stuck In The Middle full prepared SRT subtitle file."
   },
+
+  // 2. 2024.04.01：首張迷你專輯《BABYMONS7ER》
   {
     id: 'babymonster_sheesh',
     title: 'SHEESH',
@@ -47,6 +53,28 @@ export const PREPARED_SRT_LIBRARY = [
     path: '/lyrics/BABYMONSTER-DREAM.srt',
     description: "BABYMONSTER (베이비몬스터) DREAM full prepared SRT subtitle file."
   },
+
+  // 3. 2024.07.01：數位單曲
+  {
+    id: 'babymonster_forever',
+    title: "FOREVER",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'eJCHKjt0MPw',
+    filename: 'BABYMONSTER-FOREVER.srt',
+    path: '/lyrics/BABYMONSTER-FOREVER.srt',
+    description: "BABYMONSTER (베이비몬스터) FOREVER full prepared SRT subtitle file."
+  },
+
+  // 4. 2024.11.01：首張正規專輯《DRIP》
+  {
+    id: 'babymonster_clik_clak',
+    title: "CLIK CLAK",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'o0oW3lPoOXM',
+    filename: 'BABYMONSTER-CLIK-CLAK.srt',
+    path: '/lyrics/BABYMONSTER-CLIK-CLAK.srt',
+    description: "BABYMONSTER (베이비몬스터) CLIK CLAK full prepared SRT subtitle file."
+  },
   {
     id: 'babymonster_drip',
     title: 'DRIP',
@@ -56,6 +84,53 @@ export const PREPARED_SRT_LIBRARY = [
     path: '/lyrics/BABYMONSTER-DRIP.srt',
     description: 'BABYMONSTER DRIP full prepared SRT subtitle file.'
   },
+  {
+    id: 'babymonster_love_maybe',
+    title: "Love, Maybe",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'q2KJumLIxsM',
+    filename: 'BABYMONSTER-LOVE-MAYBE.srt',
+    path: '/lyrics/BABYMONSTER-LOVE-MAYBE.srt',
+    description: "BABYMONSTER (베이비몬스터) Love, Maybe full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_really_like_you',
+    title: "Really Like You",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'XShaIZs7J7M',
+    filename: 'BABYMONSTER-REALLY-LIKE-YOU.srt',
+    path: '/lyrics/BABYMONSTER-REALLY-LIKE-YOU.srt',
+    description: "BABYMONSTER (베이비몬스터) Really Like You full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_billionaire',
+    title: "BILLIONAIRE",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'Gz_yRl6703c',
+    filename: 'BABYMONSTER-BILLIONAIRE.srt',
+    path: '/lyrics/BABYMONSTER-BILLIONAIRE.srt',
+    description: "BABYMONSTER (베이비몬스터) BILLIONAIRE full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_love_in_my_heart',
+    title: "Love In My Heart",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: '1kXLsrun51s',
+    filename: 'BABYMONSTER-LOVE-IN-MY-HEART.srt',
+    path: '/lyrics/BABYMONSTER-LOVE-IN-MY-HEART.srt',
+    description: "BABYMONSTER (베이비몬스터) Love In My Heart full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_woke_up_in_tokyo',
+    title: "Woke Up In Tokyo (RUKA & ASA)",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'KcSwEoDRWTA',
+    filename: 'BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
+    path: '/lyrics/BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
+    description: "BABYMONSTER (베이비몬스터) Woke Up In Tokyo (RUKA & ASA) full prepared SRT subtitle file."
+  },
+
+  // 5. Special / Other BABYMONSTER Releases
   {
     id: 'babymonster_choom',
     title: 'CHOOM (춤)',
@@ -84,7 +159,9 @@ export const PREPARED_SRT_LIBRARY = [
     description: 'BABYMONSTER PSYCHO synchronized SRT subtitle file.'
   },
 
-  // --- ILLIT ---
+  // ==========================================
+  // ILLIT
+  // ==========================================
   {
     id: 'illit_magnetic',
     title: "Magnetic",

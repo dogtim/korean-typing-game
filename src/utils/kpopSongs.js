@@ -1,7 +1,11 @@
 // K-Pop Songs Dataset with Timed Lyrics, Romanization, English Translation & Vowel Data
 
 export const KPOP_SONG_PRESETS = [
-  // --- BABYMONSTER (Ordered by Release Date) ---
+  // ==========================================
+  // BABYMONSTER (Chronological by Release Date)
+  // ==========================================
+
+  // 1. 2024.02.01：先行單曲
   {
     id: 'GsV1i0QHi-o',
     title: "Stuck In The Middle",
@@ -12,6 +16,8 @@ export const KPOP_SONG_PRESETS = [
     srtPath: '/lyrics/BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
     lyrics: []
   },
+
+  // 2. 2024.04.01：首張迷你專輯《BABYMONS7ER》
   {
     id: '2wA_b6YHjqQ',
     title: 'SHEESH',
@@ -50,6 +56,30 @@ export const KPOP_SONG_PRESETS = [
     thumbnail: 'https://img.youtube.com/vi/ynOtYmpZxak/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-DREAM.srt',
     srtPath: '/lyrics/BABYMONSTER-DREAM.srt',
+    lyrics: []
+  },
+
+  // 3. 2024.07.01：數位單曲
+  {
+    id: 'eJCHKjt0MPw',
+    title: "FOREVER",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=eJCHKjt0MPw',
+    thumbnail: 'https://img.youtube.com/vi/eJCHKjt0MPw/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-FOREVER.srt',
+    srtPath: '/lyrics/BABYMONSTER-FOREVER.srt',
+    lyrics: []
+  },
+
+  // 4. 2024.11.01：首張正規專輯《DRIP》
+  {
+    id: 'o0oW3lPoOXM',
+    title: "CLIK CLAK",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=o0oW3lPoOXM',
+    thumbnail: 'https://img.youtube.com/vi/o0oW3lPoOXM/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-CLIK-CLAK.srt',
+    srtPath: '/lyrics/BABYMONSTER-CLIK-CLAK.srt',
     lyrics: []
   },
   {
@@ -105,6 +135,58 @@ export const KPOP_SONG_PRESETS = [
       }
     ]
   },
+  {
+    id: 'q2KJumLIxsM',
+    title: "Love, Maybe",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=q2KJumLIxsM',
+    thumbnail: 'https://img.youtube.com/vi/q2KJumLIxsM/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-LOVE-MAYBE.srt',
+    srtPath: '/lyrics/BABYMONSTER-LOVE-MAYBE.srt',
+    lyrics: []
+  },
+  {
+    id: 'XShaIZs7J7M',
+    title: "Really Like You",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=XShaIZs7J7M',
+    thumbnail: 'https://img.youtube.com/vi/XShaIZs7J7M/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-REALLY-LIKE-YOU.srt',
+    srtPath: '/lyrics/BABYMONSTER-REALLY-LIKE-YOU.srt',
+    lyrics: []
+  },
+  {
+    id: 'Gz_yRl6703c',
+    title: "BILLIONAIRE",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=Gz_yRl6703c',
+    thumbnail: 'https://img.youtube.com/vi/Gz_yRl6703c/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-BILLIONAIRE.srt',
+    srtPath: '/lyrics/BABYMONSTER-BILLIONAIRE.srt',
+    lyrics: []
+  },
+  {
+    id: '1kXLsrun51s',
+    title: "Love In My Heart",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=1kXLsrun51s',
+    thumbnail: 'https://img.youtube.com/vi/1kXLsrun51s/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-LOVE-IN-MY-HEART.srt',
+    srtPath: '/lyrics/BABYMONSTER-LOVE-IN-MY-HEART.srt',
+    lyrics: []
+  },
+  {
+    id: 'KcSwEoDRWTA',
+    title: "Woke Up In Tokyo (RUKA & ASA)",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=KcSwEoDRWTA',
+    thumbnail: 'https://img.youtube.com/vi/KcSwEoDRWTA/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
+    srtPath: '/lyrics/BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
+    lyrics: []
+  },
+
+  // 5. Special / Other BABYMONSTER Releases
   {
     id: 'x3eqqoZPV_E',
     title: 'CHOOM (춤)',
@@ -181,7 +263,9 @@ export const KPOP_SONG_PRESETS = [
     ]
   },
 
-  // --- ILLIT ---
+  // ==========================================
+  // ILLIT
+  // ==========================================
   {
     id: 'Vk5-c_v4gMU',
     title: "Magnetic",
