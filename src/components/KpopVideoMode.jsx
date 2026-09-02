@@ -21,7 +21,6 @@ import {
   Mic,
   Square,
   Volume2,
-  Gamepad2,
   Bookmark,
   Film,
   ChevronDown
@@ -181,7 +180,7 @@ export default function KpopVideoMode({
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
-      } catch (_e) {}
+      } catch (_e) { }
       recognitionRef.current = null;
     }
   };
@@ -519,7 +518,7 @@ export default function KpopVideoMode({
 
     return () => {
       if (playerRef.current && playerRef.current.destroy) {
-        try { playerRef.current.destroy(); } catch (_e) {}
+        try { playerRef.current.destroy(); } catch (_e) { }
       }
     };
   }, [activeVideoId]);
@@ -662,9 +661,9 @@ export default function KpopVideoMode({
           </button>
         </div>
 
-        {/* Action Row: Review & Play Game Shortcut */}
+        {/* Action Row: Review Notebook */}
         <div className="controls-action-row">
-          {/* Action Buttons: Review Notebook & Play Game Mode */}
+          {/* Action Buttons: Review Notebook */}
           <div className="srt-upload-group">
             {onOpenReviewModal && (
               <button
@@ -674,16 +673,6 @@ export default function KpopVideoMode({
                 title="Open Incorrect Answers Review Notebook"
               >
                 <Bookmark size={16} /> Review Missed ({missedCount})
-              </button>
-            )}
-
-            {onSwitchToGame && (
-              <button
-                className="srt-btn game-arena-shortcut-btn"
-                onClick={onSwitchToGame}
-                title="Enter K-Pop Game Arena for listening quizzes"
-              >
-                <Gamepad2 size={16} /> Play Game Mode
               </button>
             )}
           </div>
@@ -1014,7 +1003,7 @@ export default function KpopVideoMode({
         <div className="vowel-card-header">
           <Sparkles className="gold-icon" size={22} />
           <div>
-            <h3>Vowel Breakdown Helper (for Newbies & Beginners)</h3>
+            <h3>Vowel Breakdown Helper </h3>
           </div>
         </div>
 
