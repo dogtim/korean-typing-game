@@ -11,7 +11,7 @@ export default function Navbar({
       <div className="navbar-brand">
         <div className="brand-logo">한</div>
         <div className="brand-info">
-          <h1 className="brand-title">Hangul Type Quest</h1>
+          <h1 className="brand-title">Hangul PopPop</h1>
           <span className="brand-subtitle">Korean Typing & Listening Game</span>
         </div>
       </div>

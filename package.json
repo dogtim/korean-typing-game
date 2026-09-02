@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "deploy": "vite build && firebase deploy --only hosting",
     "tool": "node tools/cli.js"
   },
   "dependencies": {

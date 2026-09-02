@@ -1,6 +1,6 @@
 # 🎧 K-Pop Subtitle & Lyrics Pre-processing Tool Suite
 
-A suite of Node.js command-line tools for fetching, calibrating, shifting, converting, and registering synchronized bilingual (Hangul + English) subtitles for YouTube videos in **Hangul Type Quest**.
+A suite of Node.js command-line tools for fetching, calibrating, shifting, converting, and registering synchronized bilingual (Hangul + English) subtitles for YouTube videos in **Hangul PopPop**.
 
 ---
 

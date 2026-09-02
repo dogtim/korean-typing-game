@@ -1,6 +1,6 @@
-# 🇰🇷 Hangul Type Quest (한글 타자 퀘스트)
+# 🇰🇷 Hangul PopPop (한글 팝팝)
 
-An interactive, gamified Korean learning and typing web application. Master Korean (Hangul) step-by-step from fundamental consonants to full sentences, sing along to your favorite K-Pop music videos with synchronized bilingual lyrics, and challenge your skills in real-time mini-games!
+An interactive, gamified Korean learning and typing web application. Master Korean (Hangul) step-by-step from fundamental consonants to conversational phrases, sing along to your favorite K-Pop music videos with synchronized bilingual lyrics, and challenge your skills in real-time mini-games!
 
 ![Language](https://img.shields.io/badge/Language-Korean%20%2F%20Hangul-8b5cf6?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react)
@@ -12,9 +12,9 @@ An interactive, gamified Korean learning and typing web application. Master Kore
 ## ✨ Features Overview
 
 ### 1. ⌨️ Core Hangul Lessons & Typing Engine
-- **100% QWERTY-to-Hangul Conversion**: Practice Korean typing on any standard QWERTY keyboard without altering your OS language settings. Keystrokes (e.g. `g k s f m f`) automatically compose into Korean syllables (`한글`).
-- **Interactive Dubeolsik (두벌식) Keyboard**: Real-time visual keyboard with finger-placement guidance, color-coded finger zones (pinky, ring, middle, index), and active key feedback.
-- **Native Audio & Speech Pronunciation**: Hear native Korean audio powered by Web Speech API for individual letters, syllables, and vocabulary words.
+- **100% QWERTY-to-Hangul Conversion**: Practice Korean typing on any standard QWERTY keyboard without altering your operating system's language input settings. Keystrokes (e.g., typing `g k s f m f`) automatically compose into Korean syllables (`한글`).
+- **Interactive Dubeolsik (두벌식) Keyboard**: Real-time visual keyboard featuring finger-placement guidance, color-coded finger zones (pinky, ring, middle, index), and dynamic active key feedback.
+- **Native Audio & Speech Pronunciation**: Hear native Korean pronunciations powered by Web Speech API for individual letters, syllables, and vocabulary words.
 - **Progressive 6-Stage Curriculum**:
   1. **Basic Consonants**: `ㄱ, ㄴ, ㄷ, ㄹ, ㅁ, ㅂ, ㅅ, ㅇ, ㅈ, ㅊ, ㅋ, ㅌ, ㅍ, ㅎ`
   2. **Basic Vowels**: `ㅏ, ㅑ, ㅓ, ㅕ, ㅗ, ㅛ, ㅜ, ㅠ, ㅡ, ㅣ`
@@ -22,46 +22,53 @@ An interactive, gamified Korean learning and typing web application. Master Kore
   4. **Syllables with Batchim**: `강, 눈, 달, 맘, 법, 산, 방, 집, 밥, 꽃...`
   5. **Everyday Vocabulary**: `한국, 한글, 안녕, 사랑, 감사, 학교, 친구, 치킨...`
   6. **Conversational Phrases**: `안녕하세요, 감사합니다, 반갑습니다, 괜찮아요...`
-- **Gamification & Rewards**: Earn XP, level up, maintain streaks, and unlock achievement badges.
+- **Gamification & Rewards**: Earn XP, level up, maintain practice streaks, and unlock achievement badges.
 
 ---
 
 ### 2. 🎬 K-Pop Video Practice Mode
-- **Synchronized YouTube Music Videos**: Learn Korean naturally with synced official YouTube tracks from BABYMONSTER, ILLIT, and more.
+- **Sleek Cyber Glassmorphism Header**: Compact, responsive controls bar featuring a quick Video Selector trigger, two-tier song/artist title hierarchy, and a dedicated Review Missed notebook shortcut with count badges.
+- **Synchronized YouTube Music Videos**: Practice Korean with official tracks from BABYMONSTER, ILLIT, and more.
 - **Bilingual Synchronized Subtitles**: Simultaneous display of Hangul lyrics, Romanization guide, and English translations.
 - **Active Lyric Auto-Scroll**: Follow along in real-time as lyrics smoothly auto-scroll and highlight with video playback.
-- **Line Loop Practice**: Click any sentence to loop difficult lines continuously until mastered.
-- **Customizable Display**: Toggle Romanization and English translations on or off to tailor your practice difficulty.
-- **Playback Speed Controls**: Adjust playback speed (0.75x, 1.0x, 1.25x) to match your learning pace.
+- **Flexible Looping Options**:
+  - **Single-Line Looping**: Click any sentence to loop difficult lines continuously until mastered.
+  - **Multi-Line Range Looping**: Select custom start and end lines to loop an entire verse or chorus.
+- **Speech Recognition Pronunciation Practice**: Tap the microphone button to sing or pronounce the active line into your mic and test your speech accuracy.
+- **Precision Timing & Custom Uploads**: Fine-tune subtitle sync offsets (+/- ms) or upload custom `.srt` subtitle files directly into the player.
+- **Display & Speed Controls**: Toggle Romanization and English translations on or off, and adjust playback speed (0.75x, 1.0x, 1.25x).
 
 ---
 
-### 3. 🎮 Interactive K-Pop Game Modes
-Challenge your Korean listening, reading, speaking, and reflex skills with interactive mini-games timed to lyric playback:
+### 3. 🎮 Interactive K-Pop Game Arena
+Test your Korean listening comprehension, sentence structure, speech pronunciation, and reflexes timed to music video playback:
 
 | Game Mode | Icon | Description |
 | :--- | :---: | :--- |
-| **Choice Mode** | 📋 | **Listening Comprehension**: Pick the correct sentence that was just sung from multiple choices before time runs out. |
-| **Word Order Rebuild** | 🔀 | **Sentence Structure**: Tap scrambled Korean words back into their proper sequence. |
-| **Sing the Words!** | 🎤 | **Speech Recognition Challenge**: Sing or pronounce the missing Korean lyrics into your microphone with real-time accuracy scoring (70%+ to pass). |
-| **Batchim Builder** | 🎯 | **Interactive Catch Game**: Catch floating, drifting Hangul syllable or word tokens in the correct order to assemble the lyric line. |
+| **Choice Mode** | 📋 | **Listening Comprehension**: Listen to the sung line and select the correct matching Korean sentence from multiple choices before time runs out. |
+| **Word Order Rebuild** | 🔀 | **Sentence Structure**: Tap scrambled Korean words back into their proper sequence to reconstruct the lyric. |
+| **Sing the Words!** | 🎤 | **Speech Recognition Challenge**: Sing or pronounce missing Korean lyrics into your microphone with real-time accuracy scoring (70%+ match to pass). |
+| **Batchim Builder** | 🎯 | **Interactive Catch Game**: Catch floating, drifting Hangul syllable or word tokens in the correct order to assemble the target lyric line. |
 
-- **Custom Quiz Configuration**: Choose specific game modes, select the number of questions (5, 10, 15, or all lines), and play through a focused challenge session.
+- **Custom Challenge Coverage**: Configure the challenge length to 5 lines, 10 lines, 15 lines, or the full song (100% coverage).
+- **Batchim Builder Granularity**: Toggle between **By Syllable** (detailed Hangul assembly) and **By Word** (whole-word assembly).
+- **Survival Hearts / Lives**: Optional survival mode with configurable life counts and instant feedback.
 - **Dynamic Time Scaling**: Time limits automatically adjust based on target complexity and word/syllable counts.
+- **Post-Game Results & Review**: Comprehensive score screen with accuracy statistics, missed questions breakdown, and one-click options to retry or jump into Practice Mode.
 
 ---
 
-### 4. 📓 Deep Learning Review Notebook
-- **Automated Error Tracking**: Missed sentences from game modes are automatically captured and saved into your personal Review Notebook (`localStorage`).
-- **One-Click Loop Practice**: Jump straight from your notebook back to the exact video timestamp in Practice Mode to review problem lines.
-- **Mastery Management**: Remove mastered phrases individually or clear completed lists as your proficiency grows.
+### 4. 📓 Deep Learning Review Notebook (오답 노트)
+- **Automated Error Tracking**: Missed sentences from any game challenge are automatically captured and stored in your personal Review Notebook (`localStorage`).
+- **One-Click Loop Practice**: Jump straight from your notebook back to the exact video timestamp in Practice Mode to review difficult sentences in context.
+- **Mastery Management**: Remove mastered phrases individually or clear review lists as your proficiency grows.
 
 ---
 
 ### 5. 🎧 K-Pop Subtitle Tool Suite & Admin Sync
-A built-in Node.js CLI tool suite and developer UI for fetching, calibrating, shifting, converting, and registering synchronized `.srt` subtitles:
+A built-in Node.js CLI tool suite and developer UI for fetching, calibrating, shifting, converting, extracting frames, and registering synchronized `.srt` subtitles:
 
-- **Browser Admin Page**: Test YouTube video embeds and auto-load custom `.srt` files directly in development mode (`npm run dev`).
+- **Browser Admin Page (`/admin` tab)**: Test YouTube video embeds, fine-tune intro offsets, edit `.srt` text, and register songs directly with Vite Hot Module Replacement (HMR) during development.
 - **CLI Commands (`npm run tool -- <command>`)**:
   - `align`: Auto-align YouTube audio and caption streams into `.srt`.
   - `shift`: Shift timestamps forward (`+seconds`) or backward (`-seconds`) in place in `public/lyrics/`.
@@ -69,7 +76,7 @@ A built-in Node.js CLI tool suite and developer UI for fetching, calibrating, sh
   - `convert`: Convert raw `.lrc` lyric files into timestamped `.srt` format.
   - `register`: 1-command registration that updates video mappings, lyric loaders, and song presets.
   - `validate`: Validate sequential timestamp integrity, detect overlaps, and check token statistics.
-  - `frame`: Extract high-resolution frames from YouTube videos at exact timestamps with custom intervals.
+  - `frame`: Extract high-resolution video frames at exact timestamps and custom intervals using `yt-dlp` and `ffmpeg`.
 
 ---
 
@@ -104,8 +111,63 @@ Open your browser at `http://localhost:5173`.
 | **Development** | `npm run dev` | Starts the Vite dev server with Hot Module Replacement (HMR) and Admin Sync enabled. |
 | **Build** | `npm run build` | Builds the optimized production bundle to the `dist/` folder. |
 | **Preview** | `npm run preview` | Locally previews the production build. |
+| **Deploy** | `npm run deploy` | Builds the project and deploys to Firebase Hosting. |
 | **Lint** | `npm run lint` | Runs `oxlint` for high-speed JavaScript/JSX code validation. |
 | **Subtitle Tools** | `npm run tool -- <command>` | Runs the K-Pop Subtitle CLI tool (`tools/cli.js`). |
+
+---
+
+## 🚢 Deployment to Firebase Hosting
+
+The application is pre-configured with `firebase.json` and `.firebaserc` for fast, global hosting via **Firebase Hosting**.
+
+### 1. Install Firebase CLI & Authenticate
+If you haven't installed `firebase-tools` yet, install it globally:
+```bash
+npm install -g firebase-tools
+```
+
+Authenticate with your Google account:
+```bash
+firebase login
+# Or if working in a remote/headless terminal:
+firebase login --no-localhost
+```
+
+### 2. Configure Your Firebase Project
+Link your repository to your own Firebase project (or use the default project):
+```bash
+# View current project
+firebase projects:list
+
+# Switch to your project ID
+firebase use <your-project-id>
+
+# Or initialize a new Firebase Hosting configuration from scratch:
+firebase init hosting
+```
+*(When prompted by `firebase init`, specify `dist` as your public directory and answer `Yes` to configure as a single-page app).*
+
+### 3. Build & Deploy to Production
+You can build and deploy with a single shortcut:
+```bash
+npm run deploy
+```
+
+Or execute the steps individually:
+```bash
+# 1. Build the production bundle
+npm run build
+
+# 2. Deploy to Firebase Hosting
+firebase deploy --only hosting
+```
+
+### 4. Deploy to a Preview Channel (Optional)
+Test your changes on a temporary live URL before publishing to your production domain:
+```bash
+firebase hosting:channel:deploy <channel-name>
+```
 
 ---
 
@@ -141,10 +203,10 @@ npm run tool -- frame --video choom --start 10 --count 3 --duration 0.25
 ```
 korean-typing-game/
 ├── public/
-│   └── lyrics/                 # Static SRT subtitle files served for video playback & mapping docs
+│   └── lyrics/                 # Static SRT subtitle files and video mapping docs
 ├── src/
 │   ├── components/
-│   │   ├── gameModes/          # Mini-game challenge components
+│   │   ├── gameModes/          # Game Arena challenge components
 │   │   │   ├── BatchimBuilderChallenge.jsx
 │   │   │   ├── ChoiceModeChallenge.jsx
 │   │   │   ├── GameChallengeOverlay.jsx
@@ -172,12 +234,13 @@ korean-typing-game/
 │   ├── index.css               # Dark Glassmorphism CSS design system
 │   └── main.jsx                # Application entry point
 ├── tools/                      # Node.js CLI suite for subtitle processing
-│   ├── audioAligner.js
-│   ├── autoRegister.js
-│   ├── cli.js
-│   ├── lrcConverter.js
-│   ├── srtEngine.js
-│   └── README.md
+│   ├── audioAligner.js         # YouTube audio & caption stream aligner
+│   ├── autoRegister.js         # Automated catalog registration script
+│   ├── cli.js                  # CLI command runner entry point
+│   ├── frameExtractor.js       # Video frame extraction via ffmpeg/yt-dlp
+│   ├── lrcConverter.js         # LRC to SRT subtitle converter
+│   ├── srtEngine.js            # SRT shift, parse, format, and validation engine
+│   └── README.md               # Subtitle CLI documentation
 └── package.json
 ```
 

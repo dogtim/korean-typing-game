@@ -9,8 +9,6 @@ import { sound } from '../utils/audio';
 import GameChallengeOverlay from './gameModes/GameChallengeOverlay';
 import VideoSelectModal from './VideoSelectModal';
 import {
-  Trophy,
-  Flame,
   Heart,
   RotateCcw,
   Sparkles,
@@ -628,27 +626,6 @@ export default function KpopGameMode({
 
       {/* Main Game HUD Bar */}
       <div className="game-hud-bar glassmorphism">
-        {/* Score & Combo */}
-        <div className="hud-stat score-stat">
-          <Trophy className="hud-icon gold" size={20} />
-          <div className="hud-value-group">
-            <span className="hud-label">SCORE</span>
-            <span className="hud-number">{score.toLocaleString()}</span>
-          </div>
-        </div>
-
-        {/* Combo Multiplier */}
-        <div className={`hud-stat combo-stat ${combo >= 2 ? 'active-combo' : ''}`}>
-          <Flame className={`hud-icon ${combo >= 3 ? 'flame-hot' : 'flame'}`} size={20} />
-          <div className="hud-value-group">
-            <span className="hud-label">COMBO</span>
-            <span className="hud-number">
-              {combo > 0 ? `${combo}x` : '0'}
-              {combo >= 2 && <span className="multiplier-tag">{combo >= 5 ? '2.0x' : combo >= 3 ? '1.5x' : '1.2x'}</span>}
-            </span>
-          </div>
-        </div>
-
         {/* Lives / Hearts */}
         {useHearts && (
           <div className="hud-stat hearts-stat">
