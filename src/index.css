@@ -1402,18 +1402,14 @@ body {
   align-items: center;
   gap: 8px;
   overflow-x: auto;
-  padding: 4px 2px 12px 2px;
-  margin-bottom: 8px;
-  scrollbar-width: thin;
+  padding: 4px 2px;
+  margin-bottom: 12px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
 }
 
 .video-album-pills-bar::-webkit-scrollbar {
-  height: 4px;
-}
-
-.video-album-pills-bar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .album-pill-btn {
