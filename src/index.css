@@ -1972,63 +1972,144 @@ body {
 }
 
 .lyrics-panel {
-  padding: 20px;
+  position: relative;
+  padding: 18px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-height: 600px;
+  gap: 14px;
+  height: 100%;
+  max-height: 640px;
+  min-height: 480px;
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
 }
 
 .panel-header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  min-width: 0;
+  flex: 1;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
+/* Auto-Center Pill Toggle Button */
 .auto-scroll-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   color: #94a3b8;
   font-size: 12px;
   font-weight: 600;
-  padding: 5px 10px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  backdrop-filter: blur(8px);
 }
 
 .auto-scroll-btn:hover {
   background: rgba(255, 255, 255, 0.12);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #f1f5f9;
+  transform: translateY(-1px);
 }
 
+.auto-scroll-btn .btn-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auto-scroll-btn .btn-text {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.auto-scroll-btn .status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.auto-scroll-btn .status-pill.off {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.auto-scroll-btn .status-pill.off .status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+/* Active State: Cyber Emerald Glow */
 .auto-scroll-btn.active {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
-  color: #34d399;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(139, 92, 246, 0.18));
+  border-color: rgba(52, 211, 153, 0.55);
+  color: #ecfdf5;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25), inset 0 0 8px rgba(16, 185, 129, 0.1);
 }
 
 .auto-scroll-btn.active:hover {
-  background: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.26), rgba(139, 92, 246, 0.24));
+  border-color: #34d399;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.38);
+  transform: translateY(-1px);
+}
+
+.auto-scroll-btn.active .auto-scroll-icon {
+  color: #34d399;
+  filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.6));
+}
+
+.auto-scroll-btn.active .status-pill.on {
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #6ee7b7;
+}
+
+.auto-scroll-btn.active .status-pill.on .status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 6px #10b981;
+  animation: blinkDot 1.8s infinite ease-in-out;
+}
+
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
 }
 
 .purple-icon { color: var(--accent-purple); }
@@ -2039,27 +2120,73 @@ body {
   gap: 10px;
   overflow-y: auto;
   padding-right: 6px;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  scroll-behavior: smooth;
+}
+
+/* Subtle edge fade in auto-center mode for premium karaoke focus */
+.lyrics-scroll-list.auto-center-mode {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 3%,
+    black 12%,
+    black 88%,
+    rgba(0, 0, 0, 0.3) 97%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 3%,
+    black 12%,
+    black 88%,
+    rgba(0, 0, 0, 0.3) 97%,
+    transparent 100%
+  );
 }
 
 .lyric-row-item {
   display: flex;
   gap: 12px;
-  padding: 12px;
+  padding: 12px 14px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              opacity 0.25s ease;
+  will-change: transform, opacity;
 }
 
 .lyric-row-item:hover {
   background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateX(3px);
+}
+
+/* Dim unfocused lyrics when Auto-Center is active to highlight the center line */
+.lyrics-scroll-list.auto-center-mode .lyric-row-item:not(.active-line):not(.in-loop-range) {
+  opacity: 0.6;
+}
+
+.lyrics-scroll-list.auto-center-mode .lyric-row-item:not(.active-line):not(.in-loop-range):hover {
+  opacity: 1;
+  transform: translateX(4px);
 }
 
 .lyric-row-item.active-line {
-  background: rgba(139, 92, 246, 0.2);
-  border-color: var(--accent-purple);
-  box-shadow: 0 0 14px rgba(139, 92, 246, 0.3);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.28), rgba(99, 102, 241, 0.2)) !important;
+  border-color: rgba(168, 85, 247, 0.8) !important;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.35), inset 0 0 12px rgba(139, 92, 246, 0.15) !important;
+  transform: scale(1.015);
+  opacity: 1 !important;
+  z-index: 2;
 }
 
 /* Multi-Line Range Selection Styles */
@@ -2128,20 +2255,26 @@ body {
 }
 
 .lyrics-header-hint {
-  font-size: 11px;
-  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #94a3b8;
   font-weight: 500;
-  margin-top: 2px;
+  line-height: 1.4;
+  flex-wrap: wrap;
 }
 
 .lyrics-header-hint kbd {
   background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-  padding: 1px 5px;
-  font-size: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
   font-family: inherit;
-  color: #e2e8f0;
+  color: #f1f5f9;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Multi-Line Range Loop Banner */

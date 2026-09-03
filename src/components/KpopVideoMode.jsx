@@ -9,7 +9,6 @@ import VirtualKeyboard from './VirtualKeyboard';
 import VideoSelectModal from './VideoSelectModal';
 import {
   Sparkles,
-  BookOpen,
   Type,
   Repeat,
   RotateCcw,
@@ -311,25 +310,54 @@ export default function KpopVideoMode({
   const playerRef = useRef(null);
   const lyricsContainerRef = useRef(null);
   const activeRowRef = useRef(null);
+  const [listPadding, setListPadding] = useState(200);
 
-  // Auto-scroll lyrics container to center active line when activeLineIdx or autoScrollEnabled changes
+  // Measure container height dynamically to calculate exact padding for vertical centering
   useEffect(() => {
-    if (autoScrollEnabled && activeRowRef.current && lyricsContainerRef.current) {
-      const container = lyricsContainerRef.current;
-      const activeRow = activeRowRef.current;
+    if (!lyricsContainerRef.current) return;
+    const el = lyricsContainerRef.current;
+    const updatePadding = () => {
+      const h = el.clientHeight;
+      if (h > 80) {
+        // Half container height minus half typical row height (~28px)
+        const pad = Math.max(60, Math.floor(h / 2 - 28));
+        setListPadding(pad);
+      }
+    };
+    updatePadding();
+    const ro = new ResizeObserver(updatePadding);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
-      const containerHeight = container.clientHeight;
-      const rowOffsetTop = activeRow.offsetTop;
-      const rowHeight = activeRow.clientHeight;
+  // Smoothly center the active lyric line in the container viewport
+  const centerActiveLyric = useCallback((smooth = true) => {
+    if (!autoScrollEnabled) return;
+    const container = lyricsContainerRef.current;
+    const activeRow = activeRowRef.current;
+    if (!container || !activeRow) return;
 
-      const targetScrollTop = rowOffsetTop - (containerHeight / 2) + (rowHeight / 2);
+    const containerRect = container.getBoundingClientRect();
+    const rowRect = activeRow.getBoundingClientRect();
+    if (containerRect.height === 0 || rowRect.height === 0) return;
 
-      container.scrollTo({
-        top: Math.max(0, targetScrollTop),
-        behavior: 'smooth'
-      });
-    }
-  }, [activeLineIdx, autoScrollEnabled]);
+    // Calculate row position relative to container's scroll canvas
+    const rowContentTop = (rowRect.top - containerRect.top) + container.scrollTop;
+    const targetScrollTop = rowContentTop - (containerRect.height / 2) + (rowRect.height / 2);
+
+    container.scrollTo({
+      top: Math.max(0, targetScrollTop),
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+  }, [autoScrollEnabled]);
+
+  // Trigger centering when activeLineIdx, autoScrollEnabled, or listPadding changes
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      centerActiveLyric(true);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [activeLineIdx, autoScrollEnabled, listPadding, centerActiveLyric]);
 
   // Load Prepared SRT File from /lyrics/ folder & auto-play mapped video URL
   const handleLoadPreparedSrt = useCallback(async (item, silent = false) => {
@@ -829,21 +857,32 @@ export default function KpopVideoMode({
         <div className="lyrics-panel glassmorphism">
           <div className="panel-header">
             <div className="panel-header-left">
-              <BookOpen size={18} className="purple-icon" />
-              <div>
-                <h3>Synced Lyrics ({song.title})</h3>
-                <span className="lyrics-header-hint">
-                  💡 <kbd>Shift</kbd> + <kbd>Click</kbd> to select &amp; loop multiple consecutive lines
-                </span>
-              </div>
+              <span className="lyrics-header-hint">
+                💡 <kbd>Shift</kbd> + <kbd>Click</kbd> to select &amp; loop multiple consecutive lines
+              </span>
             </div>
             <div className="header-actions">
               <button
+                type="button"
                 className={`auto-scroll-btn ${autoScrollEnabled ? 'active' : ''}`}
-                onClick={() => setAutoScrollEnabled(!autoScrollEnabled)}
-                title={autoScrollEnabled ? 'Auto-center lyrics to current timestamp (Click to disable)' : 'Auto-center lyrics to current timestamp (Click to enable)'}
+                onClick={() => {
+                  const nextState = !autoScrollEnabled;
+                  setAutoScrollEnabled(nextState);
+                  if (nextState) {
+                    requestAnimationFrame(() => centerActiveLyric(true));
+                  }
+                }}
+                title={autoScrollEnabled ? 'Auto-Center ON: Active lyric is kept centered. Click to disable.' : 'Auto-Center OFF: Free scrolling mode. Click to enable auto-centering.'}
+                aria-pressed={autoScrollEnabled}
               >
-                <Locate size={14} /> {autoScrollEnabled ? 'Auto-Center ON' : 'Auto-Center OFF'}
+                <span className="btn-icon-wrapper">
+                  <Locate size={13} className="auto-scroll-icon" />
+                </span>
+                <span className="btn-text">Auto-Center</span>
+                <span className={`status-pill ${autoScrollEnabled ? 'on' : 'off'}`}>
+                  <span className="status-dot" />
+                  {autoScrollEnabled ? 'ON' : 'OFF'}
+                </span>
               </button>
             </div>
           </div>
@@ -895,7 +934,14 @@ export default function KpopVideoMode({
             </div>
           )}
 
-          <div className="lyrics-scroll-list" ref={lyricsContainerRef}>
+          <div
+            className={`lyrics-scroll-list ${autoScrollEnabled ? 'auto-center-mode' : ''}`}
+            ref={lyricsContainerRef}
+            style={{
+              paddingTop: autoScrollEnabled ? `${listPadding}px` : '8px',
+              paddingBottom: autoScrollEnabled ? `${listPadding}px` : '16px'
+            }}
+          >
             {song.lyrics.map((line, idx) => {
               const isActive = idx === activeLineIdx;
               const isEditingThisTime = editingLineIdx === idx;
