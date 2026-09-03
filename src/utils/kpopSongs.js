@@ -1,15 +1,62 @@
-// K-Pop Songs Dataset with Timed Lyrics, Romanization, English Translation & Vowel Data
+// K-Pop Songs Dataset with Timed Lyrics, Romanization, English Translation, Vowel Data & Albums
+
+export const ALBUM_METADATA = {
+  '數位單曲《Stuck In The Middle》': {
+    releaseDate: '2024.02.01',
+    category: '數位單曲',
+    order: 1
+  },
+  '首張迷你專輯《BABYMONS7ER》': {
+    releaseDate: '2024.04.01',
+    category: '迷你專輯',
+    order: 2
+  },
+  '數位單曲《FOREVER》': {
+    releaseDate: '2024.07.01',
+    category: '數位單曲',
+    order: 3
+  },
+  '首張正規專輯《DRIP》': {
+    releaseDate: '2024.11.01',
+    category: '正規專輯',
+    order: 4
+  },
+  '數位單曲《HOT SAUCE》': {
+    releaseDate: '2025.07.01',
+    category: '數位單曲',
+    order: 5
+  },
+  '第二張迷你專輯《WE GO UP》': {
+    releaseDate: '2025.10.10',
+    category: '迷你專輯',
+    order: 6
+  },
+  '第三張迷你專輯《춤 (CHOOM)》': {
+    releaseDate: '2026.05.04',
+    category: '迷你專輯',
+    order: 7
+  },
+  '數位單曲《SUGAR HONEY ICE TEA》': {
+    releaseDate: '2026.06.08',
+    category: '數位單曲',
+    order: 8
+  },
+  'Unkonw': {
+    releaseDate: '',
+    category: 'Other Releases',
+    order: 99
+  }
+};
 
 export const KPOP_SONG_PRESETS = [
   // ==========================================
-  // BABYMONSTER (Chronological by Release Date)
+  // 1. 數位單曲《Stuck In The Middle》 (2024.02.01)
   // ==========================================
-
-  // 1. 2024.02.01：先行單曲
   {
     id: 'GsV1i0QHi-o',
     title: "Stuck In The Middle",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '數位單曲《Stuck In The Middle》',
     youtubeUrl: 'https://www.youtube.com/watch?v=GsV1i0QHi-o',
     thumbnail: 'https://img.youtube.com/vi/GsV1i0QHi-o/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
@@ -17,11 +64,14 @@ export const KPOP_SONG_PRESETS = [
     lyrics: []
   },
 
-  // 2. 2024.04.01：首張迷你專輯《BABYMONS7ER》
+  // ==========================================
+  // 2. 首張迷你專輯《BABYMONS7ER》 (2024.04.01)
+  // ==========================================
   {
     id: '2wA_b6YHjqQ',
     title: 'SHEESH',
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張迷你專輯《BABYMONS7ER》',
     youtubeUrl: 'https://www.youtube.com/watch?v=2wA_b6YHjqQ',
     thumbnail: 'https://img.youtube.com/vi/2wA_b6YHjqQ/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-SHEESH.srt',
@@ -32,6 +82,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'M8r3x4Re8-I',
     title: "LIKE THAT",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張迷你專輯《BABYMONS7ER》',
     youtubeUrl: 'https://www.youtube.com/watch?v=M8r3x4Re8-I',
     thumbnail: 'https://img.youtube.com/vi/M8r3x4Re8-I/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-LIKE-THAT.srt',
@@ -42,6 +93,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'olDWm2veCrM',
     title: "BATTER UP (7 ver.)",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張迷你專輯《BABYMONS7ER》',
     youtubeUrl: 'https://www.youtube.com/watch?v=olDWm2veCrM',
     thumbnail: 'https://img.youtube.com/vi/olDWm2veCrM/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-BATTER-UP.srt',
@@ -52,6 +104,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'ynOtYmpZxak',
     title: "DREAM",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張迷你專輯《BABYMONS7ER》',
     youtubeUrl: 'https://www.youtube.com/watch?v=ynOtYmpZxak',
     thumbnail: 'https://img.youtube.com/vi/ynOtYmpZxak/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-DREAM.srt',
@@ -59,11 +112,14 @@ export const KPOP_SONG_PRESETS = [
     lyrics: []
   },
 
-  // 3. 2024.07.01：數位單曲
+  // ==========================================
+  // 3. 數位單曲《FOREVER》 (2024.07.01)
+  // ==========================================
   {
     id: 'eJCHKjt0MPw',
     title: "FOREVER",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '數位單曲《FOREVER》',
     youtubeUrl: 'https://www.youtube.com/watch?v=eJCHKjt0MPw',
     thumbnail: 'https://img.youtube.com/vi/eJCHKjt0MPw/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-FOREVER.srt',
@@ -71,11 +127,14 @@ export const KPOP_SONG_PRESETS = [
     lyrics: []
   },
 
-  // 4. 2024.11.01：首張正規專輯《DRIP》
+  // ==========================================
+  // 4. 首張正規專輯《DRIP》 (2024.11.01)
+  // ==========================================
   {
     id: 'o0oW3lPoOXM',
     title: "CLIK CLAK",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=o0oW3lPoOXM',
     thumbnail: 'https://img.youtube.com/vi/o0oW3lPoOXM/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-CLIK-CLAK.srt',
@@ -86,6 +145,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'Zp-Jhuhq0bQ',
     title: 'DRIP',
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=Zp-Jhuhq0bQ',
     thumbnail: 'https://img.youtube.com/vi/Zp-Jhuhq0bQ/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-DRIP.srt',
@@ -139,6 +199,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'q2KJumLIxsM',
     title: "Love, Maybe",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=q2KJumLIxsM',
     thumbnail: 'https://img.youtube.com/vi/q2KJumLIxsM/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-LOVE-MAYBE.srt',
@@ -149,6 +210,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'XShaIZs7J7M',
     title: "Really Like You",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=XShaIZs7J7M',
     thumbnail: 'https://img.youtube.com/vi/XShaIZs7J7M/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-REALLY-LIKE-YOU.srt',
@@ -159,6 +221,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'Gz_yRl6703c',
     title: "BILLIONAIRE",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=Gz_yRl6703c',
     thumbnail: 'https://img.youtube.com/vi/Gz_yRl6703c/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-BILLIONAIRE.srt',
@@ -169,6 +232,7 @@ export const KPOP_SONG_PRESETS = [
     id: '1kXLsrun51s',
     title: "Love In My Heart",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=1kXLsrun51s',
     thumbnail: 'https://img.youtube.com/vi/1kXLsrun51s/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-LOVE-IN-MY-HEART.srt',
@@ -179,6 +243,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'KcSwEoDRWTA',
     title: "Woke Up In Tokyo (RUKA & ASA)",
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '首張正規專輯《DRIP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=KcSwEoDRWTA',
     thumbnail: 'https://img.youtube.com/vi/KcSwEoDRWTA/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
@@ -186,40 +251,40 @@ export const KPOP_SONG_PRESETS = [
     lyrics: []
   },
 
-  // 5. Special / Other BABYMONSTER Releases
+  // ==========================================
+  // 5. 數位單曲《HOT SAUCE》 (2025.07.01)
+  // ==========================================
   {
-    id: 'x3eqqoZPV_E',
-    title: 'CHOOM (춤)',
+    id: 'xn8mQqz2xmM',
+    title: "HOT SAUCE",
     artist: 'BABYMONSTER (베이비몬스터)',
-    youtubeUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
-    thumbnail: 'https://img.youtube.com/vi/x3eqqoZPV_E/hqdefault.jpg',
-    srtFilename: 'BABYMONSTER-CHOOM.srt',
-    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
-    lyrics: [
-      { start: 25, end: 30, ko: "1, 2 heat is on", rom: "1, 2 heat is on", en: "1, 2 heat is on" },
-      { start: 30, end: 34, ko: "Own it, burn it, kick it, flip that", rom: "Own it, burn it, kick it, flip that", en: "Own it, burn it, kick it, flip that" },
-      { start: 34, end: 37, ko: "3, 4 BABYMON", rom: "3, 4 BABYMON", en: "3, 4 BABYMON" },
-      { start: 37, end: 41, ko: "We gon' get this party started", rom: "We gon' get this party started", en: "We gon' get this party started" },
-      { start: 73, end: 77, ko: "Oh my, oh my, my 지금 이 순간", rom: "Oh my, oh my, my ji-geum i sun-gan", en: "Oh my right now at this moment" },
-      { start: 133, end: 138, ko: "리듬을 삼켜 보자 춤", rom: "ri-deum-eul sam-kyeo bo-ja chum", en: "Let's swallow the rhythm, dance!" },
-      { start: 143, end: 148, ko: "월, 화, 수, 목, 금, 토 모두 다 함께 취해 보자 춤", rom: "wol, hwa, su, mok, geum, to mo-du da ham-kke chwi-hae bo-ja chum", en: "Mon, Tue, Wed, Thu, Fri, Sat, let's all get drunk together, dance!" },
-      { start: 148, end: 153, ko: "춤, 춤, 춤, 춤, 춤", rom: "chum, chum, chum, chum, chum", en: "Dance, dance, dance, dance, dance" }
-    ]
+    album: '數位單曲《HOT SAUCE》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=xn8mQqz2xmM',
+    thumbnail: 'https://img.youtube.com/vi/xn8mQqz2xmM/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-HOT-SAUCE.srt',
+    srtPath: '/lyrics/BABYMONSTER-HOT-SAUCE.srt',
+    lyrics: []
   },
+
+  // ==========================================
+  // 6. 第二張迷你專輯《WE GO UP》 (2025.10.10)
+  // ==========================================
   {
-    id: 'naoGk-Zjc1s',
-    title: "SUGAR HONEY ICE TEA",
-    artist: 'BabyMonster',
-    youtubeUrl: 'https://www.youtube.com/watch?v=naoGk-Zjc1s',
-    thumbnail: 'https://img.youtube.com/vi/naoGk-Zjc1s/hqdefault.jpg',
-    srtFilename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
-    srtPath: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    id: 'wlHwjkYpSr0',
+    title: "WE GO UP",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第二張迷你專輯《WE GO UP》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=wlHwjkYpSr0',
+    thumbnail: 'https://img.youtube.com/vi/wlHwjkYpSr0/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-WE-GO-UP.srt',
+    srtPath: '/lyrics/BABYMONSTER-WE-GO-UP.srt',
     lyrics: []
   },
   {
     id: 'yd_uG3TtREs',
     title: 'PSYCHO',
     artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第二張迷你專輯《WE GO UP》',
     youtubeUrl: 'https://www.youtube.com/watch?v=yd_uG3TtREs',
     thumbnail: 'https://img.youtube.com/vi/yd_uG3TtREs/hqdefault.jpg',
     srtFilename: 'BABYMONSTER-PSYCHO.srt',
@@ -262,14 +327,98 @@ export const KPOP_SONG_PRESETS = [
       }
     ]
   },
+  {
+    id: 'SbdOIdg2McI',
+    title: "Supa Dupa Luv",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第二張迷你專輯《WE GO UP》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=SbdOIdg2McI',
+    thumbnail: 'https://img.youtube.com/vi/SbdOIdg2McI/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-SUPA-DUPA-LUV.srt',
+    srtPath: '/lyrics/BABYMONSTER-SUPA-DUPA-LUV.srt',
+    lyrics: []
+  },
+  {
+    id: 'PdB0EBaWKEk',
+    title: "WILD",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第二張迷你專輯《WE GO UP》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=PdB0EBaWKEk',
+    thumbnail: 'https://img.youtube.com/vi/PdB0EBaWKEk/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-WILD.srt',
+    srtPath: '/lyrics/BABYMONSTER-WILD.srt',
+    lyrics: []
+  },
 
   // ==========================================
-  // ILLIT
+  // 7. 第三張迷你專輯《춤 (CHOOM)》 (2026.05.04)
+  // ==========================================
+  {
+    id: 'x3eqqoZPV_E',
+    title: 'CHOOM (춤)',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第三張迷你專輯《춤 (CHOOM)》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
+    thumbnail: 'https://img.youtube.com/vi/x3eqqoZPV_E/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-CHOOM.srt',
+    srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
+    lyrics: [
+      { start: 25, end: 30, ko: "1, 2 heat is on", rom: "1, 2 heat is on", en: "1, 2 heat is on" },
+      { start: 30, end: 34, ko: "Own it, burn it, kick it, flip that", rom: "Own it, burn it, kick it, flip that", en: "Own it, burn it, kick it, flip that" },
+      { start: 34, end: 37, ko: "3, 4 BABYMON", rom: "3, 4 BABYMON", en: "3, 4 BABYMON" },
+      { start: 37, end: 41, ko: "We gon' get this party started", rom: "We gon' get this party started", en: "We gon' get this party started" },
+      { start: 73, end: 77, ko: "Oh my, oh my, my 지금 이 순간", rom: "Oh my, oh my, my ji-geum i sun-gan", en: "Oh my right now at this moment" },
+      { start: 133, end: 138, ko: "리듬을 삼켜 보자 춤", rom: "ri-deum-eul sam-kyeo bo-ja chum", en: "Let's swallow the rhythm, dance!" },
+      { start: 143, end: 148, ko: "월, 화, 수, 목, 금, 토 모두 다 함께 취해 보자 춤", rom: "wol, hwa, su, mok, geum, to mo-du da ham-kke chwi-hae bo-ja chum", en: "Mon, Tue, Wed, Thu, Fri, Sat, let's all get drunk together, dance!" },
+      { start: 148, end: 153, ko: "춤, 춤, 춤, 춤, 춤", rom: "chum, chum, chum, chum, chum", en: "Dance, dance, dance, dance, dance" }
+    ]
+  },
+  {
+    id: 'LYbHsAsj6i8',
+    title: "Moon",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第三張迷你專輯《춤 (CHOOM)》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=LYbHsAsj6i8',
+    thumbnail: 'https://img.youtube.com/vi/LYbHsAsj6i8/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-MOON.srt',
+    srtPath: '/lyrics/BABYMONSTER-MOON.srt',
+    lyrics: []
+  },
+  {
+    id: '9cS2wv6AfHk',
+    title: "I Like It",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    album: '第三張迷你專輯《춤 (CHOOM)》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=9cS2wv6AfHk',
+    thumbnail: 'https://img.youtube.com/vi/9cS2wv6AfHk/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-I-LIKE-IT.srt',
+    srtPath: '/lyrics/BABYMONSTER-I-LIKE-IT.srt',
+    lyrics: []
+  },
+
+  // ==========================================
+  // 8. 數位單曲《SUGAR HONEY ICE TEA》 (2026.06.08)
+  // ==========================================
+  {
+    id: 'naoGk-Zjc1s',
+    title: "SUGAR HONEY ICE TEA",
+    artist: 'BabyMonster',
+    album: '數位單曲《SUGAR HONEY ICE TEA》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=naoGk-Zjc1s',
+    thumbnail: 'https://img.youtube.com/vi/naoGk-Zjc1s/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    srtPath: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
+    lyrics: []
+  },
+
+  // ==========================================
+  // 9. Unkonw (Other artists / unassigned)
   // ==========================================
   {
     id: 'Vk5-c_v4gMU',
     title: "Magnetic",
     artist: 'ILLIT (아일릿)',
+    album: 'Unkonw',
     youtubeUrl: 'https://www.youtube.com/watch?v=Vk5-c_v4gMU',
     thumbnail: 'https://img.youtube.com/vi/Vk5-c_v4gMU/hqdefault.jpg',
     srtFilename: 'ILLIT-MAGNETIC.srt',
@@ -280,6 +429,7 @@ export const KPOP_SONG_PRESETS = [
     id: 'bMhDJ0S0OBA',
     title: "It's Me",
     artist: 'ILLIT (아일릿)',
+    album: 'Unkonw',
     youtubeUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
     thumbnail: 'https://img.youtube.com/vi/bMhDJ0S0OBA/hqdefault.jpg',
     srtFilename: 'ILLIT-ITS-ME.srt',
