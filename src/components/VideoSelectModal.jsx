@@ -105,12 +105,7 @@ export default function VideoSelectModal({
         <div className="modal-header">
           <div className="modal-title">
             <Film className="accent-icon" size={24} />
-            <div>
-              <h3>Select K-Pop Music Video</h3>
-              <span className="modal-subtitle">
-                Choose a music video organized by album to learn Korean lyrics with synchronized subtitles
-              </span>
-            </div>
+            <h3>Select K-Pop Music Video</h3>
           </div>
           <button
             type="button"
