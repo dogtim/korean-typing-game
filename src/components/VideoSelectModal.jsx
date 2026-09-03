@@ -105,7 +105,7 @@ export default function VideoSelectModal({
         <div className="modal-header">
           <div className="modal-title">
             <Film className="accent-icon" size={24} />
-            <h3>Select K-Pop Music Video</h3>
+            <h3>Select Music Video</h3>
           </div>
           <button
             type="button"
@@ -251,11 +251,6 @@ export default function VideoSelectModal({
                                 <Play size={20} fill="currentColor" />
                               </div>
                             </div>
-                            {preset.srtPath && (
-                              <span className="video-badge-srt">
-                                <span className="dot" /> Synced SRT
-                              </span>
-                            )}
                           </div>
 
                           {/* Content info */}
@@ -269,18 +264,6 @@ export default function VideoSelectModal({
                               )}
                             </div>
                             <p className="video-card-artist">{preset.artist}</p>
-
-                            <div className="video-card-footer">
-                              <span
-                                className="video-album-tag"
-                                title={`Album: ${preset.album || 'Unkonw'}`}
-                              >
-                                {preset.album || 'Unkonw'}
-                              </span>
-                              <span className="video-action-hint">
-                                {isSelected ? 'Currently Selected' : 'Click to Load & Play'}
-                              </span>
-                            </div>
                           </div>
                         </div>
                       );
