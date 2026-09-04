@@ -38,11 +38,13 @@ export default function KpopGameMode({
   onSaveMissed,
   onLoopSentence,
   onOpenReviewModal,
-  missedCount = 0
+  missedCount = 0,
+  selectedSong = null,
+  onSelectSong = null
 }) {
   // Song selection
-  const [selectedSongIdx, setSelectedSongIdx] = useState(0);
-  const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
+  const [selectedSongIdx, setSelectedSongIdx] = useState(() => selectedSong?.index ?? 0);
+  const [activeVideoId, setActiveVideoId] = useState(() => selectedSong?.preset?.id || KPOP_SONG_PRESETS[0].id);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [customLyrics, setCustomLyrics] = useState(null);
   const [customTrackTitle, setCustomTrackTitle] = useState('');
@@ -153,13 +155,34 @@ export default function KpopGameMode({
     }
   }, []);
 
-  // Initial load default song (DRIP)
+  // Initial load song
   useEffect(() => {
-    const dripItem = PREPARED_SRT_LIBRARY.find(item => item.id === 'babymonster_drip');
-    if (dripItem) {
-      handleLoadPreparedSrt(dripItem);
+    const targetPreset = selectedSong?.preset;
+    let targetItem = null;
+
+    if (targetPreset) {
+      targetItem = PREPARED_SRT_LIBRARY.find(
+        item => item.youtubeId === targetPreset.id || item.title.toLowerCase() === targetPreset.title.toLowerCase()
+      ) || (targetPreset.srtPath ? {
+        path: targetPreset.srtPath,
+        title: targetPreset.title,
+        artist: targetPreset.artist,
+        youtubeId: targetPreset.id,
+        filename: targetPreset.srtFilename
+      } : null);
     }
-  }, [handleLoadPreparedSrt]);
+
+    if (!targetItem) {
+      targetItem = PREPARED_SRT_LIBRARY.find(item => item.id === 'babymonster_drip');
+    }
+
+    if (targetItem) {
+      handleLoadPreparedSrt(targetItem);
+      if (typeof selectedSong?.index === 'number') {
+        setSelectedSongIdx(selectedSong.index);
+      }
+    }
+  }, [handleLoadPreparedSrt, selectedSong]);
 
   // Reset to Ready Screen
   const resetToReady = useCallback(() => {
@@ -506,8 +529,9 @@ export default function KpopGameMode({
       setCustomLyrics(null);
       setCustomTrackTitle('');
     }
+    onSelectSong?.({ preset: p, index: idx });
     resetToReady();
-  }, [handleLoadPreparedSrt, resetToReady]);
+  }, [handleLoadPreparedSrt, onSelectSong, resetToReady]);
 
   return (
     <div className="kpop-game-arena-container">
@@ -857,7 +881,10 @@ export default function KpopGameMode({
                 <RotateCcw size={16} /> Play Again
               </button>
               {onSwitchToPractice && (
-                <button className="result-btn secondary-btn" onClick={onSwitchToPractice}>
+                <button
+                  className="result-btn secondary-btn"
+                  onClick={() => onSwitchToPractice(currentPreset, selectedSongIdx)}
+                >
                   <BookOpen size={16} /> Study in Practice Mode
                 </button>
               )}

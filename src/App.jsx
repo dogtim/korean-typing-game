@@ -9,10 +9,23 @@ import KpopVideoMode from './components/KpopVideoMode';
 import KpopGameMode from './components/KpopGameMode';
 import AdminSyncPage from './components/AdminSyncPage';
 import LyricsReferencePage from './components/LyricsReferencePage';
+import { KPOP_SONG_PRESETS } from './utils/kpopSongs';
+
+const defaultSongIndex = KPOP_SONG_PRESETS.findIndex(
+  p => p.id === 'Zp-Jhuhq0bQ' || p.title === 'DRIP'
+);
+const DEFAULT_SONG = {
+  preset: defaultSongIndex !== -1 ? KPOP_SONG_PRESETS[defaultSongIndex] : KPOP_SONG_PRESETS[0],
+  index: defaultSongIndex !== -1 ? defaultSongIndex : 0
+};
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('lessons');
   const [autoPlayVideoId, setAutoPlayVideoId] = useState(null);
+
+  // Selected song state across tab navigation (resets to DRIP on fresh page reload)
+  const [selectedPracticeSong, setSelectedPracticeSong] = useState(DEFAULT_SONG);
+  const [selectedGameSong, setSelectedGameSong] = useState(DEFAULT_SONG);
 
   // Gamification state
   const [xp, setXp] = useState(() => parseInt(localStorage.getItem('hangul_xp') || '0', 10));
@@ -86,11 +99,22 @@ export default function App() {
   // Trigger Loop Sentence in Practice Mode
   const handleLoopSentence = useCallback((item) => {
     setLoopTarget({ ...item, autoLoop: true });
+    const targetVideoId = item.youtubeId || item.songId;
+    if (targetVideoId) {
+      const idx = KPOP_SONG_PRESETS.findIndex(p => p.id === targetVideoId);
+      if (idx !== -1) {
+        setSelectedPracticeSong({ preset: KPOP_SONG_PRESETS[idx], index: idx });
+      }
+    }
     setActiveTab('kpop');
   }, []);
 
   // Jump to K-Pop Practice and auto-load a just-registered song from the Admin page
   const handlePlayNow = useCallback((videoId) => {
+    const idx = KPOP_SONG_PRESETS.findIndex(p => p.id === videoId);
+    if (idx !== -1) {
+      setSelectedPracticeSong({ preset: KPOP_SONG_PRESETS[idx], index: idx });
+    }
     setAutoPlayVideoId(videoId);
     setActiveTab('kpop');
   }, []);
@@ -132,6 +156,8 @@ export default function App() {
             missedCount={missedSentences.length}
             autoPlayVideoId={autoPlayVideoId}
             onAutoPlayHandled={() => setAutoPlayVideoId(null)}
+            selectedSong={selectedPracticeSong}
+            onSelectSong={setSelectedPracticeSong}
           />
         )}
 
@@ -149,11 +175,18 @@ export default function App() {
         {activeTab === 'kpop-game' && (
           <KpopGameMode
             onAddXp={handleAddXp}
-            onSwitchToPractice={() => setActiveTab('kpop')}
+            onSwitchToPractice={(preset, idx) => {
+              if (preset) {
+                setSelectedPracticeSong({ preset, index: idx });
+              }
+              setActiveTab('kpop');
+            }}
             onSaveMissed={handleSaveMissed}
             onLoopSentence={handleLoopSentence}
             onOpenReviewModal={() => setIsReviewModalOpen(true)}
             missedCount={missedSentences.length}
+            selectedSong={selectedGameSong}
+            onSelectSong={setSelectedGameSong}
           />
         )}
       </main>

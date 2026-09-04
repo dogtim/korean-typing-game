@@ -33,10 +33,12 @@ export default function KpopVideoMode({
   onOpenReviewModal,
   missedCount = 0,
   autoPlayVideoId = null,
-  onAutoPlayHandled
+  onAutoPlayHandled,
+  selectedSong = null,
+  onSelectSong = null
 }) {
-  const [selectedSongIdx, setSelectedSongIdx] = useState(0);
-  const [activeVideoId, setActiveVideoId] = useState(KPOP_SONG_PRESETS[0].id);
+  const [selectedSongIdx, setSelectedSongIdx] = useState(() => selectedSong?.index ?? 0);
+  const [activeVideoId, setActiveVideoId] = useState(() => selectedSong?.preset?.id || KPOP_SONG_PRESETS[0].id);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   // Custom uploaded or prepared SRT lyrics state
@@ -398,18 +400,39 @@ export default function KpopVideoMode({
     }
   }, []);
 
-  // Auto-load default song (DRIP) video & full SRT subtitles on initial mount
+  // Auto-load initial song video & full SRT subtitles on initial mount
   useEffect(() => {
-    const dripItem = PREPARED_SRT_LIBRARY.find(item => item.id === 'babymonster_drip') || {
-      id: 'babymonster_drip',
-      title: 'DRIP',
-      artist: 'BABYMONSTER (베이비몬스터)',
-      youtubeId: 'Zp-Jhuhq0bQ',
-      path: '/lyrics/BABYMONSTER-DRIP.srt',
-      filename: 'BABYMONSTER-DRIP.srt'
-    };
-    handleLoadPreparedSrt(dripItem, true);
-  }, [handleLoadPreparedSrt]);
+    const targetPreset = selectedSong?.preset;
+    let targetItem = null;
+
+    if (targetPreset) {
+      targetItem = PREPARED_SRT_LIBRARY.find(
+        item => item.youtubeId === targetPreset.id || item.title.toLowerCase() === targetPreset.title.toLowerCase()
+      ) || (targetPreset.srtPath ? {
+        path: targetPreset.srtPath,
+        title: targetPreset.title,
+        artist: targetPreset.artist,
+        youtubeId: targetPreset.id,
+        filename: targetPreset.srtFilename
+      } : null);
+    }
+
+    if (!targetItem) {
+      targetItem = PREPARED_SRT_LIBRARY.find(item => item.id === 'babymonster_drip') || {
+        id: 'babymonster_drip',
+        title: 'DRIP',
+        artist: 'BABYMONSTER (베이비몬스터)',
+        youtubeId: 'Zp-Jhuhq0bQ',
+        path: '/lyrics/BABYMONSTER-DRIP.srt',
+        filename: 'BABYMONSTER-DRIP.srt'
+      };
+    }
+
+    handleLoadPreparedSrt(targetItem, true);
+    if (typeof selectedSong?.index === 'number') {
+      setSelectedSongIdx(selectedSong.index);
+    }
+  }, [handleLoadPreparedSrt, selectedSong]);
 
   // Handle Review Loop Target: automatically load song, jump to timestamp, and loop sentence
   useEffect(() => {
@@ -421,6 +444,7 @@ export default function KpopVideoMode({
         const presetIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === targetVideoId);
         if (presetIdx !== -1) {
           setSelectedSongIdx(presetIdx);
+          onSelectSong?.({ preset: KPOP_SONG_PRESETS[presetIdx], index: presetIdx });
         }
         setActiveVideoId(targetVideoId);
 
@@ -450,7 +474,7 @@ export default function KpopVideoMode({
     };
 
     applyLoopTarget();
-  }, [loopTarget, activeVideoId, handleLoadPreparedSrt, song.lyrics]);
+  }, [loopTarget, activeVideoId, handleLoadPreparedSrt, onSelectSong, song.lyrics]);
 
   // Sync lyrics time ticker & sentence/range loop option
   useEffect(() => {
@@ -652,7 +676,9 @@ export default function KpopVideoMode({
       setCustomLyrics(null);
       setCustomTrackTitle('');
     }
-  }, [handleLoadPreparedSrt]);
+
+    onSelectSong?.({ preset: p, index: idx });
+  }, [handleLoadPreparedSrt, onSelectSong]);
 
   // Auto-load a song just registered from the Admin page (freshly written to
   // KPOP_SONG_PRESETS via the local admin API + Vite HMR) and start playing it
