@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { X, Search, Play, Check, Music, Film, Sparkles, Disc3, Layers } from 'lucide-react';
 import { KPOP_SONG_PRESETS, ALBUM_METADATA } from '../utils/kpopSongs';
+import { getSongDifficulty, DIFFICULTY_LEVEL_FILTERS } from '../utils/songDifficulty';
 
 export default function VideoSelectModal({
   isOpen,
@@ -12,6 +13,7 @@ export default function VideoSelectModal({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAlbumFilter, setSelectedAlbumFilter] = useState('ALL');
+  const [selectedLevelFilter, setSelectedLevelFilter] = useState('ALL');
 
   // Close on Escape key press
   useEffect(() => {
@@ -30,30 +32,46 @@ export default function VideoSelectModal({
     if (isOpen) {
       setSearchQuery('');
       setSelectedAlbumFilter('ALL');
+      setSelectedLevelFilter('ALL');
     }
   }, [isOpen]);
 
-  // Filter songs based on search query
+  // Filter songs based on search query and difficulty level
   const filteredPresets = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return presets.map((preset, index) => ({ preset, index }));
 
     return presets
-      .map((preset, index) => ({ preset, index }))
-      .filter(({ preset }) => {
-        const titleMatch = preset.title?.toLowerCase().includes(q);
-        const artistMatch = preset.artist?.toLowerCase().includes(q);
-        const albumMatch = preset.album?.toLowerCase().includes(q);
-        const idMatch = preset.id?.toLowerCase().includes(q);
-        return titleMatch || artistMatch || albumMatch || idMatch;
+      .map((preset, index) => ({
+        preset,
+        index,
+        difficulty: getSongDifficulty(preset)
+      }))
+      .filter(({ preset, difficulty }) => {
+        // Search filter
+        if (q) {
+          const titleMatch = preset.title?.toLowerCase().includes(q);
+          const artistMatch = preset.artist?.toLowerCase().includes(q);
+          const albumMatch = preset.album?.toLowerCase().includes(q);
+          const idMatch = preset.id?.toLowerCase().includes(q);
+          if (!titleMatch && !artistMatch && !albumMatch && !idMatch) {
+            return false;
+          }
+        }
+        // Difficulty level filter
+        if (selectedLevelFilter !== 'ALL') {
+          if (difficulty.level !== selectedLevelFilter) {
+            return false;
+          }
+        }
+        return true;
       });
-  }, [presets, searchQuery]);
+  }, [presets, searchQuery, selectedLevelFilter]);
 
   // Group presets into Album Sections
   const groupedByAlbum = useMemo(() => {
     const albumMap = new Map();
 
-    filteredPresets.forEach(({ preset, index }) => {
+    filteredPresets.forEach(({ preset, index, difficulty }) => {
       const albumKey = preset.album || 'Unkonw';
       if (!albumMap.has(albumKey)) {
         const meta = ALBUM_METADATA[albumKey] || {
@@ -69,7 +87,7 @@ export default function VideoSelectModal({
           songs: []
         });
       }
-      albumMap.get(albumKey).songs.push({ preset, index });
+      albumMap.get(albumKey).songs.push({ preset, index, difficulty });
     });
 
     const sorted = Array.from(albumMap.values()).sort((a, b) => a.order - b.order);
@@ -146,6 +164,30 @@ export default function VideoSelectModal({
           </div>
         </div>
 
+        {/* Difficulty Level Quick-Filter Pills */}
+        <div className="video-level-pills-bar">
+          {DIFFICULTY_LEVEL_FILTERS.map((levelItem) => {
+            const count = presets.filter((p) => {
+              if (levelItem.id === 'ALL') return true;
+              const diff = getSongDifficulty(p);
+              return diff.level === levelItem.id;
+            }).length;
+
+            return (
+              <button
+                key={levelItem.id}
+                type="button"
+                className={`level-pill-btn level-pill-${levelItem.id} ${selectedLevelFilter === levelItem.id ? 'is-active' : ''}`}
+                onClick={() => setSelectedLevelFilter(levelItem.id)}
+              >
+                <span className="level-dot" />
+                <span>{levelItem.label}</span>
+                <span className="pill-count">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* Album Quick-Filter Pills */}
         <div className="video-album-pills-bar">
           <button
@@ -177,13 +219,14 @@ export default function VideoSelectModal({
             <div className="video-empty-state">
               <Sparkles size={40} className="empty-sparkle" />
               <h4>No matching songs found</h4>
-              <p>Try searching for a different title, album, or artist name.</p>
+              <p>Try searching for a different title, album, artist, or level.</p>
               <button
                 type="button"
                 className="card-nav-btn reset-btn"
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedAlbumFilter('ALL');
+                  setSelectedLevelFilter('ALL');
                 }}
               >
                 Show All Videos
@@ -223,7 +266,7 @@ export default function VideoSelectModal({
 
                   {/* Album Video Cards Grid */}
                   <div className="video-cards-grid">
-                    {songs.map(({ preset, index }) => {
+                    {songs.map(({ preset, index, difficulty }) => {
                       const isSelected =
                         activeVideoId ? preset.id === activeVideoId : selectedSongIdx === index;
                       const thumbUrl =
@@ -255,15 +298,34 @@ export default function VideoSelectModal({
 
                           {/* Content info */}
                           <div className="video-card-details">
-                            <div className="video-card-header-row">
-                              <h4 className="video-card-title">{preset.title}</h4>
-                              {isSelected && (
-                                <span className="video-active-chip">
-                                  <Check size={12} /> Active
-                                </span>
-                              )}
+                            <div>
+                              <div className="video-card-header-row">
+                                <h4 className="video-card-title">{preset.title}</h4>
+                                {isSelected && (
+                                  <span className="video-active-chip">
+                                    <Check size={12} /> Active
+                                  </span>
+                                )}
+                              </div>
+                              <p className="video-card-artist">{preset.artist}</p>
                             </div>
-                            <p className="video-card-artist">{preset.artist}</p>
+
+                            {/* Hangul Coverage & Difficulty Level Badge */}
+                            <div className="video-card-meta-row">
+                              <span
+                                className={`song-diff-chip diff-${difficulty.level}`}
+                                title={`Hangul Coverage: ${difficulty.coveragePercent}% (${difficulty.hangulLines}/${difficulty.totalLines} lines)`}
+                              >
+                                <span className="diff-dot" />
+                                <span className="diff-label">{difficulty.label}</span>
+                                <span className="diff-percent">{difficulty.coveragePercent}%</span>
+                              </span>
+                              <span className="song-hangul-subtext">
+                                {difficulty.hangulLines > 0
+                                  ? `${difficulty.hangulLines}/${difficulty.totalLines} Kor`
+                                  : '100% English'}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       );
