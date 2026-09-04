@@ -1078,7 +1078,7 @@ export default function KpopVideoMode({
         <div className="vowel-card-header">
           <Sparkles className="gold-icon" size={22} />
           <div>
-            <h3>Vowel Breakdown Helper </h3>
+            <h3>Syllable Breakdown</h3>
           </div>
         </div>
 

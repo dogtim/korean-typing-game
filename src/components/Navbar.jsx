@@ -22,7 +22,7 @@ export default function Navbar({
           onClick={() => setActiveTab('lessons')}
         >
           <BookOpen className="tab-icon" size={18} />
-          <span>Lessons</span>
+          <span>Lessons (WIP)</span>
         </button>
 
         <button
@@ -47,7 +47,7 @@ export default function Navbar({
           title="K-Pop Lyrics & Subtitle Reference Hub (k-lyrics & RentAnAdviser)"
         >
           <BookMarked className="tab-icon" size={18} />
-          <span>Lyrics Hub</span>
+          <span>Lyrics Hub (WIP)</span>
         </button>
 
         {showAdminTab && (
