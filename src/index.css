@@ -1922,6 +1922,156 @@ body {
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
 }
 
+.action-btn.buffering-pulse {
+  background: rgba(234, 179, 8, 0.28) !important;
+  border-color: #f59e0b !important;
+  color: #fef08a !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.5) !important;
+  animation: rec-pulse 1s infinite ease-in-out;
+}
+
+.cc-subtitle-overlay.cc-buffering {
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.25);
+  transition: all 0.3s ease;
+}
+
+.cc-buffer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: rgba(34, 197, 94, 0.18);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  color: #86efac;
+  margin-bottom: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Loop Buffer Pause Toolbar */
+.loop-buffer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.7));
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease;
+  flex-wrap: wrap;
+}
+
+.loop-buffer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 180px;
+}
+
+.loop-buffer-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.loop-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.loop-status-dot.buffering {
+  background: #fbbf24;
+  box-shadow: 0 0 10px #fbbf24;
+  animation: rec-pulse 1s infinite ease-in-out;
+}
+
+.loop-status-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.loop-buffer-progress-track {
+  width: 100%;
+  max-width: 220px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.loop-buffer-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #38bdf8);
+  animation: loopBufferDrain linear forwards;
+}
+
+@keyframes loopBufferDrain {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.loop-buffer-settings {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.loop-buffer-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.loop-buffer-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.buffer-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.buffer-pill:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.buffer-pill.active {
+  background: rgba(34, 197, 94, 0.28);
+  border-color: #22c55e;
+  color: #4ade80;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+
 /* ==========================================================================
    GAME MODE: Selector Bar + Pause-and-Challenge Overlay
    ========================================================================== */

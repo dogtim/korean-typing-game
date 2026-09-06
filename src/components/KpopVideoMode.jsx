@@ -62,6 +62,31 @@ export default function KpopVideoMode({
   const [isPlaying, setIsPlaying] = useState(false);
   const [practiceMode, setPracticeMode] = useState(false);
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
+  const [loopBufferSec, setLoopBufferSec] = useState(() => {
+    const saved = localStorage.getItem('kpop_loop_buffer_sec');
+    return saved !== null ? parseFloat(saved) : 1.0;
+  });
+  const [isLoopBuffering, setIsLoopBuffering] = useState(false);
+  const loopBufferTimeoutRef = useRef(null);
+  const isWaitingLoopBufferRef = useRef(false);
+  const loopBufferSecRef = useRef(loopBufferSec);
+  loopBufferSecRef.current = loopBufferSec;
+
+  const clearLoopBufferTimeout = useCallback(() => {
+    if (loopBufferTimeoutRef.current) {
+      clearTimeout(loopBufferTimeoutRef.current);
+      loopBufferTimeoutRef.current = null;
+    }
+    isWaitingLoopBufferRef.current = false;
+    setIsLoopBuffering(false);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearLoopBufferTimeout();
+    };
+  }, [clearLoopBufferTimeout]);
+
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
   // Multi-line selection and consecutive range loop state
@@ -539,8 +564,60 @@ export default function KpopVideoMode({
                 ? endLine.end
                 : (endLine.start + 3);
 
-              // If video reaches or exceeds loop range end (or jumps outside range), loop back to start
-              if (time >= loopEnd || time < loopStart - 0.5) {
+              // If video reaches or exceeds loop range end, handle pause buffer before rewinding
+              if (time >= loopEnd) {
+                if (isWaitingLoopBufferRef.current) {
+                  return;
+                }
+
+                const currentBufferSec = loopBufferSecRef.current;
+                if (currentBufferSec > 0) {
+                  isWaitingLoopBufferRef.current = true;
+                  setIsLoopBuffering(true);
+
+                  if (playerRef.current) {
+                    if (typeof playerRef.current.pauseVideo === 'function') {
+                      playerRef.current.pauseVideo();
+                    }
+                    if (typeof playerRef.current.seekTo === 'function') {
+                      playerRef.current.seekTo(loopEnd, true);
+                    }
+                  }
+
+                  if (loopBufferTimeoutRef.current) {
+                    clearTimeout(loopBufferTimeoutRef.current);
+                  }
+
+                  loopBufferTimeoutRef.current = setTimeout(() => {
+                    isWaitingLoopBufferRef.current = false;
+                    setIsLoopBuffering(false);
+                    loopBufferTimeoutRef.current = null;
+
+                    if (playerRef.current) {
+                      if (typeof playerRef.current.seekTo === 'function') {
+                        playerRef.current.seekTo(loopStart, true);
+                      }
+                      if (typeof playerRef.current.playVideo === 'function') {
+                        playerRef.current.playVideo();
+                      }
+                    }
+                    setActiveLineIdx(rangeStartIdx);
+                    setTypedKeys('');
+                    setTypedText('');
+                  }, currentBufferSec * 1000);
+                  return;
+                } else {
+                  // Instant rewind (0s buffer)
+                  playerRef.current.seekTo(loopStart, true);
+                  setActiveLineIdx(rangeStartIdx);
+                  setTypedKeys('');
+                  setTypedText('');
+                  return;
+                }
+              }
+
+              // If video jumps backward outside loop segment
+              if (time < loopStart - 0.5) {
                 playerRef.current.seekTo(loopStart, true);
                 setActiveLineIdx(rangeStartIdx);
                 setTypedKeys('');
@@ -590,8 +667,14 @@ export default function KpopVideoMode({
             onStateChange: (event) => {
               if (event.data === window.YT.PlayerState.PLAYING) {
                 setIsPlaying(true);
+                if (isWaitingLoopBufferRef.current) {
+                  clearLoopBufferTimeout();
+                }
               } else {
                 setIsPlaying(false);
+                if (!isWaitingLoopBufferRef.current) {
+                  clearLoopBufferTimeout();
+                }
               }
             }
           }
@@ -616,6 +699,7 @@ export default function KpopVideoMode({
   }, [activeVideoId]);
 
   const seekToTime = (seconds) => {
+    clearLoopBufferTimeout();
     if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
       playerRef.current.seekTo(seconds, true);
       setCurrentTime(seconds);
@@ -732,6 +816,7 @@ export default function KpopVideoMode({
   }, [handleGlobalKeyDown]);
 
   const handleSelectSongPreset = useCallback(async (p, idx) => {
+    clearLoopBufferTimeout();
     setSelectedSongIdx(idx);
     setActiveVideoId(p.id);
     setActiveLineIdx(0);
@@ -818,7 +903,7 @@ export default function KpopVideoMode({
               </div>
               <div className="loop-banner-text">"{loopTarget.ko}"</div>
               <div className="loop-banner-time">
-                <Clock size={12} /> {loopTarget.timestampStr || `${loopTarget.start}s - ${loopTarget.end}s`}
+                <Clock size={12} /> {loopTarget.timestampStr || `${loopTarget.start}s - ${loopTarget.end}s`} · {loopBufferSec}s thinking buffer
               </div>
             </div>
           </div>
@@ -826,6 +911,7 @@ export default function KpopVideoMode({
             type="button"
             className="loop-banner-dismiss-btn"
             onClick={() => {
+              clearLoopBufferTimeout();
               setIsLineLoopEnabled(false);
               if (onClearLoopTarget) onClearLoopTarget();
             }}
@@ -845,7 +931,13 @@ export default function KpopVideoMode({
           </div>
 
           {/* CC Style Subtitle Display Banner */}
-          <div className="cc-subtitle-overlay">
+          <div className={`cc-subtitle-overlay ${isLoopBuffering ? 'cc-buffering' : ''}`}>
+            {isLoopBuffering && (
+              <div className="cc-buffer-pill">
+                <Clock size={12} className="spin-slow" />
+                <span>Thinking Pause ({loopBufferSec}s) · Rewinding soon...</span>
+              </div>
+            )}
             <div className="cc-hangul">{activeLine.ko}</div>
             {activeLine.rom && <div className="cc-romanization">{activeLine.rom}</div>}
             {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
@@ -854,7 +946,7 @@ export default function KpopVideoMode({
           {/* Loop & Practice Toggle Bar */}
           <div className="video-actions-bar">
             <button
-              className={`action-btn ${isLineLoopEnabled ? 'active-green' : ''}`}
+              className={`action-btn ${isLineLoopEnabled ? 'active-green' : ''} ${isLoopBuffering ? 'buffering-pulse' : ''}`}
               onClick={(e) => {
                 e.currentTarget.blur();
                 const nextLoopState = !isLineLoopEnabled;
@@ -866,15 +958,20 @@ export default function KpopVideoMode({
                     seekToTime(currentLine.start);
                     setActiveLineIdx(targetStartIdx);
                   }
+                } else {
+                  clearLoopBufferTimeout();
                 }
               }}
               title={isMultiSelected
-                ? `Repeat selected ${rangeCount}-line loop range forever`
-                : "Repeat the selected lyric sentence segment forever"}
+                ? `Repeat selected ${rangeCount}-line loop range with ${loopBufferSec}s thinking buffer`
+                : `Repeat the selected lyric sentence segment with ${loopBufferSec}s thinking buffer`}
             >
-              <Repeat size={18} /> {isLineLoopEnabled
-                ? (isMultiSelected ? `Loop Range ON (${rangeCount} lines)` : 'Loop Sentence ON')
-                : (isMultiSelected ? `Loop Range (${rangeCount} lines)` : 'Loop Sentence')}
+              <Repeat size={18} className={isLineLoopEnabled ? 'rotating' : ''} />
+              {isLoopBuffering
+                ? `Looping in ${loopBufferSec}s...`
+                : isLineLoopEnabled
+                  ? (isMultiSelected ? `Loop Range ON (${rangeCount} lines)` : `Loop ON (${loopBufferSec}s buffer)`)
+                  : (isMultiSelected ? `Loop Range (${rangeCount} lines)` : 'Loop Sentence')}
             </button>
 
             <button
@@ -921,6 +1018,59 @@ export default function KpopVideoMode({
               </button>
             )}
           </div>
+
+          {/* Loop Buffer Pause Toolbar */}
+          {isLineLoopEnabled && (
+            <div className="loop-buffer-toolbar glassmorphism">
+              <div className="loop-buffer-info">
+                <div className="loop-buffer-status-indicator">
+                  <span className={`loop-status-dot ${isLoopBuffering ? 'buffering' : 'active'}`} />
+                  <span className="loop-status-text">
+                    {isLoopBuffering ? `🧠 Thinking pause (${loopBufferSec}s)...` : `🔁 Sentence Loop Active`}
+                  </span>
+                </div>
+                {isLoopBuffering && (
+                  <div className="loop-buffer-progress-track">
+                    <div
+                      key={Date.now()}
+                      className="loop-buffer-progress-bar"
+                      style={{ animationDuration: `${loopBufferSec}s` }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="loop-buffer-settings">
+                <span className="loop-buffer-label">
+                  <Clock size={13} /> Thinking Buffer:
+                </span>
+                <div className="loop-buffer-pills">
+                  {[
+                    { label: '0s (Off)', val: 0 },
+                    { label: '0.5s', val: 0.5 },
+                    { label: '1s', val: 1 },
+                    { label: '1.5s', val: 1.5 },
+                    { label: '2s', val: 2 },
+                    { label: '3s', val: 3 },
+                  ].map(item => (
+                    <button
+                      key={item.val}
+                      type="button"
+                      className={`buffer-pill ${loopBufferSec === item.val ? 'active' : ''}`}
+                      onClick={() => {
+                        setLoopBufferSec(item.val);
+                        loopBufferSecRef.current = item.val;
+                        localStorage.setItem('kpop_loop_buffer_sec', item.val.toString());
+                      }}
+                      title={item.val === 0 ? 'No pause, loop sentence immediately' : `Pause for ${item.val} second${item.val > 1 ? 's' : ''} after sentence before looping`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Web Speech API Pronunciation Check Display */}
           {(isRecording || speechTranscript) && (
@@ -992,7 +1142,7 @@ export default function KpopVideoMode({
                 <Repeat size={16} className={`range-loop-icon ${isLineLoopEnabled ? 'rotating' : ''}`} />
                 <div className="range-banner-text">
                   <div className="range-title">
-                    {isLineLoopEnabled ? '🔁 Multi-Line Loop Active' : '⏸️ Multi-Line Range Selected'}
+                    {isLineLoopEnabled ? `🔁 Multi-Line Loop Active (${loopBufferSec}s buffer)` : '⏸️ Multi-Line Range Selected'}
                     <span className="range-count-tag">{rangeCount} lines</span>
                   </div>
                   <div className="range-details">
