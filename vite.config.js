@@ -56,6 +56,18 @@ function adminSyncApiPlugin() {
             return sendJson(res, 200, result)
           }
 
+          if (req.url === '/api/admin/save-srt') {
+            const { srtFilename, srtContent } = body
+            if (!srtFilename || !srtContent) {
+              return sendJson(res, 400, { error: 'srtFilename and srtContent are required.' })
+            }
+            const cleanFilename = srtFilename.endsWith('.srt') ? srtFilename : `${srtFilename}.srt`
+            const publicDir = path.join(rootDir, 'public', 'lyrics')
+            fs.mkdirSync(publicDir, { recursive: true })
+            fs.writeFileSync(path.join(publicDir, cleanFilename), srtContent, 'utf-8')
+            return sendJson(res, 200, { success: true, filename: cleanFilename })
+          }
+
           if (req.url === '/api/admin/register') {
             const { id, title, artist, srtFilename, youtubeIds, srtContent } = body
             if (!title || !artist || !srtFilename || !srtContent || !youtubeIds?.length) {

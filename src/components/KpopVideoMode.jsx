@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { KPOP_SONG_PRESETS, VOWEL_PRONUNCIATION_GUIDE } from '../utils/kpopSongs';
 import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
-import { parseSRTContent, parseSRTTimeToSeconds } from '../utils/srtParser';
+import { parseSRTContent, parseSRTTimeToSeconds, exportLyricsToSRT, downloadSRTFile } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
 import { getHokkienLineBreakdown } from '../utils/hokkien';
 import { sound } from '../utils/audio';
@@ -23,7 +23,14 @@ import {
   Volume2,
   Bookmark,
   Film,
-  ChevronDown
+  ChevronDown,
+  Sliders,
+  Download,
+  Copy,
+  Save,
+  FileText,
+  Play,
+  Pause
 } from 'lucide-react';
 
 export default function KpopVideoMode({
@@ -88,6 +95,15 @@ export default function KpopVideoMode({
   }, [clearLoopBufferTimeout]);
 
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+
+  // Live Tap-to-Sync Studio State
+  const [isSyncStudioOpen, setIsSyncStudioOpen] = useState(false);
+  const [syncToastMessage, setSyncToastMessage] = useState(null);
+  const [isSrtPreviewOpen, setIsSrtPreviewOpen] = useState(false);
+  const [srtPreviewText, setSrtPreviewText] = useState('');
+  const [isSavingSrt, setIsSavingSrt] = useState(false);
+  const [startInputStr, setStartInputStr] = useState('');
+  const [endInputStr, setEndInputStr] = useState('');
 
   // Multi-line selection and consecutive range loop state
   const [selectedRange, setSelectedRange] = useState(null); // [startIdx, endIdx] or null
@@ -367,12 +383,207 @@ export default function KpopVideoMode({
   };
 
   // Sync line timestamp to current video playback time
+  // Hold Shift to ripple-shift this line and all following lines!
   const handleSyncToCurrentTime = (e, lineIdx) => {
     e.stopPropagation();
     const roundedTime = Math.round(currentTime * 10) / 10;
+
+    if (e.shiftKey) {
+      const currentList = customLyrics ? [...customLyrics] : [...song.lyrics];
+      const target = currentList[lineIdx];
+      if (target) {
+        const delta = Math.round((roundedTime - target.start) * 10) / 10;
+        for (let i = lineIdx; i < currentList.length; i++) {
+          const l = currentList[i];
+          const newStart = Math.max(0, Math.round((l.start + delta) * 10) / 10);
+          const newEnd = Math.max(newStart + 0.5, Math.round(((l.end || newStart + 3) + delta) * 10) / 10);
+          currentList[i] = { ...l, start: newStart, end: newEnd };
+        }
+        setCustomLyrics(currentList);
+        sound.playCorrect();
+        setSyncToastMessage(`🌊 Ripple shifted lines #${lineIdx + 1} ~ #${currentList.length} by ${delta > 0 ? '+' : ''}${delta}s!`);
+        setTimeout(() => setSyncToastMessage(null), 3000);
+        return;
+      }
+    }
+
     updateLineTimestamp(lineIdx, roundedTime);
     sound.playKeyPress();
   };
+
+  // Resolved filename for saving and exporting
+  const resolvedSrtFilename = useMemo(() => {
+    if (currentPreset?.srtFilename) return currentPreset.srtFilename;
+    const mapped = findMappingByVideoId(activeVideoId);
+    if (mapped?.srtFilename) return mapped.srtFilename;
+    const safeTitle = (song.title || 'song').replace(/[^a-zA-Z0-9_-]+/g, '-');
+    const safeArtist = (song.artist || 'artist').replace(/[^a-zA-Z0-9_-]+/g, '-');
+    return `${safeArtist}-${safeTitle}.srt`.toUpperCase();
+  }, [currentPreset, activeVideoId, song.title, song.artist]);
+
+  // Keep input fields synchronized whenever activeLine or activeLineIdx changes
+  useEffect(() => {
+    if (activeLine) {
+      const s = typeof activeLine.start === 'number' ? activeLine.start.toFixed(1) : '0.0';
+      const e = typeof activeLine.end === 'number' ? activeLine.end.toFixed(1) : (Number(activeLine.start || 0) + 3).toFixed(1);
+      setStartInputStr(s);
+      setEndInputStr(e);
+    }
+  }, [activeLineIdx, activeLine?.start, activeLine?.end]);
+
+  // Toggle video play / pause
+  const toggleVideoPlayback = useCallback(() => {
+    if (!playerRef.current) return;
+    if (isPlaying) {
+      if (typeof playerRef.current.pauseVideo === 'function') playerRef.current.pauseVideo();
+    } else {
+      if (typeof playerRef.current.playVideo === 'function') playerRef.current.playVideo();
+    }
+  }, [isPlaying]);
+
+  // Update Start Time for active line
+  const updateActiveLineStart = useCallback((newStart, syncInputText = true) => {
+    const s = Math.max(0, Math.round(newStart * 10) / 10);
+    if (syncInputText) {
+      setStartInputStr(s.toFixed(1));
+    }
+    setCustomLyrics((prevCustom) => {
+      const baseList = prevCustom || song.lyrics;
+      if (!baseList || baseList.length === 0) return prevCustom;
+      const currentList = [...baseList];
+      const target = currentList[activeLineIdx];
+      if (!target) return prevCustom;
+      currentList[activeLineIdx] = { ...target, start: s };
+      return currentList;
+    });
+  }, [song.lyrics, activeLineIdx]);
+
+  // Update End Time for active line
+  const updateActiveLineEnd = useCallback((newEnd, syncInputText = true) => {
+    const e = Math.max(0, Math.round(newEnd * 10) / 10);
+    if (syncInputText) {
+      setEndInputStr(e.toFixed(1));
+    }
+    setCustomLyrics((prevCustom) => {
+      const baseList = prevCustom || song.lyrics;
+      if (!baseList || baseList.length === 0) return prevCustom;
+      const currentList = [...baseList];
+      const target = currentList[activeLineIdx];
+      if (!target) return prevCustom;
+      currentList[activeLineIdx] = { ...target, end: e };
+      return currentList;
+    });
+  }, [song.lyrics, activeLineIdx]);
+
+  // Set Start Time = Current Live Video Time
+  const setStartToLiveTime = useCallback(() => {
+    const stamped = Math.round(currentTime * 10) / 10;
+    updateActiveLineStart(stamped, true);
+    sound.playKeyPress();
+    setSyncToastMessage(`🟢 Set Start Time = ${formatTimeMinutesSeconds(stamped)} (${stamped}s)`);
+    setTimeout(() => setSyncToastMessage(null), 2000);
+  }, [currentTime, updateActiveLineStart]);
+
+  // Set End Time = Current Live Video Time
+  const setEndToLiveTime = useCallback(() => {
+    const stamped = Math.round(currentTime * 10) / 10;
+    updateActiveLineEnd(stamped, true);
+    sound.playKeyPress();
+    setSyncToastMessage(`🔴 Set End Time = ${formatTimeMinutesSeconds(stamped)} (${stamped}s)`);
+    setTimeout(() => setSyncToastMessage(null), 2000);
+  }, [currentTime, updateActiveLineEnd]);
+
+  // Nudge Start Time
+  const nudgeActiveLineStart = useCallback((delta) => {
+    const target = song.lyrics[activeLineIdx];
+    if (!target) return;
+    const newStart = Math.max(0, Math.round((target.start + delta) * 10) / 10);
+    updateActiveLineStart(newStart, true);
+    sound.playKeyPress();
+  }, [song.lyrics, activeLineIdx, updateActiveLineStart]);
+
+  // Nudge End Time
+  const nudgeActiveLineEnd = useCallback((delta) => {
+    const target = song.lyrics[activeLineIdx];
+    if (!target) return;
+    const currentEnd = (typeof target.end === 'number' && target.end > target.start) ? target.end : target.start + 3;
+    const newEnd = Math.max(0, Math.round((currentEnd + delta) * 10) / 10);
+    updateActiveLineEnd(newEnd, true);
+    sound.playKeyPress();
+  }, [song.lyrics, activeLineIdx, updateActiveLineEnd]);
+
+  // Replay active line from start
+  const replayActiveLine = useCallback(() => {
+    const line = song.lyrics[activeLineIdx];
+    if (line && typeof line.start === 'number') {
+      seekToTime(line.start);
+      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+        playerRef.current.playVideo();
+      }
+    }
+  }, [song.lyrics, activeLineIdx]);
+
+  // Direct save to public/lyrics folder via local Vite dev server API
+  const handleSaveSrtToDisk = useCallback(async () => {
+    const srtContent = exportLyricsToSRT(song.lyrics);
+    if (!srtContent) {
+      alert('No lyrics available to export.');
+      return;
+    }
+    setIsSavingSrt(true);
+    try {
+      const res = await fetch('/api/admin/save-srt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          srtFilename: resolvedSrtFilename,
+          srtContent
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        sound.playCorrect();
+        setSyncToastMessage(`✅ Successfully saved directly to public/lyrics/${data.filename}!`);
+        setTimeout(() => setSyncToastMessage(null), 3500);
+      } else {
+        downloadSRTFile(resolvedSrtFilename, srtContent);
+        setSyncToastMessage(`📥 Downloaded ${resolvedSrtFilename} to your device!`);
+        setTimeout(() => setSyncToastMessage(null), 3500);
+      }
+    } catch (_err) {
+      downloadSRTFile(resolvedSrtFilename, srtContent);
+      setSyncToastMessage(`📥 Downloaded ${resolvedSrtFilename} to your device!`);
+      setTimeout(() => setSyncToastMessage(null), 3500);
+    } finally {
+      setIsSavingSrt(false);
+    }
+  }, [song.lyrics, resolvedSrtFilename]);
+
+  // Download .srt file to local machine
+  const handleDownloadSrt = useCallback(() => {
+    const srtContent = exportLyricsToSRT(song.lyrics);
+    if (!srtContent) {
+      alert('No lyrics available to export.');
+      return;
+    }
+    downloadSRTFile(resolvedSrtFilename, srtContent);
+    sound.playCorrect();
+    setSyncToastMessage(`📥 Downloaded ${resolvedSrtFilename}!`);
+    setTimeout(() => setSyncToastMessage(null), 3500);
+  }, [song.lyrics, resolvedSrtFilename]);
+
+  // Copy full formatted SRT content to clipboard
+  const handleCopySrt = useCallback(() => {
+    const srtContent = exportLyricsToSRT(song.lyrics);
+    if (!srtContent) return;
+    navigator.clipboard.writeText(srtContent).then(() => {
+      sound.playCorrect();
+      setSyncToastMessage('📋 Full SRT copied to clipboard!');
+      setTimeout(() => setSyncToastMessage(null), 3000);
+    }).catch(() => {
+      alert('Could not copy to clipboard.');
+    });
+  }, [song.lyrics]);
 
   const playerRef = useRef(null);
   const lyricsContainerRef = useRef(null);
@@ -638,18 +849,21 @@ export default function KpopVideoMode({
               }
             }
           } else {
-            const matchedIdx = song.lyrics.findIndex(line => time >= line.start && time < line.end);
-            if (matchedIdx !== -1 && matchedIdx !== activeLineIdx) {
-              setActiveLineIdx(matchedIdx);
-              setTypedKeys('');
-              setTypedText('');
+            // When Sync Studio is open, do not auto-advance activeLineIdx based on uncalibrated timestamps
+            if (!isSyncStudioOpen) {
+              const matchedIdx = song.lyrics.findIndex(line => time >= line.start && time < line.end);
+              if (matchedIdx !== -1 && matchedIdx !== activeLineIdx) {
+                setActiveLineIdx(matchedIdx);
+                setTypedKeys('');
+                setTypedText('');
+              }
             }
           }
         }
-      }, 200);
+      }, isSyncStudioOpen ? 100 : 200);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, song.lyrics, activeLineIdx, isLineLoopEnabled, selectedRange]);
+  }, [isPlaying, song.lyrics, activeLineIdx, isLineLoopEnabled, selectedRange, isSyncStudioOpen]);
 
   // Load YouTube IFrame API
   useEffect(() => {
@@ -745,8 +959,42 @@ export default function KpopVideoMode({
 
   const vowelTokens = getVowelBreakdown(activeLine.ko);
 
-  // Typing practice logic
+  // Typing practice logic & Live Sync Studio shortcut handler
   const handleGlobalKeyDown = useCallback((e) => {
+    // If Live Sync Studio is active and user is not in a text input or practice mode:
+    if (isSyncStudioOpen && !practiceMode && editingLineIdx === -1 && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        toggleVideoPlayback();
+        return;
+      }
+      if (e.key.toLowerCase() === 's' || e.key === '[') {
+        e.preventDefault();
+        setStartToLiveTime();
+        return;
+      }
+      if (e.key.toLowerCase() === 'e' || e.key === ']') {
+        e.preventDefault();
+        setEndToLiveTime();
+        return;
+      }
+      if (e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        replayActiveLine();
+        return;
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setActiveLineIdx(prev => Math.max(0, prev - 1));
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        setActiveLineIdx(prev => Math.min(song.lyrics.length - 1, prev + 1));
+        return;
+      }
+    }
+
     if (!practiceMode) return;
 
     if (e.key === 'Backspace') {
@@ -808,7 +1056,20 @@ export default function KpopVideoMode({
         return newKeys;
       });
     }
-  }, [practiceMode, isHokkienSong, activeLine.ko, activeLine.rom, onAddXp]);
+  }, [
+    isSyncStudioOpen,
+    practiceMode,
+    editingLineIdx,
+    toggleVideoPlayback,
+    setStartToLiveTime,
+    setEndToLiveTime,
+    replayActiveLine,
+    song.lyrics.length,
+    isHokkienSong,
+    activeLine.ko,
+    activeLine.rom,
+    onAddXp
+  ]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleGlobalKeyDown, true);
@@ -985,6 +1246,17 @@ export default function KpopVideoMode({
             </button>
 
             <button
+              className={`action-btn ${isSyncStudioOpen ? 'active-amber' : ''}`}
+              onClick={(e) => {
+                e.currentTarget.blur();
+                setIsSyncStudioOpen(!isSyncStudioOpen);
+              }}
+              title="Open Live Tap-to-Sync Studio: Stamp timestamps in real-time as song plays, adjust and export the whole SRT"
+            >
+              <Sliders size={18} /> {isSyncStudioOpen ? 'Sync Studio ON' : 'Live Sync Studio'}
+            </button>
+
+            <button
               className={`action-btn ${isRecording ? 'active-red' : ''}`}
               onClick={toggleVoiceRecording}
               title={isRecording ? "Click to stop and save voice recording" : "Click to start recording voice"}
@@ -1072,7 +1344,255 @@ export default function KpopVideoMode({
             </div>
           )}
 
-          {/* Web Speech API Pronunciation Check Display */}
+          {/* Live Sync Studio Panel: Separate Start / End Time & Live Time Controls */}
+          {isSyncStudioOpen && (
+            <div className="sync-studio-panel glassmorphism">
+              <div className="sync-studio-header">
+                <div className="sync-studio-title-group">
+                  <div className="sync-studio-badge">
+                    <Sliders size={15} />
+                    <span>Sync Studio</span>
+                  </div>
+                  <div className="live-video-time-pill" title="Live real-time YouTube video playback time">
+                    <span className="live-pulse-dot" />
+                    <Clock size={16} className="live-clock-icon" />
+                    <span className="live-pill-label">Live Video Time:</span>
+                    <strong className="live-clock-text">{formatTimeMinutesSeconds(currentTime)}</strong>
+                    <span className="live-clock-sec">({currentTime.toFixed(1)}s)</span>
+                  </div>
+                </div>
+
+                <div className="sync-studio-export-group">
+                  <button
+                    type="button"
+                    className="sync-action-pill play-toggle"
+                    onClick={toggleVideoPlayback}
+                    title="Play / Pause Video (Shortcut: Space)"
+                  >
+                    {isPlaying ? <Pause size={13} /> : <Play size={13} />} {isPlaying ? 'Pause' : 'Play'}
+                  </button>
+                  <button
+                    type="button"
+                    className="sync-action-pill save-disk"
+                    onClick={handleSaveSrtToDisk}
+                    disabled={isSavingSrt}
+                    title="Save directly to public/lyrics folder on local server"
+                  >
+                    <Save size={13} /> {isSavingSrt ? 'Saving...' : 'Save to Disk'}
+                  </button>
+                  <button
+                    type="button"
+                    className="sync-action-pill download"
+                    onClick={handleDownloadSrt}
+                    title="Download the updated .srt file to your computer"
+                  >
+                    <Download size={13} /> Download .srt
+                  </button>
+                  <button
+                    type="button"
+                    className="sync-action-pill copy"
+                    onClick={handleCopySrt}
+                    title="Copy formatted SRT content to clipboard"
+                  >
+                    <Copy size={13} /> Copy SRT
+                  </button>
+                  <button
+                    type="button"
+                    className="sync-action-pill preview"
+                    onClick={() => {
+                      setSrtPreviewText(exportLyricsToSRT(song.lyrics));
+                      setIsSrtPreviewOpen(true);
+                    }}
+                    title="Preview or edit full SRT raw text"
+                  >
+                    <FileText size={13} /> Preview
+                  </button>
+                  <button
+                    type="button"
+                    className="sync-close-btn"
+                    onClick={() => setIsSyncStudioOpen(false)}
+                    title="Close Live Sync Studio"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Active Sentence Selector & Display */}
+              <div className="sync-sentence-card">
+                <div className="sync-sentence-nav">
+                  <button
+                    type="button"
+                    className="sentence-nav-btn prev"
+                    disabled={activeLineIdx <= 0}
+                    onClick={() => setActiveLineIdx(prev => Math.max(0, prev - 1))}
+                    title="Previous Sentence (Shortcut: Left Arrow)"
+                  >
+                    ◀ Prev Line
+                  </button>
+                  <div className="sentence-counter-badge">
+                    Sentence <strong>#{activeLineIdx + 1}</strong> of <strong>{song.lyrics.length}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    className="sentence-nav-btn next"
+                    disabled={activeLineIdx >= song.lyrics.length - 1}
+                    onClick={() => setActiveLineIdx(prev => Math.min(song.lyrics.length - 1, prev + 1))}
+                    title="Next Sentence (Shortcut: Right Arrow)"
+                  >
+                    Next Line ▶
+                  </button>
+                  <button
+                    type="button"
+                    className="sentence-replay-btn"
+                    onClick={replayActiveLine}
+                    title="Seek to Start & Play this line (Shortcut: R)"
+                  >
+                    <RotateCcw size={13} /> Play Line
+                  </button>
+                </div>
+
+                <div className="sync-sentence-text-block">
+                  <div className="sync-ko-text">{activeLine.ko}</div>
+                  {activeLine.rom && <div className="sync-rom-text">{activeLine.rom}</div>}
+                  {activeLine.en && <div className="sync-en-text">"{activeLine.en}"</div>}
+                </div>
+              </div>
+
+              {/* Separate Start & End Time Modification Grid */}
+              <div className="sync-times-grid">
+                {/* START TIME SECTION */}
+                <div className="sync-time-card start-card">
+                  <div className="time-card-header">
+                    <div className="time-card-title-group">
+                      <span className="dot-indicator green" />
+                      <span className="time-card-label">START TIME</span>
+                    </div>
+                    <span className="time-card-formatted">{formatTimeMinutesSeconds(activeLine.start)}</span>
+                  </div>
+
+                  <div className="time-input-row">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      className="time-numeric-input"
+                      value={startInputStr}
+                      onChange={(e) => {
+                        const txt = e.target.value;
+                        setStartInputStr(txt);
+                        const parsed = parseFloat(txt);
+                        if (!isNaN(parsed) && parsed >= 0) {
+                          updateActiveLineStart(parsed, false);
+                        }
+                      }}
+                      onBlur={() => {
+                        const parsed = parseFloat(startInputStr);
+                        if (!isNaN(parsed) && parsed >= 0) {
+                          updateActiveLineStart(parsed, true);
+                        } else {
+                          setStartInputStr(typeof activeLine.start === 'number' ? activeLine.start.toFixed(1) : '0.0');
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') e.target.blur();
+                      }}
+                      title="Directly edit start time in seconds (e.g. 14.2)"
+                    />
+                    <span className="time-unit">sec</span>
+                    <button
+                      type="button"
+                      className="set-time-btn start-stamp-btn"
+                      onClick={setStartToLiveTime}
+                      title="Set Start Time = Current Live Video Time (Shortcut: S or [)"
+                    >
+                      📍 Set = Live Time ({currentTime.toFixed(1)}s)
+                    </button>
+                  </div>
+
+                  <div className="time-nudge-row">
+                    <span className="nudge-sub-label">Nudge:</span>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineStart(-0.5)}>-0.5s</button>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineStart(-0.1)}>-0.1s</button>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineStart(+0.1)}>+0.1s</button>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineStart(+0.5)}>+0.5s</button>
+                    <button
+                      type="button"
+                      className="nudge-chip seek"
+                      onClick={() => seekToTime(activeLine.start)}
+                      title="Jump video to Start Time"
+                    >
+                      Seek ⏩
+                    </button>
+                  </div>
+                </div>
+
+                {/* END TIME SECTION */}
+                <div className="sync-time-card end-card">
+                  <div className="time-card-header">
+                    <div className="time-card-title-group">
+                      <span className="dot-indicator red" />
+                      <span className="time-card-label">END TIME</span>
+                    </div>
+                    <span className="time-card-formatted">{formatTimeMinutesSeconds(activeLine.end)}</span>
+                  </div>
+
+                  <div className="time-input-row">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      className="time-numeric-input"
+                      value={endInputStr}
+                      onChange={(e) => {
+                        const txt = e.target.value;
+                        setEndInputStr(txt);
+                        const parsed = parseFloat(txt);
+                        if (!isNaN(parsed) && parsed >= 0) {
+                          updateActiveLineEnd(parsed, false);
+                        }
+                      }}
+                      onBlur={() => {
+                        const parsed = parseFloat(endInputStr);
+                        if (!isNaN(parsed) && parsed >= 0) {
+                          updateActiveLineEnd(parsed, true);
+                        } else {
+                          setEndInputStr(typeof activeLine.end === 'number' ? activeLine.end.toFixed(1) : (Number(activeLine.start || 0) + 3).toFixed(1));
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') e.target.blur();
+                      }}
+                      title="Directly edit end time in seconds (e.g. 18.5)"
+                    />
+                    <span className="time-unit">sec</span>
+                    <button
+                      type="button"
+                      className="set-time-btn end-stamp-btn"
+                      onClick={setEndToLiveTime}
+                      title="Set End Time = Current Live Video Time (Shortcut: E or ])"
+                    >
+                      🏁 Set = Live Time ({currentTime.toFixed(1)}s)
+                    </button>
+                  </div>
+
+                  <div className="time-nudge-row">
+                    <span className="nudge-sub-label">Nudge:</span>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineEnd(-0.5)}>-0.5s</button>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineEnd(-0.1)}>-0.1s</button>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineEnd(+0.1)}>+0.1s</button>
+                    <button type="button" className="nudge-chip" onClick={() => nudgeActiveLineEnd(+0.5)}>+0.5s</button>
+                    <button
+                      type="button"
+                      className="nudge-chip seek"
+                      onClick={() => seekToTime(activeLine.end || (activeLine.start + 3))}
+                      title="Jump video to End Time"
+                    >
+                      Seek ⏩
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {(isRecording || speechTranscript) && (
             <div className="speech-recognition-box">
               <div className="speech-header">
@@ -1201,7 +1721,7 @@ export default function KpopVideoMode({
                 <div
                   key={idx}
                   ref={isActive ? activeRowRef : null}
-                  className={`lyric-row-item ${isActive ? 'active-line' : ''} ${isInRange ? 'in-loop-range' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''}`}
+                  className={`lyric-row-item ${isActive ? 'active-line' : ''} ${isSyncStudioOpen && isActive ? 'sync-editing-line' : ''} ${isInRange ? 'in-loop-range' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''}`}
                   onClick={(e) => {
                     if (e.shiftKey) {
                       // Multi-line selection with Shift + Click
@@ -1225,10 +1745,20 @@ export default function KpopVideoMode({
                       seekToTime(line.start);
                     }
                   }}
-                  title="Click to play · Shift + Click to select multiple consecutive lyrics to loop"
+                  title="Click to select · Shift + Click to select multiple consecutive lyrics to loop"
                 >
                   <div className="time-badge-container" onClick={(e) => e.stopPropagation()}>
-                    {isEditingThisTime ? (
+                    {isSyncStudioOpen ? (
+                      <div className="sync-studio-row-times" title="Sentence Start ~ End. Click this row to edit in Studio">
+                        <span className="sync-row-badge start" title="Start Time">
+                          S: {formatTimeMinutesSeconds(line.start)}
+                        </span>
+                        <span className="sync-row-sep">~</span>
+                        <span className="sync-row-badge end" title="End Time">
+                          E: {formatTimeMinutesSeconds(line.end || line.start + 3)}
+                        </span>
+                      </div>
+                    ) : isEditingThisTime ? (
                       <div className="time-badge-editor">
                         <input
                           type="text"
@@ -1271,18 +1801,21 @@ export default function KpopVideoMode({
                         <Edit3 size={10} className="edit-time-icon" />
                       </div>
                     )}
-                    <button
-                      className="sync-now-btn"
-                      title="Sync timestamp to current video playback time"
-                      onClick={(e) => handleSyncToCurrentTime(e, idx)}
-                    >
-                      <Clock size={10} /> Sync
-                    </button>
+                    {!isSyncStudioOpen && (
+                      <button
+                        className="sync-now-btn"
+                        title="Sync timestamp to current video time (Tip: Hold Shift to ripple shift this & all following lines!)"
+                        onClick={(e) => handleSyncToCurrentTime(e, idx)}
+                      >
+                        <Clock size={10} /> Sync
+                      </button>
+                    )}
                   </div>
 
                   <div className="lyric-content">
                     <div className="lyric-ko-row">
                       <div className="lyric-ko">{line.ko}</div>
+                      {isSyncStudioOpen && isActive && <span className="sync-studio-active-tag">✏️ Editing in Studio</span>}
                       {isRangeStart && <span className="range-badge-pill start">🔁 Loop Start</span>}
                       {isRangeEnd && <span className="range-badge-pill end">🔁 Loop End</span>}
                     </div>
@@ -1370,6 +1903,97 @@ export default function KpopVideoMode({
         selectedSongIdx={selectedSongIdx}
         activeVideoId={activeVideoId}
       />
+
+      {/* Floating Sync Alert Toast */}
+      {syncToastMessage && (
+        <div className="sync-toast-alert animate-bounce-in">
+          <span>{syncToastMessage}</span>
+        </div>
+      )}
+
+      {/* Raw SRT Preview & Batch Edit Modal */}
+      {isSrtPreviewOpen && (
+        <div className="srt-preview-modal-overlay" onClick={() => setIsSrtPreviewOpen(false)}>
+          <div className="srt-preview-modal-content glassmorphism" onClick={(e) => e.stopPropagation()}>
+            <div className="srt-preview-header">
+              <div className="srt-preview-title">
+                <FileText size={18} className="gold-icon" />
+                <span>SRT Subtitle Preview: <strong>{resolvedSrtFilename}</strong></span>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setIsSrtPreviewOpen(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="srt-preview-body">
+              <textarea
+                className="srt-preview-textarea"
+                value={srtPreviewText}
+                onChange={(e) => setSrtPreviewText(e.target.value)}
+                spellCheck={false}
+              />
+            </div>
+
+            <div className="srt-preview-footer">
+              <div className="srt-preview-footer-left">
+                <span className="srt-line-count-badge">
+                  {song.lyrics.length} subtitle blocks
+                </span>
+              </div>
+              <div className="srt-preview-footer-right">
+                <button
+                  type="button"
+                  className="action-btn active-purple"
+                  onClick={() => {
+                    const parsed = parseSRTContent(srtPreviewText);
+                    if (parsed && parsed.length > 0) {
+                      setCustomLyrics(parsed);
+                      sound.playCorrect();
+                      setSyncToastMessage(`✅ Applied ${parsed.length} lines from preview editor!`);
+                      setTimeout(() => setSyncToastMessage(null), 3000);
+                      setIsSrtPreviewOpen(false);
+                    } else {
+                      alert('Could not parse SRT text.');
+                    }
+                  }}
+                  title="Apply changes made in the textarea to player"
+                >
+                  <Check size={14} /> Apply Edits to Player
+                </button>
+                <button
+                  type="button"
+                  className="action-btn active-green"
+                  onClick={handleSaveSrtToDisk}
+                  disabled={isSavingSrt}
+                  title="Save directly to public/lyrics folder"
+                >
+                  <Save size={14} /> Save to Disk
+                </button>
+                <button
+                  type="button"
+                  className="action-btn active-blue"
+                  onClick={handleDownloadSrt}
+                  title="Download the updated .srt file"
+                >
+                  <Download size={14} /> Download .srt
+                </button>
+                <button
+                  type="button"
+                  className="action-btn"
+                  onClick={handleCopySrt}
+                  title="Copy formatted SRT to clipboard"
+                >
+                  <Copy size={14} /> Copy to Clipboard
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

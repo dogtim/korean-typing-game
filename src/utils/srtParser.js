@@ -100,6 +100,7 @@ export function formatSrtTimestampRange(start, end) {
 
 /**
  * Converts array of lyrics objects back into standard SRT string.
+ * Preserves bilingual Hangul/Taiwanese, Romanization/Tai-lo, and English translations.
  */
 export function exportLyricsToSRT(lyrics) {
   if (!lyrics || !Array.isArray(lyrics) || lyrics.length === 0) return '';
@@ -107,8 +108,34 @@ export function exportLyricsToSRT(lyrics) {
     const startStr = formatSecondsToSRTTime(line.start);
     const endTime = (typeof line.end === 'number' && line.end > line.start) ? line.end : line.start + 3;
     const endStr = formatSecondsToSRTTime(endTime);
-    const content = line.ko || '';
+    
+    let content = line.ko || '';
+    if (line.rom && line.en) {
+      content = `${line.ko} | ${line.rom} | ${line.en}`;
+    } else if (line.rom) {
+      content = `${line.ko} | ${line.rom}`;
+    } else if (line.en) {
+      content = `${line.ko} | ${line.en}`;
+    }
+
     return `${idx + 1}\n${startStr} --> ${endStr}\n${content}\n`;
   }).join('\n');
 }
+
+/**
+ * Triggers a browser file download for the generated SRT string.
+ */
+export function downloadSRTFile(filename, srtContent) {
+  const cleanFilename = filename.endsWith('.srt') ? filename : `${filename}.srt`;
+  const blob = new Blob([srtContent], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = cleanFilename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 
