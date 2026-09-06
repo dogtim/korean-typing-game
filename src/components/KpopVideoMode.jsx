@@ -4,6 +4,7 @@ import { PREPARED_SRT_LIBRARY } from '../utils/preparedLyrics';
 import { VIDEO_SRT_MAPPINGS, findMappingByVideoId } from '../utils/videoSrtMapping';
 import { parseSRTContent, parseSRTTimeToSeconds } from '../utils/srtParser';
 import { decomposeHangulChar, composeHangul, getQWERTYKeyFromEvent, romanizeSyllable, romanizeHangulWord } from '../utils/hangul';
+import { getHokkienLineBreakdown } from '../utils/hokkien';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
 import VideoSelectModal from './VideoSelectModal';
@@ -108,9 +109,41 @@ export default function KpopVideoMode({
     };
   }, [recordedAudioUrl]);
 
-  // Calculate Hangul character match percentage between target line and detected speech
+  const isHokkienSong = Boolean(
+    currentPreset?.language === 'hokkien' ||
+    (activeLine?.ko && /[\u4e00-\u9fa5]/.test(activeLine.ko) && !/[가-힣]/.test(activeLine.ko))
+  );
+
+  // Calculate character / word match percentage between target line and detected speech
   const calculateSpeechAccuracy = (target, detected) => {
     if (!target || !detected) return 0;
+
+    if (isHokkienSong) {
+      // 1. Check Chinese character matches
+      const cleanTargetHanzi = target.replace(/[^\u4e00-\u9fa5]/g, '');
+      const cleanSpokenHanzi = detected.replace(/[^\u4e00-\u9fa5]/g, '');
+      if (cleanTargetHanzi && cleanSpokenHanzi) {
+        let matches = 0;
+        const targetChars = cleanTargetHanzi.split('');
+        for (const dChar of cleanSpokenHanzi) {
+          if (targetChars.includes(dChar)) matches++;
+        }
+        return Math.min(100, Math.round((matches / Math.max(targetChars.length, 1)) * 100));
+      }
+      // 2. Check Romanized / Tâi-lô matches
+      const targetWords = (activeLine.rom || target).toLowerCase().replace(/[^a-z0-9]/g, ' ').trim().split(/\s+/).filter(Boolean);
+      const spokenWords = detected.toLowerCase().replace(/[^a-z0-9]/g, ' ').trim().split(/\s+/).filter(Boolean);
+      if (targetWords.length > 0 && spokenWords.length > 0) {
+        let matches = 0;
+        for (const w of spokenWords) {
+          if (targetWords.includes(w)) matches++;
+        }
+        return Math.min(100, Math.round((matches / targetWords.length) * 100));
+      }
+      return 0;
+    }
+
+    // Default Korean matching
     const cleanTarget = target.replace(/[^\uAC00-\uD7A3]/g, '');
     const cleanDetected = detected.replace(/[^\uAC00-\uD7A3]/g, '');
     if (!cleanTarget || !cleanDetected) return 0;
@@ -120,7 +153,7 @@ export default function KpopVideoMode({
     const detectedChars = cleanDetected.split('');
 
     let tIdx = 0;
-    for (let dChar of detectedChars) {
+    for (const dChar of detectedChars) {
       const foundIdx = targetChars.indexOf(dChar, tIdx);
       if (foundIdx !== -1) {
         matches++;
@@ -143,7 +176,7 @@ export default function KpopVideoMode({
       stopSpeechRecognition();
 
       const recognition = new SpeechRecognition();
-      recognition.lang = 'ko-KR';
+      recognition.lang = isHokkienSong ? 'nan-TW' : 'ko-KR';
       recognition.continuous = true;
       recognition.interimResults = true;
 
@@ -162,6 +195,13 @@ export default function KpopVideoMode({
         console.warn('Speech recognition error:', event.error);
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           setSpeechTranscript('⚠️ Microphone permission denied for speech recognition. Please allow microphone access in your browser settings.');
+        } else if (event.error === 'language-not-supported' && isHokkienSong && recognition.lang !== 'zh-TW') {
+          // Graceful fallback from nan-TW to zh-TW
+          try {
+            recognition.lang = 'zh-TW';
+            recognition.start();
+            return;
+          } catch (_e) {}
         } else if (event.error === 'network') {
           setSpeechTranscript('⚠️ Speech recognition network error. Please check your internet connection.');
         } else if (event.error !== 'no-speech') {
@@ -582,9 +622,13 @@ export default function KpopVideoMode({
     }
   };
 
-  // Decompose Hangul into word-level & syllable-level breakdown for Beginners
+  // Decompose lyrics into word-level & syllable-level breakdown for Beginners
   const getVowelBreakdown = (text) => {
     if (!text) return [];
+    if (isHokkienSong) {
+      return getHokkienLineBreakdown(text, activeLine.rom);
+    }
+
     const words = text.trim().split(/\s+/);
     const tokens = [];
 
@@ -624,11 +668,38 @@ export default function KpopVideoMode({
     if (e.key === 'Backspace') {
       e.preventDefault();
       sound.playKeyPress();
+      if (isHokkienSong) {
+        setTypedText(prev => prev.slice(0, -1));
+        setTypedKeys(prev => prev.slice(0, -1));
+        return;
+      }
       setTypedKeys(prev => {
         const next = prev.slice(0, -1);
         setTypedText(composeHangul(next));
         return next;
       });
+      return;
+    }
+
+    if (isHokkienSong) {
+      if (e.key === ' ' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        sound.playKeyPress();
+        const char = e.key;
+        setActiveKeyPressed([char.toLowerCase()]);
+        setTimeout(() => setActiveKeyPressed([]), 150);
+
+        setTypedText(prev => {
+          const next = prev + char;
+          const targetText = (activeLine.rom || activeLine.ko || '').toLowerCase().trim();
+          if (next.toLowerCase().trim() === targetText) {
+            sound.playCorrect();
+            onAddXp(20);
+          }
+          return next;
+        });
+        setTypedKeys(prev => prev + char);
+      }
       return;
     }
 
@@ -653,7 +724,7 @@ export default function KpopVideoMode({
         return newKeys;
       });
     }
-  }, [practiceMode, activeLine.ko, onAddXp]);
+  }, [practiceMode, isHokkienSong, activeLine.ko, activeLine.rom, onAddXp]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleGlobalKeyDown, true);
@@ -776,6 +847,7 @@ export default function KpopVideoMode({
           {/* CC Style Subtitle Display Banner */}
           <div className="cc-subtitle-overlay">
             <div className="cc-hangul">{activeLine.ko}</div>
+            {activeLine.rom && <div className="cc-romanization">{activeLine.rom}</div>}
             {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
           </div>
 
@@ -855,12 +927,12 @@ export default function KpopVideoMode({
             <div className="speech-recognition-box">
               <div className="speech-header">
                 <Sparkles size={16} className="sparkle-icon" />
-                <span>Korean Pronunciation Check (ko-KR)</span>
+                <span>{isHokkienSong ? 'Taiwanese Pronunciation Check (nan-TW)' : 'Korean Pronunciation Check (ko-KR)'}</span>
                 {isRecording && <span className="listening-badge">Listening...</span>}
               </div>
 
               <div className={`speech-transcript-area ${!speechTranscript ? 'placeholder' : ''}`}>
-                {speechTranscript || (isRecording ? 'Listening to your Korean pronunciation...' : 'No speech detected.')}
+                {speechTranscript || (isRecording ? (isHokkienSong ? 'Listening to your Taiwanese pronunciation...' : 'Listening to your Korean pronunciation...') : 'No speech detected.')}
               </div>
 
               {activeLine?.ko && speechTranscript && (
@@ -1064,6 +1136,7 @@ export default function KpopVideoMode({
                       {isRangeStart && <span className="range-badge-pill start">🔁 Loop Start</span>}
                       {isRangeEnd && <span className="range-badge-pill end">🔁 Loop End</span>}
                     </div>
+                    {line.rom && <div className="lyric-rom">{line.rom}</div>}
                     {line.en && <div className="lyric-en">{line.en}</div>}
                   </div>
                 </div>
@@ -1073,12 +1146,17 @@ export default function KpopVideoMode({
         </div>
       </div>
 
-      {/* Vowel Breakdown Helper Card for Newbies */}
+      {/* Vowel / Syllable Breakdown Helper Card */}
       <div className="vowel-breakdown-card glassmorphism">
         <div className="vowel-card-header">
           <Sparkles className="gold-icon" size={22} />
           <div>
-            <h3>Syllable Breakdown</h3>
+            <h3>{isHokkienSong ? 'Hokkien Phonetic Breakdown (台語聲韻調分解)' : 'Syllable Breakdown'}</h3>
+            <span className="vowel-card-desc">
+              {isHokkienSong
+                ? 'Siann-bú (聲母 Initial) + Ūn-bú (韻母 Rime) + Siann-tiāu (聲調 8 Tones) · Tâi-lô & 方音符號'
+                : 'Click or hover each syllable to review consonants, vowels & batchim.'}
+            </span>
           </div>
         </div>
 
@@ -1088,8 +1166,17 @@ export default function KpopVideoMode({
             <div key={idx} className="vowel-token-box" style={{ borderColor: token.color }}>
               <div className="token-syllable">{token.char}</div>
               <div className="token-vowel-badge" style={{ backgroundColor: token.color }}>
-                {token.syllableRom} ({token.vowel})
+                {isHokkienSong
+                  ? `${token.syllable || token.char} · ${token.toneName || ''}`
+                  : `${token.syllableRom} (${token.vowel})`}
               </div>
+              {isHokkienSong && token.initialDisplay && (
+                <div className="token-hokkien-meta">
+                  <span className="meta-init">聲: {token.initialDisplay}</span>
+                  {token.vowel && <span className="meta-rime"> · 韻: {token.vowel}{token.coda || ''}</span>}
+                  {token.tonePitch && <span className="meta-pitch"> · {token.tonePitch}</span>}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -1099,8 +1186,8 @@ export default function KpopVideoMode({
       {practiceMode && (
         <div className="lyric-typing-trainer glassmorphism">
           <div className="trainer-header">
-            <h4>Type Along With The K-Pop Song:</h4>
-            <span className="target-text-display">{activeLine.ko}</span>
+            <h4>{isHokkienSong ? 'Type Along With The Song (Tâi-lô / Lyrics):' : 'Type Along With The K-Pop Song:'}</h4>
+            <span className="target-text-display">{activeLine.rom ? `${activeLine.ko} (${activeLine.rom})` : activeLine.ko}</span>
           </div>
 
           <div className="typed-result-bar">

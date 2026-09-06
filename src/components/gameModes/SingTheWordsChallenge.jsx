@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { maskHangulTokens, calculateHangulAccuracy } from '../../utils/gameModes';
+import { maskHangulTokens, calculateSpeechAccuracy } from '../../utils/gameModes';
 import { Mic, Sparkles, CheckCircle2, RotateCcw, FastForward, Volume2 } from 'lucide-react';
 import { sound } from '../../utils/audio';
 
-export default function SingTheWordsChallenge({ line, onAnswer }) {
+export default function SingTheWordsChallenge({ line, onAnswer, language = 'korean' }) {
+  const isHokkien = language === 'hokkien' || line?.language === 'hokkien' || /[\u4e00-\u9fa5]/.test(line?.ko || '');
   const { tokens, hangulTarget } = useMemo(() => maskHangulTokens(line.ko), [line.ko]);
   const [transcript, setTranscript] = useState('');
   const [accuracy, setAccuracy] = useState(0);
@@ -40,7 +41,7 @@ export default function SingTheWordsChallenge({ line, onAnswer }) {
       }
 
       const recognition = new SpeechRecognition();
-      recognition.lang = 'ko-KR';
+      recognition.lang = isHokkien ? 'nan-TW' : 'ko-KR';
       recognition.continuous = true;
       recognition.interimResults = true;
 
@@ -56,7 +57,7 @@ export default function SingTheWordsChallenge({ line, onAnswer }) {
         }
         setTranscript(currentTranscript);
 
-        const currentAcc = calculateHangulAccuracy(hangulTarget, currentTranscript);
+        const currentAcc = calculateSpeechAccuracy(line.ko, currentTranscript, isHokkien ? 'hokkien' : 'korean');
         setAccuracy(currentAcc);
 
         // 70% ~ 80% is the passing threshold
@@ -69,6 +70,12 @@ export default function SingTheWordsChallenge({ line, onAnswer }) {
         console.warn('Speech recognition notice:', event.error);
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           setMicError('Microphone access was denied. Please allow microphone permissions.');
+        } else if (event.error === 'language-not-supported' && isHokkien && recognition.lang !== 'zh-TW') {
+          // Fallback from nan-TW to zh-TW
+          try {
+            recognition.lang = 'zh-TW';
+            recognition.start();
+          } catch (_err) {}
         } else if (event.error !== 'no-speech') {
           setMicError(`Notice: ${event.error}`);
         }
@@ -84,7 +91,7 @@ export default function SingTheWordsChallenge({ line, onAnswer }) {
       console.error('Failed to initialize speech recognition:', e);
       setMicError('Could not start microphone. Check browser permissions.');
     }
-  }, [hangulTarget, settleAnswer]);
+  }, [isHokkien, line.ko, settleAnswer]);
 
   // Start voice recognition on mount
   useEffect(() => {
@@ -164,21 +171,22 @@ export default function SingTheWordsChallenge({ line, onAnswer }) {
           {transcript ? (
             <span>"{transcript}"</span>
           ) : (
-            <span>Sing / speak the Korean words into your microphone now...</span>
+            <span>{isHokkien ? 'Sing / speak the Taiwanese words into your microphone now...' : 'Sing / speak the Korean words into your microphone now...'}</span>
           )}
         </div>
 
         {/* Target vs Detected Hint */}
         <div className="sing-target-hint">
-          <span className="hint-label">Target Korean:</span>
-          <span className="hint-target">{revealed || accuracy >= 70 ? hangulTarget : '(Sing the missing words above)'}</span>
+          <span className="hint-label">{isHokkien ? 'Target Hokkien:' : 'Target Korean:'}</span>
+          <span className="hint-target">{revealed || accuracy >= 70 ? (isHokkien ? line.ko : hangulTarget) : '(Sing the missing words above)'}</span>
           <button
             type="button"
             className="listen-target-btn"
-            onClick={() => sound.speakKorean(hangulTarget)}
-            title="Hear Korean pronunciation"
+            onClick={() => sound.speak(isHokkien ? line.ko : hangulTarget, isHokkien ? 'hokkien' : 'ko')}
+            title="Hear native pronunciation"
           >
-            <Volume2 size={13} /> Listen
+            <Volume2 size={15} />
+            <span>Listen</span>
           </button>
         </div>
 

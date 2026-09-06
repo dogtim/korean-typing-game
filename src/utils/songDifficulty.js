@@ -61,7 +61,9 @@ export const SONG_DIFFICULTY_MAP = {
   // 23. Magnetic (ILLIT)
   'Vk5-c_v4gMU': { hangulLines: 28, totalLines: 61, coveragePercent: 45.9, level: 'medium', label: 'Medium' },
   // 24. It's Me (ILLIT)
-  'bMhDJ0S0OBA': { hangulLines: 13, totalLines: 76, coveragePercent: 17.1, level: 'easy', label: 'Easy' }
+  'bMhDJ0S0OBA': { hangulLines: 13, totalLines: 76, coveragePercent: 17.1, level: 'easy', label: 'Easy' },
+  // 25. 電火王 King of Light (Amazing Show)
+  'BuuIbTF0_b0': { hangulLines: 0, totalLines: 57, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' }
 };
 
 /**

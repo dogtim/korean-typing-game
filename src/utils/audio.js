@@ -148,18 +148,53 @@ class SoundEngine {
     });
   }
 
-  // Speak Korean text using browser Web Speech API
-  speakKorean(text) {
-    if (this.muted || !this.speechSynth) return;
+  // Unified multi-language speech synthesizer (Korean, Hokkien / Taiwanese, English)
+  speak(text, lang = 'ko') {
+    if (this.muted || !this.speechSynth || !text) return;
     try {
       this.speechSynth.cancel(); // Stop ongoing speech
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ko-KR';
-      utterance.rate = 0.9; // Slightly slower for clear learning
+
+      const isHokkien = lang === 'nan' || lang === 'hokkien' || lang === 'taiwanese';
+      const isKorean = lang === 'ko' || lang === 'korean' || lang === 'ko-KR';
+
+      if (isKorean) {
+        utterance.lang = 'ko-KR';
+        utterance.rate = 0.9;
+      } else if (isHokkien) {
+        // Search available system voices for Taiwanese / Hokkien / Minnan or Traditional Chinese
+        const voices = this.speechSynth.getVoices() || [];
+        const hokkienVoice = voices.find(v =>
+          (v.lang && (v.lang.includes('nan') || v.lang.includes('min'))) ||
+          (v.name && v.name.toLowerCase().includes('taiwan'))
+        ) || voices.find(v => v.lang === 'zh-TW');
+
+        if (hokkienVoice) {
+          utterance.voice = hokkienVoice;
+          utterance.lang = hokkienVoice.lang;
+        } else {
+          utterance.lang = 'nan-TW';
+        }
+        utterance.rate = 0.85; // Slightly slower for clear tones
+      } else {
+        utterance.lang = lang;
+        utterance.rate = 0.9;
+      }
+
       this.speechSynth.speak(utterance);
     } catch (e) {
       console.warn('Speech synthesis not available:', e);
     }
+  }
+
+  // Speak Korean text using browser Web Speech API (legacy backwards compatible)
+  speakKorean(text) {
+    this.speak(text, 'ko');
+  }
+
+  // Speak Hokkien / Taiwanese text using browser Web Speech API
+  speakHokkien(text) {
+    this.speak(text, 'hokkien');
   }
 }
 

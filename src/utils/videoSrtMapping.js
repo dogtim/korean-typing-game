@@ -325,6 +325,23 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=bMhDJ0S0OBA',
     alternateUrls: [],
     description: "ILLIT - It's Me synchronized SRT subtitle lyrics"
+  },
+
+  // ==========================================
+  // 10. Hokkien / Taiwanese Songs (台語流行音樂)
+  // ==========================================
+  {
+    id: 'amazing_show_king_of_light',
+    title: "電火王 (King of Light)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張正規專輯《電火王》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-KING-OF-LIGHT.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-KING-OF-LIGHT.srt',
+    youtubeIds: ['BuuIbTF0_b0'],
+    primaryUrl: 'https://www.youtube.com/watch?v=BuuIbTF0_b0',
+    alternateUrls: [],
+    description: "美秀集團 (Amazing Show) - 電火王 (King of Light) synchronized Hokkien (Tâi-lô) SRT subtitle lyrics"
   }
 ];
 

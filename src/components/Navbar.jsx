@@ -4,17 +4,43 @@ import { BookOpen, Tv, Gamepad2, BookMarked, Wrench } from 'lucide-react';
 export default function Navbar({
   activeTab,
   setActiveTab,
-  showAdminTab = false
+  showAdminTab = false,
+  learningLanguage = 'korean',
+  onSelectLanguage
 }) {
+  const isHokkien = learningLanguage === 'hokkien';
+
   return (
     <header className="navbar-container">
       <div className="navbar-brand">
-        <div className="brand-logo">한</div>
+        <div className="brand-logo">{isHokkien ? '台' : '한'}</div>
         <div className="brand-info">
-          <h1 className="brand-title">Hangul PopPop</h1>
-          <span className="brand-subtitle">Korean Typing & Listening Game</span>
+          <h1 className="brand-title">{isHokkien ? 'Hokkien PopPop' : 'Hangul PopPop'}</h1>
+          <span className="brand-subtitle">{isHokkien ? 'Taiwanese Typing, Singing & Tones' : 'Korean Typing & Listening Game'}</span>
         </div>
       </div>
+
+      {/* Language Switcher Pill Group */}
+      {onSelectLanguage && (
+        <div className="navbar-lang-switcher">
+          <button
+            type="button"
+            className={`navbar-lang-btn ${learningLanguage === 'korean' ? 'active' : ''}`}
+            onClick={() => onSelectLanguage('korean')}
+            title="Switch to Korean (한국어) mode"
+          >
+            🇰🇷 Korean
+          </button>
+          <button
+            type="button"
+            className={`navbar-lang-btn ${learningLanguage === 'hokkien' ? 'active' : ''}`}
+            onClick={() => onSelectLanguage('hokkien')}
+            title="Switch to Hokkien (台語) mode"
+          >
+            🇹🇼 台語 (Hokkien)
+          </button>
+        </div>
+      )}
 
       <nav className="navbar-tabs">
         <button

@@ -226,10 +226,7 @@ export function maskHangulTokens(text) {
 // chunk remembers whether a space followed it in the source text, so the
 // caught-so-far preview can reinsert word breaks correctly.
 //
-// unit: 'syllable' (default) splits into individual Hangul 음절 characters —
-// harder, more targets to track. 'word' splits on whitespace instead — each
-// whole word is one target, same granularity as Word Order Rebuild, but
-// still scattered/drifting rather than in a static tray.
+// Splits Korean / Hokkien text into ordered syllable "chunks" for Syllable Catch
 export function buildBatchimTargets(text, unit = 'syllable') {
   if (!text) return [];
 
@@ -246,7 +243,8 @@ export function buildBatchimTargets(text, unit = 'syllable') {
   const chars = Array.from(text.trim());
   const chunks = [];
   chars.forEach((ch, i) => {
-    if (/[가-힣]/.test(ch)) {
+    // Supports Hangul syllables as well as Traditional Hanzi characters (Hokkien)
+    if (/[가-힣\u4e00-\u9fa5]/.test(ch)) {
       chunks.push({
         id: `${chunks.length}-${ch}-${i}`,
         text: ch,
@@ -280,4 +278,40 @@ export function calculateHangulAccuracy(target, detected) {
 
   const score = Math.round((matches / Math.max(targetChars.length, 1)) * 100);
   return Math.min(100, score);
+}
+
+// Generalized multi-language speech accuracy calculator (Korean + Hokkien / Chinese)
+export function calculateSpeechAccuracy(target, detected, lang = 'korean') {
+  if (!target || !detected) return 0;
+
+  if (lang === 'hokkien' || /[\u4e00-\u9fa5]/.test(target)) {
+    // 1. Check Chinese character overlap
+    const cleanTargetHanzi = target.replace(/[^\u4e00-\u9fa5]/g, '');
+    const cleanDetectedHanzi = detected.replace(/[^\u4e00-\u9fa5]/g, '');
+
+    if (cleanTargetHanzi && cleanDetectedHanzi) {
+      let matches = 0;
+      const targetChars = cleanTargetHanzi.split('');
+      for (const dChar of cleanDetectedHanzi) {
+        if (targetChars.includes(dChar)) {
+          matches++;
+        }
+      }
+      return Math.min(100, Math.round((matches / Math.max(targetChars.length, 1)) * 100));
+    }
+
+    // 2. Check Romanized / Tâi-lô words overlap
+    const targetWords = target.toLowerCase().replace(/[^a-z0-9]/g, ' ').trim().split(/\s+/).filter(Boolean);
+    const detectedWords = detected.toLowerCase().replace(/[^a-z0-9]/g, ' ').trim().split(/\s+/).filter(Boolean);
+    if (targetWords.length === 0) return 0;
+
+    let wordMatches = 0;
+    for (const w of detectedWords) {
+      if (targetWords.includes(w)) wordMatches++;
+    }
+    return Math.min(100, Math.round((wordMatches / targetWords.length) * 100));
+  }
+
+  // Default Korean calculation
+  return calculateHangulAccuracy(target, detected);
 }

@@ -27,16 +27,19 @@ export default function VideoSelectModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
+  const [selectedLangFilter, setSelectedLangFilter] = useState('ALL');
+
   // Reset search query and filter whenever modal opens
   useEffect(() => {
     if (isOpen) {
       setSearchQuery('');
       setSelectedAlbumFilter('ALL');
       setSelectedLevelFilter('ALL');
+      setSelectedLangFilter('ALL');
     }
   }, [isOpen]);
 
-  // Filter songs based on search query and difficulty level
+  // Filter songs based on search query, difficulty level, and language
   const filteredPresets = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
 
@@ -47,6 +50,13 @@ export default function VideoSelectModal({
         difficulty: getSongDifficulty(preset)
       }))
       .filter(({ preset, difficulty }) => {
+        // Language filter
+        if (selectedLangFilter !== 'ALL') {
+          const isSongHokkien = preset.language === 'hokkien' || difficulty.language === 'hokkien';
+          if (selectedLangFilter === 'hokkien' && !isSongHokkien) return false;
+          if (selectedLangFilter === 'korean' && isSongHokkien) return false;
+        }
+
         // Search filter
         if (q) {
           const titleMatch = preset.title?.toLowerCase().includes(q);
@@ -65,7 +75,7 @@ export default function VideoSelectModal({
         }
         return true;
       });
-  }, [presets, searchQuery, selectedLevelFilter]);
+  }, [presets, searchQuery, selectedLevelFilter, selectedLangFilter]);
 
   // Group presets into Album Sections
   const groupedByAlbum = useMemo(() => {
@@ -162,6 +172,31 @@ export default function VideoSelectModal({
             <Music size={13} />
             <span>{filteredPresets.length} {filteredPresets.length === 1 ? 'Video' : 'Videos'}</span>
           </div>
+        </div>
+
+        {/* Language Filter Pills */}
+        <div className="video-lang-pills-bar">
+          <button
+            type="button"
+            className={`lang-pill-btn ${selectedLangFilter === 'ALL' ? 'is-active' : ''}`}
+            onClick={() => setSelectedLangFilter('ALL')}
+          >
+            🌐 All Languages ({presets.length})
+          </button>
+          <button
+            type="button"
+            className={`lang-pill-btn korean ${selectedLangFilter === 'korean' ? 'is-active' : ''}`}
+            onClick={() => setSelectedLangFilter('korean')}
+          >
+            🇰🇷 Korean (K-Pop) ({presets.filter(p => p.language !== 'hokkien').length})
+          </button>
+          <button
+            type="button"
+            className={`lang-pill-btn hokkien ${selectedLangFilter === 'hokkien' ? 'is-active' : ''}`}
+            onClick={() => setSelectedLangFilter('hokkien')}
+          >
+            🇹🇼 台語 (Hokkien) ({presets.filter(p => p.language === 'hokkien').length})
+          </button>
         </div>
 
         {/* Difficulty Level Quick-Filter Pills */}
@@ -301,27 +336,36 @@ export default function VideoSelectModal({
                             <div>
                               <div className="video-card-header-row">
                                 <h4 className="video-card-title">{preset.title}</h4>
-                                {isSelected && (
-                                  <span className="video-active-chip">
-                                    <Check size={12} /> Active
-                                  </span>
-                                )}
+                                <div className="video-header-chips">
+                                  {preset.language === 'hokkien' ? (
+                                    <span className="lang-tag-chip hokkien">🇹🇼 台語</span>
+                                  ) : (
+                                    <span className="lang-tag-chip korean">🇰🇷 K-Pop</span>
+                                  )}
+                                  {isSelected && (
+                                    <span className="video-active-chip">
+                                      <Check size={12} /> Active
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                               <p className="video-card-artist">{preset.artist}</p>
                             </div>
 
-                            {/* Hangul Coverage & Difficulty Level Badge */}
+                            {/* Hangul / Hokkien Coverage & Difficulty Level Badge */}
                             <div className="video-card-meta-row">
                               <span
                                 className={`song-diff-chip diff-${difficulty.level}`}
-                                title={`Hangul Coverage: ${difficulty.coveragePercent}% (${difficulty.hangulLines}/${difficulty.totalLines} lines)`}
+                                title={`Coverage: ${difficulty.coveragePercent}% (${difficulty.hangulLines}/${difficulty.totalLines} lines)`}
                               >
                                 <span className="diff-dot" />
                                 <span className="diff-label">{difficulty.label}</span>
                                 <span className="diff-percent">{difficulty.coveragePercent}%</span>
                               </span>
                               <span className="song-hangul-subtext">
-                                {difficulty.hangulLines > 0
+                                {difficulty.language === 'hokkien' || preset.language === 'hokkien'
+                                  ? '🇹🇼 100% 台語 (Hokkien)'
+                                  : difficulty.hangulLines > 0
                                   ? `${difficulty.hangulLines}/${difficulty.totalLines} Kor`
                                   : '100% English'}
                               </span>

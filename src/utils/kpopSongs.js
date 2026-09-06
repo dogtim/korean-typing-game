@@ -41,6 +41,11 @@ export const ALBUM_METADATA = {
     category: '數位單曲',
     order: 8
   },
+  '首張正規專輯《電火王》': {
+    releaseDate: '2018.12.31',
+    category: '台語正規專輯',
+    order: 9
+  },
   'Unkonw': {
     releaseDate: '',
     category: 'Other Releases',
@@ -434,6 +439,18 @@ export const KPOP_SONG_PRESETS = [
     thumbnail: 'https://img.youtube.com/vi/bMhDJ0S0OBA/hqdefault.jpg',
     srtFilename: 'ILLIT-ITS-ME.srt',
     srtPath: '/lyrics/ILLIT-ITS-ME.srt',
+    lyrics: []
+  },
+  {
+    id: 'BuuIbTF0_b0',
+    title: "電火王 (King of Light)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張正規專輯《電火王》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=BuuIbTF0_b0',
+    thumbnail: 'https://img.youtube.com/vi/BuuIbTF0_b0/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-KING-OF-LIGHT.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-KING-OF-LIGHT.srt',
     lyrics: []
   }
 ];
