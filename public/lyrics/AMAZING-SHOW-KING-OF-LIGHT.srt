@@ -217,3 +217,7 @@
 55
 00:04:17,800 --> 00:04:21,000
 電阿嬤 電胡蠅拍仔 給你捽予落 | Tiān a-má, tiān hôo-sîn phah-á, kā lí sut hōo--lo̍h | Electric grandma, electric fly swatter, whip it right on you
+
+55
+00:04:22,800 --> 00:04:23,000
+End.
