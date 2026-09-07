@@ -342,6 +342,84 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=BuuIbTF0_b0',
     alternateUrls: [],
     description: "美秀集團 (Amazing Show) - 電火王 (King of Light) synchronized Hokkien (Tâi-lô) SRT subtitle lyrics"
+  },
+  {
+    id: 'amazing_show_sound_check_intro',
+    title: "Intro (Sound Check)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-INTRO.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-INTRO.srt',
+    youtubeIds: ['7HUVMqcUpDU', '3HgJpO4c9zg'],
+    primaryUrl: 'https://www.youtube.com/watch?v=7HUVMqcUpDU',
+    alternateUrls: ['https://www.youtube.com/watch?v=3HgJpO4c9zg'],
+    description: "美秀集團 (Amazing Show) - Intro (Sound Check) synchronized instrument and stage intro SRT subtitle cues"
+  },
+  {
+    id: 'amazing_show_the_little_eyeball',
+    title: "細粒的目睭 (The Little Eyeball)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-THE-LITTLE-EYEBALL.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-THE-LITTLE-EYEBALL.srt',
+    youtubeIds: ['p_fEh6dBAG0', 'COmaE0rcOA0'],
+    primaryUrl: 'https://www.youtube.com/watch?v=p_fEh6dBAG0',
+    alternateUrls: ['https://www.youtube.com/watch?v=COmaE0rcOA0'],
+    description: "美秀集團 (Amazing Show) - 細粒的目睭 (The Little Eyeball) synchronized Hokkien (Tâi-lô) SRT subtitle lyrics"
+  },
+  {
+    id: 'amazing_show_roll_cigg',
+    title: "捲菸 (Roll-Cigg)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-ROLL-CIGG.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-ROLL-CIGG.srt',
+    youtubeIds: ['S4JLJVVjevI', 'Hw06iZa8KhQ'],
+    primaryUrl: 'https://www.youtube.com/watch?v=S4JLJVVjevI',
+    alternateUrls: ['https://www.youtube.com/watch?v=Hw06iZa8KhQ'],
+    description: "美秀集團 (Amazing Show) - 捲菸 (Roll-Cigg) synchronized Taiwanese indie rock SRT subtitle lyrics"
+  },
+  {
+    id: 'amazing_show_lp_fire',
+    title: "懶趴火 (L.P. Fire)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-LP-FIRE.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-LP-FIRE.srt',
+    youtubeIds: ['pS3vI3t9K8A', 'wuqkZWCeSBc'],
+    primaryUrl: 'https://www.youtube.com/watch?v=pS3vI3t9K8A',
+    alternateUrls: ['https://www.youtube.com/watch?v=wuqkZWCeSBc'],
+    description: "美秀集團 (Amazing Show) - 懶趴火 (L.P. Fire) synchronized Hokkien (Tâi-lô) SRT subtitle lyrics"
+  },
+  {
+    id: 'amazing_show_only_scott_knows',
+    title: "Only Scott Knows (Only One)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-ONLY-SCOTT-KNOWS.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-ONLY-SCOTT-KNOWS.srt',
+    youtubeIds: ['dN3yWXc5UsY', '5DaG0stQW-Y'],
+    primaryUrl: 'https://www.youtube.com/watch?v=dN3yWXc5UsY',
+    alternateUrls: ['https://www.youtube.com/watch?v=5DaG0stQW-Y'],
+    description: "美秀集團 (Amazing Show) - Only Scott Knows (Only One) synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'amazing_show_a_rooster',
+    title: "一隻雞 (A Rooster)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    srtFilename: 'AMAZING-SHOW-A-ROOSTER.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-A-ROOSTER.srt',
+    youtubeIds: ['xrXtveuEZjs'],
+    primaryUrl: 'https://www.youtube.com/watch?v=xrXtveuEZjs',
+    alternateUrls: [],
+    description: "美秀集團 (Amazing Show) - 一隻雞 (A Rooster) synchronized Hokkien (Tâi-lô) SRT subtitle lyrics"
   }
 ];
 

@@ -63,7 +63,19 @@ export const SONG_DIFFICULTY_MAP = {
   // 24. It's Me (ILLIT)
   'bMhDJ0S0OBA': { hangulLines: 13, totalLines: 76, coveragePercent: 17.1, level: 'easy', label: 'Easy' },
   // 25. 電火王 King of Light (Amazing Show)
-  'BuuIbTF0_b0': { hangulLines: 0, totalLines: 57, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' }
+  'BuuIbTF0_b0': { hangulLines: 0, totalLines: 57, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 26. Intro (Sound Check) (Amazing Show)
+  '7HUVMqcUpDU': { hangulLines: 0, totalLines: 7, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 27. 細粒的目睭 (Amazing Show)
+  'p_fEh6dBAG0': { hangulLines: 0, totalLines: 31, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 28. 捲菸 (Amazing Show)
+  'S4JLJVVjevI': { hangulLines: 0, totalLines: 32, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 29. 懶趴火 (Amazing Show)
+  'pS3vI3t9K8A': { hangulLines: 0, totalLines: 31, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 30. Only Scott Knows (Only One) (Amazing Show)
+  'dN3yWXc5UsY': { hangulLines: 0, totalLines: 35, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 31. 一隻雞 (Amazing Show)
+  'xrXtveuEZjs': { hangulLines: 0, totalLines: 29, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' }
 };
 
 /**

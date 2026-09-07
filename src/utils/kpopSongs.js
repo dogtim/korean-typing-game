@@ -452,6 +452,78 @@ export const KPOP_SONG_PRESETS = [
     srtFilename: 'AMAZING-SHOW-KING-OF-LIGHT.srt',
     srtPath: '/lyrics/AMAZING-SHOW-KING-OF-LIGHT.srt',
     lyrics: []
+  },
+  {
+    id: '7HUVMqcUpDU',
+    title: "Intro (Sound Check)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=7HUVMqcUpDU',
+    thumbnail: 'https://img.youtube.com/vi/7HUVMqcUpDU/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-INTRO.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-INTRO.srt',
+    lyrics: []
+  },
+  {
+    id: 'p_fEh6dBAG0',
+    title: "細粒的目睭 (The Little Eyeball)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=p_fEh6dBAG0',
+    thumbnail: 'https://img.youtube.com/vi/p_fEh6dBAG0/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-THE-LITTLE-EYEBALL.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-THE-LITTLE-EYEBALL.srt',
+    lyrics: []
+  },
+  {
+    id: 'S4JLJVVjevI',
+    title: "捲菸 (Roll-Cigg)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=S4JLJVVjevI',
+    thumbnail: 'https://img.youtube.com/vi/S4JLJVVjevI/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-ROLL-CIGG.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-ROLL-CIGG.srt',
+    lyrics: []
+  },
+  {
+    id: 'pS3vI3t9K8A',
+    title: "懶趴火 (L.P. Fire)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=pS3vI3t9K8A',
+    thumbnail: 'https://img.youtube.com/vi/pS3vI3t9K8A/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-LP-FIRE.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-LP-FIRE.srt',
+    lyrics: []
+  },
+  {
+    id: 'dN3yWXc5UsY',
+    title: "Only Scott Knows (Only One)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=dN3yWXc5UsY',
+    thumbnail: 'https://img.youtube.com/vi/dN3yWXc5UsY/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-ONLY-SCOTT-KNOWS.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-ONLY-SCOTT-KNOWS.srt',
+    lyrics: []
+  },
+  {
+    id: 'xrXtveuEZjs',
+    title: "一隻雞 (A Rooster)",
+    artist: '美秀集團 (Amazing Show)',
+    album: '首張 EP《Sound Check》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=xrXtveuEZjs',
+    thumbnail: 'https://img.youtube.com/vi/xrXtveuEZjs/hqdefault.jpg',
+    srtFilename: 'AMAZING-SHOW-A-ROOSTER.srt',
+    srtPath: '/lyrics/AMAZING-SHOW-A-ROOSTER.srt',
+    lyrics: []
   }
 ];
 
