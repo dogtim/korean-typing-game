@@ -16,7 +16,7 @@
 
 5
 00:00:51,000 --> 00:00:53,200
-天頂的蟑螂四界飛 | Thinn-tíng ê ka-tsu̍ah-á sì-kè pue | Cockroaches in the sky are flying everywhere
+天頂的蟑螂仔四界飛 | Thinn-tíng ê ka-tsu̍ah-á sì-kè pue | Cockroaches in the sky are flying everywhere
 
 6
 00:00:54,200 --> 00:00:56,700
@@ -56,7 +56,7 @@
 
 15
 00:01:20,099 --> 00:01:23,099
-當做食老兩三歲 當做少年攏盲 | Tòng-tsò tsia̍h-lāu nn̄g-sann huè, tòng-tsò siàu-liân lóng tshinn-mê | Just because you are older, you think all youth are blind
+當做食老兩三歲 當做少年攏青盲 | Tòng-tsò tsia̍h-lāu nn̄g-sann huè, tòng-tsò siàu-liân lóng tshinn-mê | Just because you are older, you think all youth are blind
 
 16
 00:01:23,099 --> 00:01:36,000
@@ -72,7 +72,7 @@
 
 19
 00:01:43,500 --> 00:01:46,000
-膨椅拆開揣弓仔 剪刀鈍去做鑷仔 | Phòng-í thiah--khui tshuē king-á, tsián-to tūn tsò nip-á | Ripping open sofa to find springs, blunt scissors turned to pliers
+膨椅拆開揣弓仔 剪刀鈍去做鑷仔 | Phòng-í thiah--khui tshuē king-á, tsián-to tūn-khì tsò nip-á | Ripping open sofa to find springs, blunt scissors turned to pliers
 
 20
 00:01:46,000 --> 00:01:48,500
@@ -116,11 +116,11 @@
 
 30
 00:02:21,000 --> 00:02:23,500
-湊落去 湊做蓋的電器 | Tsàu--lo̍h-khì, tsàu tsò kài-tshian ê tiān-khì | Piece it together, build the most badass gadget
+湊落去 湊做蓋仙的電器 | Tsàu--lo̍h-khì, tsàu tsò kài-tshian ê tiān-khì | Piece it together, build the most badass gadget
 
 31
 00:02:27,000 --> 00:02:34,598
-湊做蓋的電器 啊電器 啊電器 啊電器 啊電器 | Tsàu tsò kài-tshian ê tiān-khì, ah tiān-khì ah tiān-khì | Assemble the most awesome appliance, oh electric device!
+湊做蓋仙的電器 啊電器 啊電器 | Tsàu tsò kài-tshian ê tiān-khì, ah tiān-khì ah tiān-khì | Assemble the most awesome appliance, oh electric device!
 
 32
 00:02:35,000 --> 00:02:38,000
@@ -164,7 +164,7 @@
 
 42
 00:03:37,300 --> 00:03:40,500
-膨椅拆開揣弓仔 剪刀鈍去做鑷仔 | Phòng-í thiah--khui tshuē king-á, tsián-to tūn tsò nip-á | Ripping open sofa to find springs, blunt scissors turned to pliers
+膨椅拆開揣弓仔 剪刀鈍去做鑷仔 | Phòng-í thiah--khui tshuē king-á, tsián-to tūn-khì tsò nip-á | Ripping open sofa to find springs, blunt scissors turned to pliers
 
 43
 00:03:40,598 --> 00:03:43,500
@@ -218,6 +218,6 @@
 00:04:17,800 --> 00:04:21,000
 電阿嬤 電胡蠅拍仔 給你捽予落 | Tiān a-má, tiān hôo-sîn phah-á, kā lí sut hōo--lo̍h | Electric grandma, electric fly swatter, whip it right on you
 
-55
+56
 00:04:22,800 --> 00:04:23,000
 End.

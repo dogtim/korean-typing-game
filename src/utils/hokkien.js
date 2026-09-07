@@ -260,20 +260,26 @@ export function decomposeHokkienSyllable(syllableStr) {
 
 /**
  * Breaks down a paired Hanzi and Tâi-lô line into rich educational breakdown tokens.
+ * Correctly handles compound words ('thâu-ke') and light-tone double hyphens ('sio̍k--leh', 'tuā--ê').
  */
 export function getHokkienLineBreakdown(hanziLine, tailoLine) {
   if (!tailoLine && !hanziLine) return [];
 
   const rawTailoWords = (tailoLine || '').trim().split(/\s+/).filter(Boolean);
-  const hanziChars = (hanziLine || '').replace(/\s+/g, '');
+  // Remove whitespace and common Chinese/Latin punctuation so punctuation doesn't consume syllables
+  const hanziChars = (hanziLine || '').replace(/[，。！？、：；（）“”"'\s\-_—,.!?~]/g, '');
 
   const tokens = [];
   let hanziIdx = 0;
 
   for (let wIdx = 0; wIdx < rawTailoWords.length; wIdx++) {
     const word = rawTailoWords[wIdx];
-    // A word can be hyphenated compound (e.g. "tiān-hué-ông", "tsi̍t-khoo-lān")
-    const syllables = word.split('-');
+    // Split by one or more hyphens (covers standard hyphens '-' and light-tone double hyphens '--')
+    // and strip surrounding punctuation like commas, periods, quotes
+    const syllables = word
+      .split(/-+/)
+      .map(s => s.replace(/^[^\w\u00C0-\u024F\u0300-\u036F]+|[^\w\u00C0-\u024F\u0300-\u036F]+$/g, ''))
+      .filter(Boolean);
 
     for (let sIdx = 0; sIdx < syllables.length; sIdx++) {
       const syl = syllables[sIdx];
@@ -304,6 +310,29 @@ export function getHokkienLineBreakdown(hanziLine, tailoLine) {
         keys: dec.keys
       });
     }
+  }
+
+  // If there are any remaining Hanzi characters not covered by tailo syllables
+  while (hanziIdx < hanziChars.length) {
+    const char = hanziChars[hanziIdx];
+    tokens.push({
+      char,
+      word: char,
+      syllable: '',
+      isFirstInWord: false,
+      initial: '',
+      initialDisplay: '',
+      initialTps: '',
+      vowel: '',
+      coda: '',
+      tone: 1,
+      toneName: '',
+      tonePitch: '',
+      toneColor: '#64748b',
+      color: '#64748b',
+      keys: []
+    });
+    hanziIdx++;
   }
 
   return tokens;
