@@ -356,5 +356,15 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'AMAZING-SHOW-A-ROOSTER.srt',
     path: '/lyrics/AMAZING-SHOW-A-ROOSTER.srt',
     description: "美秀集團 (Amazing Show) 一隻雞 (A Rooster) full prepared Hokkien (Tâi-lô) SRT subtitle file."
+  },
+  {
+    id: 'girls_generation_hrs_skibidi',
+    title: "Skibidi",
+    artist: "Girls' Generation-HRS (소녀시대-효리수)",
+    album: '出道單曲《Skibidi》',
+    youtubeId: 'oAwzFFEYm38',
+    filename: 'GIRLS-GENERATION-HRS-SKIBIDI.srt',
+    path: '/lyrics/GIRLS-GENERATION-HRS-SKIBIDI.srt',
+    description: "Girls' Generation-HRS (소녀시대-효리수) Skibidi full prepared SRT subtitle file."
   }
 ];

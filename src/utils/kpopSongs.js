@@ -46,6 +46,11 @@ export const ALBUM_METADATA = {
     category: '台語正規專輯',
     order: 9
   },
+  '出道單曲《Skibidi》': {
+    releaseDate: '2026.08.31',
+    category: '出道單曲',
+    order: 10
+  },
   'Unkonw': {
     releaseDate: '',
     category: 'Other Releases',
@@ -523,6 +528,21 @@ export const KPOP_SONG_PRESETS = [
     thumbnail: 'https://img.youtube.com/vi/xrXtveuEZjs/hqdefault.jpg',
     srtFilename: 'AMAZING-SHOW-A-ROOSTER.srt',
     srtPath: '/lyrics/AMAZING-SHOW-A-ROOSTER.srt',
+    lyrics: []
+  },
+
+  // ==========================================
+  // 10. 出道單曲《Skibidi》 (2026.08.31)
+  // ==========================================
+  {
+    id: 'oAwzFFEYm38',
+    title: "Skibidi",
+    artist: "Girls' Generation-HRS (소녀시대-효리수)",
+    album: '出道單曲《Skibidi》',
+    youtubeUrl: 'https://www.youtube.com/watch?v=oAwzFFEYm38',
+    thumbnail: 'https://img.youtube.com/vi/oAwzFFEYm38/hqdefault.jpg',
+    srtFilename: 'GIRLS-GENERATION-HRS-SKIBIDI.srt',
+    srtPath: '/lyrics/GIRLS-GENERATION-HRS-SKIBIDI.srt',
     lyrics: []
   }
 ];

@@ -420,6 +420,18 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=xrXtveuEZjs',
     alternateUrls: [],
     description: "美秀集團 (Amazing Show) - 一隻雞 (A Rooster) synchronized Hokkien (Tâi-lô) SRT subtitle lyrics"
+  },
+  {
+    id: 'girls_generation_hrs_skibidi',
+    title: "Skibidi",
+    artist: "Girls' Generation-HRS (소녀시대-효리수)",
+    album: '出道單曲《Skibidi》',
+    srtFilename: 'GIRLS-GENERATION-HRS-SKIBIDI.srt',
+    srtPath: '/lyrics/GIRLS-GENERATION-HRS-SKIBIDI.srt',
+    youtubeIds: ['oAwzFFEYm38'],
+    primaryUrl: 'https://www.youtube.com/watch?v=oAwzFFEYm38',
+    alternateUrls: [],
+    description: "Girls' Generation-HRS (소녀시대-효리수) - Skibidi synchronized SRT subtitle lyrics"
   }
 ];
 

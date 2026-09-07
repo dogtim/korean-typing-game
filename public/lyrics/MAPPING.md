@@ -11,6 +11,7 @@ This mapping table connects YouTube Music Video URLs / Video IDs directly with t
 | **CHOOM (춤)** | BABYMONSTER | `https://www.youtube.com/watch?v=x3eqqoZPV_E` | `x3eqqoZPV_E` | [`BABYMONSTER-CHOOM.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-CHOOM.srt) |
 | **DRIP** | BABYMONSTER | `https://www.youtube.com/watch?v=Zp-Jhuhq0bQ` | `Zp-Jhuhq0bQ` | [`BABYMONSTER-DRIP.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-DRIP.srt) |
 | **PSYCHO** | BABYMONSTER | `https://www.youtube.com/watch?v=yd_uG3TtREs` | `yd_uG3TtREs` | [`BABYMONSTER-PSYCHO.srt`](file:///Users/timchen/korean-typing-game/public/lyrics/BABYMONSTER-PSYCHO.srt) |
+| **Skibidi** | Girls' Generation-HRS (소녀시대-효리수) | `https://www.youtube.com/watch?v=oAwzFFEYm38` | `oAwzFFEYm38` | [`GIRLS-GENERATION-HRS-SKIBIDI.srt`](file:///Users/hsiaotingchen/korean-typing-game/public/lyrics/GIRLS-GENERATION-HRS-SKIBIDI.srt) |
 
 ---
 

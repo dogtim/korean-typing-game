@@ -75,7 +75,9 @@ export const SONG_DIFFICULTY_MAP = {
   // 30. Only Scott Knows (Only One) (Amazing Show)
   'dN3yWXc5UsY': { hangulLines: 0, totalLines: 35, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
   // 31. 一隻雞 (Amazing Show)
-  'xrXtveuEZjs': { hangulLines: 0, totalLines: 29, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' }
+  'xrXtveuEZjs': { hangulLines: 0, totalLines: 29, coveragePercent: 100, level: 'hokkien', label: '台語 (Hokkien)', language: 'hokkien' },
+  // 32. Skibidi (Girls' Generation-HRS)
+  'oAwzFFEYm38': { hangulLines: 22, totalLines: 65, coveragePercent: 33.8, level: 'medium', label: 'Medium' }
 };
 
 /**
