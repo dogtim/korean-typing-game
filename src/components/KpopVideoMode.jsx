@@ -242,7 +242,7 @@ export default function KpopVideoMode({
             recognition.lang = 'zh-TW';
             recognition.start();
             return;
-          } catch (_e) {}
+          } catch (_e) { }
         } else if (event.error === 'network') {
           setSpeechTranscript('⚠️ Speech recognition network error. Please check your internet connection.');
         } else if (event.error !== 'no-speech') {
