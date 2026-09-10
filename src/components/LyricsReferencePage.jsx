@@ -1157,7 +1157,7 @@ export default function LyricsReferencePage({ onSelectSongForPractice, onSwitchT
             <ul className="sop-checklist">
               <li>Check if the YouTube MV has an intro skit (e.g. 4.5s intro delay)</li>
               <li>Apply <code className="tag-code">+Offset</code> so lyrics match vocal delivery</li>
-              <li>Switch to K-Pop Practice or Game Mode to type Hangul in real-time!</li>
+              <li>Switch to Song Practice or Game Mode to type Hangul in real-time!</li>
             </ul>
           </div>
         </div>

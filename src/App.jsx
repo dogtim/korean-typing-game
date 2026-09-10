@@ -20,16 +20,37 @@ const DEFAULT_SONG = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('lessons');
-  const [autoPlayVideoId, setAutoPlayVideoId] = useState(null);
-
-  // Selected song state across tab navigation (resets to DRIP on fresh page reload)
-  const [selectedPracticeSong, setSelectedPracticeSong] = useState(DEFAULT_SONG);
-  const [selectedGameSong, setSelectedGameSong] = useState(DEFAULT_SONG);
-
   // Learning Language mode: 'korean' or 'hokkien'
   const [learningLanguage, setLearningLanguage] = useState(() => {
     return localStorage.getItem('pop_learning_lang') || 'korean';
+  });
+
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedLang = localStorage.getItem('pop_learning_lang') || 'korean';
+    return savedLang === 'hokkien' ? 'kpop' : 'lessons';
+  });
+  const [autoPlayVideoId, setAutoPlayVideoId] = useState(null);
+
+  // Selected song state across tab navigation (resets to DRIP on fresh page reload or first Hokkien song if in Hokkien mode)
+  const [selectedPracticeSong, setSelectedPracticeSong] = useState(() => {
+    const savedLang = localStorage.getItem('pop_learning_lang') || 'korean';
+    if (savedLang === 'hokkien') {
+      const hokkienIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === 'BuuIbTF0_b0' || p.language === 'hokkien');
+      if (hokkienIdx !== -1) {
+        return { preset: KPOP_SONG_PRESETS[hokkienIdx], index: hokkienIdx };
+      }
+    }
+    return DEFAULT_SONG;
+  });
+  const [selectedGameSong, setSelectedGameSong] = useState(() => {
+    const savedLang = localStorage.getItem('pop_learning_lang') || 'korean';
+    if (savedLang === 'hokkien') {
+      const hokkienIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === 'BuuIbTF0_b0' || p.language === 'hokkien');
+      if (hokkienIdx !== -1) {
+        return { preset: KPOP_SONG_PRESETS[hokkienIdx], index: hokkienIdx };
+      }
+    }
+    return DEFAULT_SONG;
   });
 
   const handleSelectLanguage = useCallback((lang) => {
@@ -40,8 +61,8 @@ export default function App() {
       if (hokkienIdx !== -1) {
         setSelectedPracticeSong({ preset: KPOP_SONG_PRESETS[hokkienIdx], index: hokkienIdx });
         setSelectedGameSong({ preset: KPOP_SONG_PRESETS[hokkienIdx], index: hokkienIdx });
-        setActiveTab('kpop');
       }
+      setActiveTab('kpop');
     } else {
       const koreanIdx = KPOP_SONG_PRESETS.findIndex(p => p.id === 'Zp-Jhuhq0bQ' || p.title === 'DRIP');
       if (koreanIdx !== -1) {
@@ -50,6 +71,13 @@ export default function App() {
       }
     }
   }, []);
+
+  // Ensure disallowed tabs in Hokkien mode redirect to Song Practice ('kpop')
+  useEffect(() => {
+    if (learningLanguage === 'hokkien' && (activeTab === 'lessons' || activeTab === 'kpop-game' || activeTab === 'lyrics-ref')) {
+      setActiveTab('kpop');
+    }
+  }, [learningLanguage, activeTab]);
 
   // Gamification state
   const [xp, setXp] = useState(() => parseInt(localStorage.getItem('hangul_xp') || '0', 10));
@@ -133,7 +161,7 @@ export default function App() {
     setActiveTab('kpop');
   }, []);
 
-  // Jump to K-Pop Practice and auto-load a just-registered song from the Admin page
+  // Jump to Song Practice and auto-load a just-registered song from the Admin page
   const handlePlayNow = useCallback((videoId) => {
     const idx = KPOP_SONG_PRESETS.findIndex(p => p.id === videoId);
     if (idx !== -1) {
@@ -184,6 +212,7 @@ export default function App() {
             onAutoPlayHandled={() => setAutoPlayVideoId(null)}
             selectedSong={selectedPracticeSong}
             onSelectSong={setSelectedPracticeSong}
+            learningLanguage={learningLanguage}
           />
         )}
 
@@ -213,6 +242,7 @@ export default function App() {
             missedCount={missedSentences.length}
             selectedSong={selectedGameSong}
             onSelectSong={setSelectedGameSong}
+            learningLanguage={learningLanguage}
           />
         )}
       </main>

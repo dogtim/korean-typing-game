@@ -43,7 +43,8 @@ export default function KpopVideoMode({
   autoPlayVideoId = null,
   onAutoPlayHandled,
   selectedSong = null,
-  onSelectSong = null
+  onSelectSong = null,
+  learningLanguage = 'korean'
 }) {
   const [selectedSongIdx, setSelectedSongIdx] = useState(() => selectedSong?.index ?? 0);
   const [activeVideoId, setActiveVideoId] = useState(() => selectedSong?.preset?.id || KPOP_SONG_PRESETS[0].id);
@@ -1117,7 +1118,7 @@ export default function KpopVideoMode({
             type="button"
             className="select-video-trigger-btn"
             onClick={() => setIsVideoModalOpen(true)}
-            title="Choose a K-Pop video to practice"
+            title={isHokkienSong ? "Choose a song to practice" : "Choose a K-Pop video to practice"}
           >
             <div className="trigger-icon-wrap">
               <Film size={17} />
@@ -1902,6 +1903,7 @@ export default function KpopVideoMode({
         onSelectSong={handleSelectSongPreset}
         selectedSongIdx={selectedSongIdx}
         activeVideoId={activeVideoId}
+        learningLanguage={learningLanguage}
       />
 
       {/* Floating Sync Alert Toast */}

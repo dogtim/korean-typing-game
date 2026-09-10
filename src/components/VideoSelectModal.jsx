@@ -9,7 +9,8 @@ export default function VideoSelectModal({
   onSelectSong,
   selectedSongIdx = 0,
   activeVideoId = null,
-  presets = KPOP_SONG_PRESETS
+  presets = KPOP_SONG_PRESETS,
+  learningLanguage = 'korean'
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAlbumFilter, setSelectedAlbumFilter] = useState('ALL');
@@ -27,7 +28,9 @@ export default function VideoSelectModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  const [selectedLangFilter, setSelectedLangFilter] = useState('ALL');
+  const [selectedLangFilter, setSelectedLangFilter] = useState(() => (
+    learningLanguage === 'hokkien' ? 'hokkien' : 'ALL'
+  ));
 
   // Reset search query and filter whenever modal opens
   useEffect(() => {
@@ -35,9 +38,9 @@ export default function VideoSelectModal({
       setSearchQuery('');
       setSelectedAlbumFilter('ALL');
       setSelectedLevelFilter('ALL');
-      setSelectedLangFilter('ALL');
+      setSelectedLangFilter(learningLanguage === 'hokkien' ? 'hokkien' : 'ALL');
     }
-  }, [isOpen]);
+  }, [isOpen, learningLanguage]);
 
   // Filter songs based on search query, difficulty level, and language
   const filteredPresets = useMemo(() => {

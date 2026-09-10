@@ -40,7 +40,8 @@ export default function KpopGameMode({
   onOpenReviewModal,
   missedCount = 0,
   selectedSong = null,
-  onSelectSong = null
+  onSelectSong = null,
+  learningLanguage = 'korean'
 }) {
   // Song selection
   const [selectedSongIdx, setSelectedSongIdx] = useState(() => selectedSong?.index ?? 0);
@@ -900,6 +901,7 @@ export default function KpopGameMode({
         onSelectSong={handleSelectSongPreset}
         selectedSongIdx={selectedSongIdx}
         activeVideoId={activeVideoId}
+        learningLanguage={learningLanguage}
       />
     </div>
   );
