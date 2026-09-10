@@ -358,6 +358,17 @@ export const PREPARED_SRT_LIBRARY = [
     description: "美秀集團 (Amazing Show) 一隻雞 (A Rooster) full prepared Hokkien (Tâi-lô) SRT subtitle file."
   },
   {
+    id: 'kim_kong_decisive_moment',
+    title: "決戰時刻 (Battle of Decision)",
+    artist: '黃立綱 (Huang Li-gang)',
+    album: '金光布袋戲《天地風雲錄之決戰時刻》',
+    language: 'hokkien',
+    youtubeId: 'I0w6OCa1kbQ',
+    filename: 'KIM-KONG-DECISIVE-MOMENT.srt',
+    path: '/lyrics/KIM-KONG-DECISIVE-MOMENT.srt',
+    description: "金光布袋戲 (Kim Kong) 決戰時刻 (Battle of Decision) full prepared Hokkien (Tâi-lô) SRT subtitle file."
+  },
+  {
     id: 'girls_generation_hrs_skibidi',
     title: "Skibidi",
     artist: "Girls' Generation-HRS (소녀시대-효리수)",

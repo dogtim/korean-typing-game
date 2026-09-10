@@ -51,6 +51,11 @@ export const ALBUM_METADATA = {
     category: '出道單曲',
     order: 10
   },
+  '金光布袋戲《天地風雲錄之決戰時刻》': {
+    releaseDate: '2012.05.15',
+    category: '布袋戲原聲帶',
+    order: 11
+  },
   'Unkonw': {
     releaseDate: '',
     category: 'Other Releases',
@@ -528,6 +533,18 @@ export const KPOP_SONG_PRESETS = [
     thumbnail: 'https://img.youtube.com/vi/xrXtveuEZjs/hqdefault.jpg',
     srtFilename: 'AMAZING-SHOW-A-ROOSTER.srt',
     srtPath: '/lyrics/AMAZING-SHOW-A-ROOSTER.srt',
+    lyrics: []
+  },
+  {
+    id: 'I0w6OCa1kbQ',
+    title: "決戰時刻 (Battle of Decision)",
+    artist: '黃立綱 (Huang Li-gang)',
+    album: '金光布袋戲《天地風雲錄之決戰時刻》',
+    language: 'hokkien',
+    youtubeUrl: 'https://www.youtube.com/watch?v=I0w6OCa1kbQ',
+    thumbnail: 'https://img.youtube.com/vi/I0w6OCa1kbQ/hqdefault.jpg',
+    srtFilename: 'KIM-KONG-DECISIVE-MOMENT.srt',
+    srtPath: '/lyrics/KIM-KONG-DECISIVE-MOMENT.srt',
     lyrics: []
   },
 
