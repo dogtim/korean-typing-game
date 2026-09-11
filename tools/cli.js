@@ -102,6 +102,14 @@ Commands:
                --format <fmt>        (Optional) Image format: jpg, png, webp (default: jpg)
                --resolution <res>    (Optional) Resolution: 1080p, 720p, best (default: 1080p)
 
+  align-acoustic Align SRT subtitle cues to audio energy attacks (Method 2: Acoustic Vocal Alignment)
+                 Options:
+                   --srt <path>          Path to input SRT file
+                   --audio <path/url>    Path to audio/video file, or YouTube URL/ID
+                   --pre-roll <seconds>  (Optional) Anticipation pre-roll (default: 0.30s)
+                   --anchors <range>     (Optional) Preserved anchor lines, e.g. "1-8" or "1,2,3"
+                   --output <path>       (Optional) Output file path. Defaults to overwriting --srt in-place
+
   align      Download & extract audio/captions directly from YouTube video and align to lyrics
              Options:
                --video <id>          YouTube Video ID or URL
@@ -113,6 +121,7 @@ Commands:
                --file <path>         Path to SRT file
 
 Examples:
+  node tools/cli.js align-acoustic --srt public/lyrics/SONG.srt --audio https://youtu.be/ID --anchors 1-8
   node tools/cli.js frame --video choom --start 10 --count 3 --duration 0.25
   node tools/cli.js frame --video x3eqqoZPV_E --start 00:10 --count 3 --duration 0.25
   node tools/cli.js align --video bMhDJ0S0OBA --output ILLIT-ITS-ME.srt
@@ -310,7 +319,138 @@ async function main() {
         break;
       }
 
+      case 'align-acoustic': {
+        const srtPath = resolveFilePath(options.srt || options.file || options.s || options.f);
+        const audioSource = options.audio || options.video || options.a || options.v;
+        const preRoll = options['pre-roll'] ? parseFloat(options['pre-roll']) : (options.preroll ? parseFloat(options.preroll) : 0.30);
+        const outPath = options.output ? resolveFilePath(options.output) : srtPath;
+        const anchorsStr = options.anchors || options.anchor;
+
+        if (!srtPath || !audioSource) {
+          console.error('❌ Error: --srt <path> and --audio <path_or_video> are required.');
+          process.exit(1);
+        }
+
+        if (!fs.existsSync(srtPath)) {
+          console.error(`❌ Error: SRT file not found: ${srtPath}`);
+          process.exit(1);
+        }
+
+        const srtContent = fs.readFileSync(srtPath, 'utf-8');
+        const manualAnchors = {};
+        if (anchorsStr) {
+          const { parseSRT } = await import('./srtEngine.js');
+          const currentItems = parseSRT(srtContent);
+          const parts = String(anchorsStr).split(',');
+          for (const p of parts) {
+            if (p.includes('-')) {
+              const [start, end] = p.split('-').map(n => parseInt(n.trim(), 10));
+              for (let i = start; i <= end; i++) {
+                const item = currentItems.find(it => it.index === i);
+                if (item) manualAnchors[i] = [item.start, item.end];
+              }
+            } else {
+              const i = parseInt(p.trim(), 10);
+              const item = currentItems.find(it => it.index === i);
+              if (item) manualAnchors[i] = [item.start, item.end];
+            }
+          }
+        }
+
+        const { extractAndFilterAudio, acousticAlignSRT } = await import('./audioAligner.js');
+        let wavPath = audioSource;
+        let isTempWav = false;
+
+        if (!audioSource.endsWith('.wav')) {
+          const tempWav = path.join(rootDir, 'tools', `temp_filtered_${Date.now()}.wav`);
+          extractAndFilterAudio({ input: audioSource, outputWav: tempWav });
+          wavPath = tempWav;
+          isTempWav = true;
+        }
+
+        console.log(`⚡ Running Method 2 (Acoustic Vocal Alignment) with pre-roll: ${preRoll}s...`);
+        const result = acousticAlignSRT({
+          srtContent,
+          wavPath,
+          preRoll,
+          manualAnchors
+        });
+
+        saveSrtFile(outPath, result.content);
+        if (isTempWav && fs.existsSync(wavPath)) {
+          try { fs.unlinkSync(wavPath); } catch {}
+        }
+
+        console.log(`✅ Successfully aligned ${result.items.length} cues using Method 2!`);
+        console.log(`💾 Saved to: ${outPath}`);
+        break;
+      }
+
       case 'align': {
+        const method = options.method || options.m;
+        if (method === 'acoustic' || options.audio) {
+          // Forward to align-acoustic
+          const srtPath = resolveFilePath(options.srt || options.file || options.s || options.f);
+          const audioSource = options.audio || options.video || options.a || options.v;
+          const preRoll = options['pre-roll'] ? parseFloat(options['pre-roll']) : (options.preroll ? parseFloat(options.preroll) : 0.30);
+          const outPath = options.output ? resolveFilePath(options.output) : srtPath;
+          const anchorsStr = options.anchors || options.anchor;
+
+          if (!srtPath || !audioSource) {
+            console.error('❌ Error: --srt <path> and --audio <path_or_video> are required for acoustic alignment.');
+            process.exit(1);
+          }
+
+          const srtContent = fs.readFileSync(srtPath, 'utf-8');
+          const manualAnchors = {};
+          if (anchorsStr) {
+            const { parseSRT } = await import('./srtEngine.js');
+            const currentItems = parseSRT(srtContent);
+            const parts = String(anchorsStr).split(',');
+            for (const p of parts) {
+              if (p.includes('-')) {
+                const [start, end] = p.split('-').map(n => parseInt(n.trim(), 10));
+                for (let i = start; i <= end; i++) {
+                  const item = currentItems.find(it => it.index === i);
+                  if (item) manualAnchors[i] = [item.start, item.end];
+                }
+              } else {
+                const i = parseInt(p.trim(), 10);
+                const item = currentItems.find(it => it.index === i);
+                if (item) manualAnchors[i] = [item.start, item.end];
+              }
+            }
+          }
+
+          const { extractAndFilterAudio, acousticAlignSRT } = await import('./audioAligner.js');
+          let wavPath = audioSource;
+          let isTempWav = false;
+
+          if (!audioSource.endsWith('.wav')) {
+            const tempWav = path.join(rootDir, 'tools', `temp_filtered_${Date.now()}.wav`);
+            extractAndFilterAudio({ input: audioSource, outputWav: tempWav });
+            wavPath = tempWav;
+            isTempWav = true;
+          }
+
+          console.log(`⚡ Running Method 2 (Acoustic Vocal Alignment) with pre-roll: ${preRoll}s...`);
+          const result = acousticAlignSRT({
+            srtContent,
+            wavPath,
+            preRoll,
+            manualAnchors
+          });
+
+          saveSrtFile(outPath, result.content);
+          if (isTempWav && fs.existsSync(wavPath)) {
+            try { fs.unlinkSync(wavPath); } catch {}
+          }
+
+          console.log(`✅ Successfully aligned ${result.items.length} cues using Method 2!`);
+          console.log(`💾 Saved to: ${outPath}`);
+          break;
+        }
+
         const videoId = options.video || options.v;
         const outputFilename = options.output || options.o || options.file || options.f;
         let lyricsText = options.lyrics || options.text || '';

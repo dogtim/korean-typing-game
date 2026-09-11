@@ -10,6 +10,9 @@ description: >-
 
 This skill defines the standardized workflow for synchronizing bilingual (Korean Hangul + English) SRT subtitles to any YouTube video using the project's built-in **`tools/`** CLI suite.
 
+> [!TIP]
+> For advanced multi-method synchronization (including **Method 2: Acoustic / AI Vocal Energy Alignment** and decision matrices), refer to the unified [sync-song-lyrics](file:///Users/hsiaotingchen/korean-typing-game/.agents/skills/sync-song-lyrics/SKILL.md) skill.
+
 ---
 
 ## 🎯 Core Principles

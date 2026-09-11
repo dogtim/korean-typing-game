@@ -109,3 +109,24 @@ npm run tool -- frame --video x3eqqoZPV_E --start 00:45.2
 # Custom output directory and image format
 npm run tool -- frame --video "https://www.youtube.com/watch?v=bMhDJ0S0OBA" --start 12.5 --count 5 --duration 0.5 --output output/my_frames --format png
 ```
+
+---
+
+### 7. Acoustic Vocal Energy Alignment (`align-acoustic`) [Method 2]
+Aligns SRT subtitle cues automatically to singing vocal energy attacks in an audio/video track by analyzing bandpass-filtered vocal frequencies (200Hz–3500Hz), rising energy gradients ($dE/dt$), and dynamic phrase envelopes. Supports preserving manual ground-truth anchors and pre-roll anticipation for rhythm gaming.
+
+```bash
+# Acoustic alignment with YouTube video and preserved anchors 1 to 8
+node tools/cli.js align-acoustic \
+  --srt public/lyrics/KIM-KONG-DECISIVE-MOMENT.srt \
+  --audio https://www.youtube.com/watch?v=I0w6OCa1kbQ \
+  --anchors 1-8 \
+  --pre-roll 0.30
+
+# Acoustic alignment with local audio file
+node tools/cli.js align-acoustic \
+  --srt public/lyrics/SONG.srt \
+  --audio path/to/vocal_filtered.wav \
+  --pre-roll 0.25
+```
+
