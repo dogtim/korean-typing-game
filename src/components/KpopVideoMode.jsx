@@ -8,6 +8,8 @@ import { getHokkienLineBreakdown } from '../utils/hokkien';
 import { sound } from '../utils/audio';
 import VirtualKeyboard from './VirtualKeyboard';
 import VideoSelectModal from './VideoSelectModal';
+import FanchantPrompter from './FanchantPrompter';
+import { getFanchantForSong, FANCHANT_TYPES } from '../utils/fanchantData';
 import {
   Sparkles,
   Type,
@@ -30,7 +32,8 @@ import {
   Save,
   FileText,
   Play,
-  Pause
+  Pause,
+  Flame
 } from 'lucide-react';
 
 export default function KpopVideoMode({
@@ -69,6 +72,13 @@ export default function KpopVideoMode({
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [practiceMode, setPracticeMode] = useState(false);
+  const [isFanchantMode, setIsFanchantMode] = useState(true); // Default ON when song has fanchant
+
+  const currentFanchant = useMemo(() => {
+    return getFanchantForSong(activeVideoId) || getFanchantForSong(song.title);
+  }, [activeVideoId, song.title]);
+  const songHasFanchant = Boolean(currentFanchant);
+
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
   const [loopBufferSec, setLoopBufferSec] = useState(() => {
     const saved = localStorage.getItem('kpop_loop_buffer_sec');
@@ -1192,21 +1202,45 @@ export default function KpopVideoMode({
             <div id="youtube-player-element" className="yt-iframe-container"></div>
           </div>
 
-          {/* CC Style Subtitle Display Banner */}
-          <div className={`cc-subtitle-overlay ${isLoopBuffering ? 'cc-buffering' : ''}`}>
-            {isLoopBuffering && (
-              <div className="cc-buffer-pill">
-                <Clock size={12} className="spin-slow" />
-                <span>Thinking Pause ({loopBufferSec}s) · Rewinding soon...</span>
-              </div>
-            )}
-            <div className="cc-hangul">{activeLine.ko}</div>
-            {activeLine.rom && <div className="cc-romanization">{activeLine.rom}</div>}
-            {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
-          </div>
+          {/* CC Style Subtitle Display Banner OR Fanchant Concert Prompter */}
+          {isFanchantMode && currentFanchant ? (
+            <FanchantPrompter
+              fanchant={currentFanchant}
+              currentTime={currentTime}
+              isPlaying={isPlaying}
+              onSeek={seekToTime}
+              activeLine={activeLine}
+            />
+          ) : (
+            <div className={`cc-subtitle-overlay ${isLoopBuffering ? 'cc-buffering' : ''}`}>
+              {isLoopBuffering && (
+                <div className="cc-buffer-pill">
+                  <Clock size={12} className="spin-slow" />
+                  <span>Thinking Pause ({loopBufferSec}s) · Rewinding soon...</span>
+                </div>
+              )}
+              <div className="cc-hangul">{activeLine.ko}</div>
+              {activeLine.rom && <div className="cc-romanization">{activeLine.rom}</div>}
+              {activeLine.en && <div className="cc-english">"{activeLine.en}"</div>}
+            </div>
+          )}
 
           {/* Loop & Practice Toggle Bar */}
           <div className="video-actions-bar">
+            {songHasFanchant && (
+              <button
+                className={`action-btn ${isFanchantMode ? 'active-pink' : ''}`}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  setIsFanchantMode(!isFanchantMode);
+                }}
+                title="切換演唱會官方應援練習提詞機 (Fanchant Guide Mode)"
+              >
+                <Flame size={18} className={isFanchantMode ? 'flame-icon-pulse' : ''} />
+                {isFanchantMode ? '應援模式 ON' : '演唱會應援 (Fanchant)'}
+              </button>
+            )}
+
             <button
               className={`action-btn ${isLineLoopEnabled ? 'active-green' : ''} ${isLoopBuffering ? 'buffering-pulse' : ''}`}
               onClick={(e) => {
@@ -1718,11 +1752,17 @@ export default function KpopVideoMode({
               const isRangeStart = isMultiSelected && idx === selectedRange[0];
               const isRangeEnd = isMultiSelected && idx === selectedRange[1];
 
+              const lineEnd = typeof line.end === 'number' ? line.end : line.start + 3;
+              const matchedCues = (isFanchantMode && currentFanchant?.cues)
+                ? currentFanchant.cues.filter(c => (c.start >= line.start - 0.5 && c.start <= lineEnd + 0.5) || (line.start >= c.start && line.start <= c.end))
+                : [];
+              const hasChant = matchedCues.length > 0;
+
               return (
                 <div
                   key={idx}
                   ref={isActive ? activeRowRef : null}
-                  className={`lyric-row-item ${isActive ? 'active-line' : ''} ${isSyncStudioOpen && isActive ? 'sync-editing-line' : ''} ${isInRange ? 'in-loop-range' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''}`}
+                  className={`lyric-row-item ${isActive ? 'active-line' : ''} ${isSyncStudioOpen && isActive ? 'sync-editing-line' : ''} ${isInRange ? 'in-loop-range' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''} ${hasChant ? 'has-fanchant-cue' : (isFanchantMode ? 'is-fanchant-dim' : '')}`}
                   onClick={(e) => {
                     if (e.shiftKey) {
                       // Multi-line selection with Shift + Click
@@ -1746,7 +1786,7 @@ export default function KpopVideoMode({
                       seekToTime(line.start);
                     }
                   }}
-                  title="Click to select · Shift + Click to select multiple consecutive lyrics to loop"
+                  title={hasChant ? "點擊練習此段（含應援法）· Shift + Click 選取多行" : "Click to select · Shift + Click to select multiple consecutive lyrics to loop"}
                 >
                   <div className="time-badge-container" onClick={(e) => e.stopPropagation()}>
                     {isSyncStudioOpen ? (
@@ -1822,6 +1862,34 @@ export default function KpopVideoMode({
                     </div>
                     {line.rom && <div className="lyric-rom">{line.rom}</div>}
                     {line.en && <div className="lyric-en">{line.en}</div>}
+
+                    {/* Fanchant Callout Badges */}
+                    {hasChant && (
+                      <div className="lyric-fanchant-callouts">
+                        {matchedCues.map((cue, cIdx) => {
+                          const typeConf = FANCHANT_TYPES[cue.type.toUpperCase()] || FANCHANT_TYPES.SHOUT;
+                          return (
+                            <div
+                              key={cIdx}
+                              className="lyric-fanchant-callout"
+                              style={{ borderColor: typeConf.color }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                seekToTime(Math.max(0, cue.start - 1.5));
+                              }}
+                              title="點擊跳轉至此應援點練習"
+                            >
+                              <span className="fanchant-callout-badge" style={{ backgroundColor: typeConf.color }}>
+                                {typeConf.icon} {typeConf.label}
+                              </span>
+                              <strong className="fanchant-callout-text">{cue.chant}</strong>
+                              {cue.roman && <span className="fanchant-callout-roman">({cue.roman})</span>}
+                              {cue.meaning && <span className="fanchant-callout-meaning">· {cue.meaning}</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
               );

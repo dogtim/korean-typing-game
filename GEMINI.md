@@ -19,3 +19,10 @@
   - However, you must **never** automatically chain or follow a build/verification step with a deployment command.
 - **Hand-off When Ready**:
   - When changes are implemented and verified, notify the user that changes are ready for deployment and ask if they would like you to deploy, rather than deploying automatically.
+
+## File Deletion Policy (Strict)
+
+- **No Unauthorized File Deletion**: Never execute destructive file deletion commands (`rm`, `git rm`, or code-based unlink) on existing workspace files without explicit user approval.
+- **Temporary Files Exception**: Only temporary scratch files created within the current active session (e.g. temporary download artifacts) may be removed automatically.
+- **Explicit Consent Required**: If any non-new or project file needs to be deleted or cleaned up, you MUST explicitly ask the user for confirmation first.
+

@@ -72,6 +72,11 @@ class SoundEngine {
     osc.stop(now + 0.25);
   }
 
+  // Success chime alias
+  playSuccess() {
+    this.playCorrect();
+  }
+
   // Error buzz
   playError() {
     if (this.muted) return;
