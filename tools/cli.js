@@ -11,6 +11,7 @@ import { shiftSRT, alignAnchor, validateSRT } from './srtEngine.js';
 import { convertLrcToSrtString } from './lrcConverter.js';
 import { registerSong } from './autoRegister.js';
 import { fetchSongPipeline } from './songFetcher.js';
+import { listFanchants, validateFanchants, scaffoldFanchant } from './fanchantHelper.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -120,7 +121,16 @@ Commands:
              Options:
                --file <path>         Path to SRT file
 
+  fanchant   Manage, validate, or scaffold official K-Pop fanchants
+             Options:
+               --list                List all registered fanchants
+               --validate            Validate fanchant cue structure & timestamps
+               --scaffold <video>    Generate fanchant JSON template for a song
+
 Examples:
+  node tools/cli.js fanchant --list
+  node tools/cli.js fanchant --validate
+  node tools/cli.js fanchant --scaffold Zp-Jhuhq0bQ
   node tools/cli.js align-acoustic --srt public/lyrics/SONG.srt --audio https://youtu.be/ID --anchors 1-8
   node tools/cli.js frame --video choom --start 10 --count 3 --duration 0.25
   node tools/cli.js frame --video x3eqqoZPV_E --start 00:10 --count 3 --duration 0.25
@@ -509,6 +519,21 @@ async function main() {
         result.frames.forEach(f => {
           console.log(`   [#${f.index}] ${f.timeString} (${f.timestamp.toFixed(3)}s) ➔ ${f.outputPath} (${(f.sizeBytes / 1024).toFixed(1)} KB)`);
         });
+        break;
+      }
+
+      case 'fanchant': {
+        if (options.list) {
+          listFanchants();
+        } else if (options.scaffold) {
+          const videoId = typeof options.scaffold === 'string' ? options.scaffold : positional[1];
+          scaffoldFanchant(videoId);
+        } else if (options.validate) {
+          const ok = validateFanchants();
+          if (!ok) process.exit(1);
+        } else {
+          listFanchants();
+        }
         break;
       }
 

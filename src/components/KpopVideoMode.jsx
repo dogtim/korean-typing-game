@@ -1745,6 +1745,41 @@ export default function KpopVideoMode({
               paddingBottom: autoScrollEnabled ? `${listPadding}px` : '16px'
             }}
           >
+            {/* Intro Fanchant Cues (before first lyric line) */}
+            {isFanchantMode && currentFanchant?.cues && song.lyrics.length > 0 && (
+              currentFanchant.cues
+                .filter(c => c.start < (song.lyrics[0].start - 0.5))
+                .map((cue) => {
+                  const typeConf = FANCHANT_TYPES[cue.type.toUpperCase()] || FANCHANT_TYPES.SHOUT;
+                  const isActive = currentTime >= cue.start && currentTime <= cue.end;
+                  return (
+                    <div
+                      key={cue.id}
+                      className={`lyric-row-item has-fanchant-cue ${isActive ? 'active-line' : ''}`}
+                      onClick={() => seekToTime(Math.max(0, cue.start - (cue.leadTimeSec || 1.5)))}
+                      style={{ cursor: 'pointer', marginBottom: '4px' }}
+                      title="點擊練習前奏應援點"
+                    >
+                      <div className="lyric-time-col">
+                        <span className="lyric-time-badge">{formatTimeMinutesSeconds(cue.start)}</span>
+                      </div>
+                      <div className="lyric-text-col">
+                        <div className="lyric-fanchant-callouts" style={{ marginTop: 0 }}>
+                          <div className="lyric-fanchant-callout">
+                            <span className="fanchant-callout-badge" style={{ backgroundColor: typeConf.color }}>
+                              {typeConf.icon} {typeConf.label}
+                            </span>
+                            <strong className="fanchant-callout-text">{cue.chant}</strong>
+                            {cue.roman && <span className="fanchant-callout-roman">({cue.roman})</span>}
+                            {cue.tip && <span className="fanchant-callout-meaning">· {cue.tip}</span>}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+            )}
+
             {song.lyrics.map((line, idx) => {
               const isActive = idx === activeLineIdx;
               const isEditingThisTime = editingLineIdx === idx;
