@@ -72,14 +72,22 @@ Search for the **official cheering guide** released by the artist's agency or ma
   - Parentheses `()` or brackets `[]` denoting actions or crowd shouts.
   - Member roll-call order (usually leader-first or age order).
 
-#### 2. Official YouTube Cheering Guide Video
+#### 2. KpopChords Fanchant Index & Guides (極高實用度，含雙語對照)
+- URL / Index: `https://www.kpopchords.com/chant/<artist>-fanchant-index` (例：`https://www.kpopchords.com/chant/babymonster-fanchant-index`)
+- 特色與使用要點：
+  - 整理了官方 Weverse 發布的應援法與對應嵌入 YouTube MV。
+  - **重要準則：務必優先檢視「KOREAN」版本標籤頁**（非僅看 ROMANIZED）。
+  - **色彩判定**：通常非白色字體即為需要應援的詞（HTML 標籤為 `<span class="chant1">` 重音/齊喊、`<span class="chant2">` 團名/口號呼應、`<span class="chant3">` `[함성]` 尖叫歡呼）。
+  - 可直接透過 `read_url_content` 快速抓取頁面並解析。
+
+#### 3. Official YouTube Cheering Guide Video
 - Search query:
   ```bash
   yt-dlp --print "%(id)s %(title)s" "ytsearch3:<Artist> <Song Title> CHEERING GUIDE"
   ```
 - Official cheering videos usually have members holding lightsticks demonstrating the shouts in real time with on-screen karaoke lyrics.
 
-#### 3. Japanese Fan Blog / Community Cheat Sheets (備用對照)
+#### 4. Japanese Fan Blog / Community Cheat Sheets (備用對照)
 - Search Ameblo or Naver Blog for `<Artist> <Song Title> 掛け声 / 응원법`.
 - Japanese fan guides are exceptionally detailed with line-by-line color coding and kana/romanization.
 

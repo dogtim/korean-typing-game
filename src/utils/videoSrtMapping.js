@@ -11,7 +11,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '數位單曲《Stuck In The Middle》',
     srtFilename: 'BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
     srtPath: '/lyrics/BABYMONSTER-STUCK-IN-THE-MIDDLE.srt',
-    youtubeIds: ['GsV1i0QHi-o', 'u1GVtUHb2TM'],
+    youtubeIds: ['GsV1i0QHi-o', 'u1GVtUHb2TM', 'aDcMNi_qQyM', 'KaM7ZxoGQuE'],
     primaryUrl: 'https://www.youtube.com/watch?v=GsV1i0QHi-o',
     alternateUrls: ['https://www.youtube.com/watch?v=u1GVtUHb2TM'],
     description: "BABYMONSTER (베이비몬스터) - Stuck In The Middle synchronized SRT subtitle lyrics"
@@ -81,9 +81,9 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '數位單曲《FOREVER》',
     srtFilename: 'BABYMONSTER-FOREVER.srt',
     srtPath: '/lyrics/BABYMONSTER-FOREVER.srt',
-    youtubeIds: ['eJCHKjt0MPw'],
+    youtubeIds: ['eJCHKjt0MPw', 'Zy1sU6ZOgjc'],
     primaryUrl: 'https://www.youtube.com/watch?v=eJCHKjt0MPw',
-    alternateUrls: [],
+    alternateUrls: ['https://www.youtube.com/watch?v=Zy1sU6ZOgjc'],
     description: "BABYMONSTER (베이비몬스터) - FOREVER synchronized SRT subtitle lyrics"
   },
 
@@ -97,9 +97,9 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '首張正規專輯《DRIP》',
     srtFilename: 'BABYMONSTER-CLIK-CLAK.srt',
     srtPath: '/lyrics/BABYMONSTER-CLIK-CLAK.srt',
-    youtubeIds: ['o0oW3lPoOXM'],
-    primaryUrl: 'https://www.youtube.com/watch?v=o0oW3lPoOXM',
-    alternateUrls: [],
+    youtubeIds: ['1eQO8h7XU0Y', 'o0oW3lPoOXM', 'le_VX8l35XI'],
+    primaryUrl: 'https://www.youtube.com/watch?v=1eQO8h7XU0Y',
+    alternateUrls: ['https://www.youtube.com/watch?v=o0oW3lPoOXM', 'https://www.youtube.com/watch?v=le_VX8l35XI'],
     description: "BABYMONSTER (베이비몬스터) - CLIK CLAK synchronized SRT subtitle lyrics"
   },
   {
@@ -121,7 +121,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '首張正規專輯《DRIP》',
     srtFilename: 'BABYMONSTER-LOVE-MAYBE.srt',
     srtPath: '/lyrics/BABYMONSTER-LOVE-MAYBE.srt',
-    youtubeIds: ['q2KJumLIxsM', 'xPq1Oz_hzVc'],
+    youtubeIds: ['q2KJumLIxsM', 'xPq1Oz_hzVc', 'uQ6J8b_P5iA'],
     primaryUrl: 'https://www.youtube.com/watch?v=q2KJumLIxsM',
     alternateUrls: ['https://www.youtube.com/watch?v=xPq1Oz_hzVc'],
     description: "BABYMONSTER (베이비몬스터) - Love, Maybe synchronized SRT subtitle lyrics"
@@ -133,7 +133,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '首張正規專輯《DRIP》',
     srtFilename: 'BABYMONSTER-REALLY-LIKE-YOU.srt',
     srtPath: '/lyrics/BABYMONSTER-REALLY-LIKE-YOU.srt',
-    youtubeIds: ['XShaIZs7J7M', 'eCFlXhPmaBs'],
+    youtubeIds: ['XShaIZs7J7M', 'eCFlXhPmaBs', '4qL5eP8J0uY'],
     primaryUrl: 'https://www.youtube.com/watch?v=XShaIZs7J7M',
     alternateUrls: ['https://www.youtube.com/watch?eCFlXhPmaBs'],
     description: "BABYMONSTER (베이비몬스터) - Really Like You synchronized SRT subtitle lyrics"
@@ -145,7 +145,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '首張正規專輯《DRIP》',
     srtFilename: 'BABYMONSTER-BILLIONAIRE.srt',
     srtPath: '/lyrics/BABYMONSTER-BILLIONAIRE.srt',
-    youtubeIds: ['Gz_yRl6703c'],
+    youtubeIds: ['Gz_yRl6703c', '8sK7k0Y9c5A', 'MN2RlOy8y8k'],
     primaryUrl: 'https://www.youtube.com/watch?v=Gz_yRl6703c',
     alternateUrls: [],
     description: "BABYMONSTER (베이비몬스터) - BILLIONAIRE synchronized SRT subtitle lyrics"
@@ -157,7 +157,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '首張正規專輯《DRIP》',
     srtFilename: 'BABYMONSTER-LOVE-IN-MY-HEART.srt',
     srtPath: '/lyrics/BABYMONSTER-LOVE-IN-MY-HEART.srt',
-    youtubeIds: ['1kXLsrun51s'],
+    youtubeIds: ['1kXLsrun51s', 'nZzM_X9L8eQ'],
     primaryUrl: 'https://www.youtube.com/watch?v=1kXLsrun51s',
     alternateUrls: [],
     description: "BABYMONSTER (베이비몬스터) - Love In My Heart synchronized SRT subtitle lyrics"
@@ -169,7 +169,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '首張正規專輯《DRIP》',
     srtFilename: 'BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
     srtPath: '/lyrics/BABYMONSTER-WOKE-UP-IN-TOKYO.srt',
-    youtubeIds: ['KcSwEoDRWTA', 'EGGeEtbsFFE'],
+    youtubeIds: ['KcSwEoDRWTA', 'EGGeEtbsFFE', '7mY3yQ2X1fU'],
     primaryUrl: 'https://www.youtube.com/watch?v=KcSwEoDRWTA',
     alternateUrls: ['https://www.youtube.com/watch?v=EGGeEtbsFFE'],
     description: "BABYMONSTER (베이비몬스터) - Woke Up In Tokyo (RUKA & ASA) synchronized SRT subtitle lyrics"
@@ -185,9 +185,9 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '數位單曲《HOT SAUCE》',
     srtFilename: 'BABYMONSTER-HOT-SAUCE.srt',
     srtPath: '/lyrics/BABYMONSTER-HOT-SAUCE.srt',
-    youtubeIds: ['xn8mQqz2xmM'],
+    youtubeIds: ['xn8mQqz2xmM', 'wBHKLsujSNA'],
     primaryUrl: 'https://www.youtube.com/watch?v=xn8mQqz2xmM',
-    alternateUrls: [],
+    alternateUrls: ['https://www.youtube.com/watch?v=wBHKLsujSNA'],
     description: "BABYMONSTER (베이비몬스터) - HOT SAUCE synchronized SRT subtitle lyrics"
   },
 
@@ -201,7 +201,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '第二張迷你專輯《WE GO UP》',
     srtFilename: 'BABYMONSTER-WE-GO-UP.srt',
     srtPath: '/lyrics/BABYMONSTER-WE-GO-UP.srt',
-    youtubeIds: ['wlHwjkYpSr0'],
+    youtubeIds: ['wlHwjkYpSr0', '3yXQ3sN2Y6k', 'x4b_9YdhT8M'],
     primaryUrl: 'https://www.youtube.com/watch?v=wlHwjkYpSr0',
     alternateUrls: [],
     description: "BABYMONSTER (베이비몬스터) - WE GO UP synchronized SRT subtitle lyrics"
@@ -253,9 +253,9 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '第三張迷你專輯《춤 (CHOOM)》',
     srtFilename: 'BABYMONSTER-CHOOM.srt',
     srtPath: '/lyrics/BABYMONSTER-CHOOM.srt',
-    youtubeIds: ['x3eqqoZPV_E'],
+    youtubeIds: ['x3eqqoZPV_E', 'UPkyursCTfE'],
     primaryUrl: 'https://www.youtube.com/watch?v=x3eqqoZPV_E',
-    alternateUrls: [],
+    alternateUrls: ['https://www.youtube.com/watch?v=UPkyursCTfE'],
     description: 'BABYMONSTER - CHOOM (춤) synchronized SRT subtitle lyrics'
   },
   {
@@ -265,7 +265,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '第三張迷你專輯《춤 (CHOOM)》',
     srtFilename: 'BABYMONSTER-MOON.srt',
     srtPath: '/lyrics/BABYMONSTER-MOON.srt',
-    youtubeIds: ['LYbHsAsj6i8'],
+    youtubeIds: ['LYbHsAsj6i8', 'dY4yqM2Z1cQ', 'm7YXyj1RigA'],
     primaryUrl: 'https://www.youtube.com/watch?v=LYbHsAsj6i8',
     alternateUrls: [],
     description: "BABYMONSTER (베이비몬스터) - Moon synchronized SRT subtitle lyrics"
@@ -277,7 +277,7 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '第三張迷你專輯《춤 (CHOOM)》',
     srtFilename: 'BABYMONSTER-I-LIKE-IT.srt',
     srtPath: '/lyrics/BABYMONSTER-I-LIKE-IT.srt',
-    youtubeIds: ['9cS2wv6AfHk'],
+    youtubeIds: ['9cS2wv6AfHk', 'kP7uX9Z8m1Q', 'ZhLZEvR6V5U'],
     primaryUrl: 'https://www.youtube.com/watch?v=9cS2wv6AfHk',
     alternateUrls: [],
     description: "BABYMONSTER (베이비몬스터) - I Like It synchronized SRT subtitle lyrics"
@@ -293,9 +293,9 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '數位單曲《SUGAR HONEY ICE TEA》',
     srtFilename: 'BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
     srtPath: '/lyrics/BABYMONSTER-SUGAR-HONEY-ICE-TEA.srt',
-    youtubeIds: ['naoGk-Zjc1s'],
+    youtubeIds: ['naoGk-Zjc1s', 'xN3X_tl4zlQ'],
     primaryUrl: 'https://www.youtube.com/watch?v=naoGk-Zjc1s',
-    alternateUrls: [],
+    alternateUrls: ['https://www.youtube.com/watch?v=xN3X_tl4zlQ'],
     description: "BabyMonster - SUGAR HONEY ICE TEA synchronized SRT subtitle lyrics"
   },
 
