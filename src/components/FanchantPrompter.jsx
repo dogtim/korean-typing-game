@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FANCHANT_TYPES, getFanchantStatusAtTime } from '../utils/fanchantData';
-import { Volume2, VolumeX, RotateCcw, Flame, Info, Eye, EyeOff } from 'lucide-react';
+import { RotateCcw, Info } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 export default function FanchantPrompter({
@@ -10,9 +10,9 @@ export default function FanchantPrompter({
   onSeek,
   activeLine
 }) {
-  const [showRoman, setShowRoman] = useState(true);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [lightstickActive, setLightstickActive] = useState(true);
+  const showRoman = true;
+  const soundEnabled = true;
+  const lightstickActive = true;
 
   const cues = fanchant?.cues || [];
   const status = getFanchantStatusAtTime(cues, currentTime);
@@ -47,52 +47,6 @@ export default function FanchantPrompter({
 
   return (
     <div className={`fanchant-prompter-stage glassmorphism ${activeCue ? 'is-chant-active' : ''}`}>
-      {/* Stage Top Bar */}
-      <div className="prompter-top-bar">
-        <div className="prompter-meta-left">
-          <div className="fanchant-mode-pill">
-            <Flame size={14} className="flame-icon-pulse" />
-            <span>CONCERT FANCHANT · {fanchant.groupName || 'K-POP'}</span>
-          </div>
-          {fanchant.fandomName && (
-            <span className="fandom-badge">
-              🪄 {fanchant.fandomName} 應援中
-            </span>
-          )}
-        </div>
-
-        <div className="prompter-controls-right">
-          <button
-            type="button"
-            className={`prompter-tool-chip ${showRoman ? 'active' : ''}`}
-            onClick={() => setShowRoman(!showRoman)}
-            title="切換羅馬拼音與中文註釋提示"
-          >
-            {showRoman ? <Eye size={12} /> : <EyeOff size={12} />}
-            <span>拼音註解</span>
-          </button>
-
-          <button
-            type="button"
-            className={`prompter-tool-chip ${soundEnabled ? 'active' : ''}`}
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            title="切換卡點提示音效"
-          >
-            {soundEnabled ? <Volume2 size={12} /> : <VolumeX size={12} />}
-            <span>提示音</span>
-          </button>
-
-          <button
-            type="button"
-            className={`prompter-tool-chip ${lightstickActive ? 'active' : ''}`}
-            onClick={() => setLightstickActive(!lightstickActive)}
-            title="開啟/關閉虛擬應援棒"
-          >
-            <span>🪄 應援棒</span>
-          </button>
-        </div>
-      </div>
-
       {/* Main Prompter Center Area */}
       <div className="prompter-main-canvas">
         {/* Background Singer Lyrics (Dimmed) */}
