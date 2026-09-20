@@ -41,17 +41,6 @@ export default {
     },
     {
       "id": "wgu-4",
-      "start": 29.24,
-      "end": 30.33,
-      "chant": "blow",
-      "type": "hook",
-      "roman": "blow",
-      "meaning": "火箭升空炸裂 (重音爆發)",
-      "tip": "watch the rocket blow 尾音用力下沉！",
-      "leadTimeSec": 1.2
-    },
-    {
-      "id": "wgu-5",
       "start": 33.5,
       "end": 34.33,
       "chant": "be bygones",
@@ -62,7 +51,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-6",
+      "id": "wgu-5",
       "start": 35,
       "end": 35.87,
       "chant": "no problems",
@@ -73,7 +62,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-7",
+      "id": "wgu-6",
       "start": 37.8,
       "end": 39.12,
       "chant": "be icons",
@@ -84,7 +73,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-8",
+      "id": "wgu-7",
       "start": 39.12,
       "end": 41.71,
       "chant": "What you gon', what you gon', what you gon' do?",
@@ -95,7 +84,7 @@ export default {
       "leadTimeSec": 1.5
     },
     {
-      "id": "wgu-9",
+      "id": "wgu-8",
       "start": 41.96,
       "end": 44.54,
       "chant": "Lookin' good, lookin' fly, lookin' brand new",
@@ -106,7 +95,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-10",
+      "id": "wgu-9",
       "start": 47.3,
       "end": 50.22,
       "chant": "You love it, love it",
@@ -117,7 +106,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-11",
+      "id": "wgu-10",
       "start": 53.22,
       "end": 55.47,
       "chant": "B-A-B-Y-M-O-N, we up, up, up",
@@ -128,7 +117,7 @@ export default {
       "leadTimeSec": 1.5
     },
     {
-      "id": "wgu-12",
+      "id": "wgu-11",
       "start": 55.47,
       "end": 57.22,
       "chant": "We go up",
@@ -139,7 +128,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-13",
+      "id": "wgu-12",
       "start": 57.22,
       "end": 58.64,
       "chant": "killas, killas",
@@ -150,7 +139,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-14",
+      "id": "wgu-13",
       "start": 58.64,
       "end": 60.1,
       "chant": "We go up",
@@ -161,7 +150,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-15",
+      "id": "wgu-14",
       "start": 60.1,
       "end": 61.56,
       "chant": "villains, villains",
@@ -172,7 +161,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-16",
+      "id": "wgu-15",
       "start": 67.03,
       "end": 68.32,
       "chant": "We go up",
@@ -183,7 +172,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-17",
+      "id": "wgu-16",
       "start": 68.32,
       "end": 69.82,
       "chant": "killas, killas",
@@ -194,7 +183,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-18",
+      "id": "wgu-17",
       "start": 69.82,
       "end": 71.32,
       "chant": "We go up",
@@ -205,7 +194,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-19",
+      "id": "wgu-18",
       "start": 71.32,
       "end": 72.86,
       "chant": "villains, villains",
@@ -216,7 +205,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-20",
+      "id": "wgu-19",
       "start": 79,
       "end": 81.79,
       "chant": "Copy, copy, copy, copy",
@@ -227,7 +216,7 @@ export default {
       "leadTimeSec": 1.5
     },
     {
-      "id": "wgu-21",
+      "id": "wgu-20",
       "start": 81.79,
       "end": 83.2,
       "chant": "Copy, copy",
@@ -238,7 +227,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-22",
+      "id": "wgu-21",
       "start": 95.95,
       "end": 97.31,
       "chant": "be bygones",
@@ -249,7 +238,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-23",
+      "id": "wgu-22",
       "start": 97.31,
       "end": 98.72,
       "chant": "no problems",
@@ -260,7 +249,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-24",
+      "id": "wgu-23",
       "start": 100.14,
       "end": 101.77,
       "chant": "be icons",
@@ -271,7 +260,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-25",
+      "id": "wgu-24",
       "start": 101.77000000000001,
       "end": 105.02,
       "chant": "What you gon', what you gon', what you gon' do?",
@@ -282,7 +271,7 @@ export default {
       "leadTimeSec": 1.5
     },
     {
-      "id": "wgu-26",
+      "id": "wgu-25",
       "start": 105.02,
       "end": 107.48,
       "chant": "Lookin' good, lookin' fly, lookin' brand new",
@@ -293,7 +282,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-27",
+      "id": "wgu-26",
       "start": 110.07,
       "end": 112.86,
       "chant": "You love it, love it",
@@ -304,7 +293,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-28",
+      "id": "wgu-27",
       "start": 116.03,
       "end": 118.45,
       "chant": "B-A-B-Y-M-O-N, we up, up, up",
@@ -315,7 +304,7 @@ export default {
       "leadTimeSec": 1.5
     },
     {
-      "id": "wgu-29",
+      "id": "wgu-28",
       "start": 118.45,
       "end": 119.87,
       "chant": "We go up",
@@ -326,7 +315,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-30",
+      "id": "wgu-29",
       "start": 119.87,
       "end": 121.99,
       "chant": "killas, killas",
@@ -337,7 +326,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-31",
+      "id": "wgu-30",
       "start": 121.99,
       "end": 123.04,
       "chant": "We go up",
@@ -348,7 +337,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-32",
+      "id": "wgu-31",
       "start": 123.04,
       "end": 124.5,
       "chant": "villains, villains",
@@ -359,7 +348,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-33",
+      "id": "wgu-32",
       "start": 130,
       "end": 131.38,
       "chant": "We go up",
@@ -370,7 +359,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-34",
+      "id": "wgu-33",
       "start": 131.38,
       "end": 133.05,
       "chant": "killas, killas",
@@ -381,7 +370,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-35",
+      "id": "wgu-34",
       "start": 133.05,
       "end": 134.59,
       "chant": "We go up",
@@ -392,7 +381,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-36",
+      "id": "wgu-35",
       "start": 134.59,
       "end": 135.89,
       "chant": "villains, villains",
@@ -403,7 +392,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-37",
+      "id": "wgu-36",
       "start": 143.06,
       "end": 144.64,
       "chant": "run it up",
@@ -414,7 +403,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-38",
+      "id": "wgu-37",
       "start": 146.27,
       "end": 147.44,
       "chant": "burn it up",
@@ -425,7 +414,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-39",
+      "id": "wgu-38",
       "start": 148.82,
       "end": 150.19,
       "chant": "say my name",
@@ -436,7 +425,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-40",
+      "id": "wgu-39",
       "start": 153.28,
       "end": 156.16,
       "chant": "dangerous",
@@ -447,7 +436,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-41",
+      "id": "wgu-40",
       "start": 157.49,
       "end": 158.87,
       "chant": "buckle up",
@@ -458,7 +447,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-42",
+      "id": "wgu-41",
       "start": 164.66,
       "end": 166.12,
       "chant": "We go up",
@@ -469,7 +458,7 @@ export default {
       "leadTimeSec": 1.2
     },
     {
-      "id": "wgu-43",
+      "id": "wgu-42",
       "start": 166.12,
       "end": 167.17,
       "chant": "killas, killas",
@@ -480,7 +469,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-44",
+      "id": "wgu-43",
       "start": 167.17,
       "end": 168.5,
       "chant": "We go up",
@@ -491,7 +480,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-45",
+      "id": "wgu-44",
       "start": 168.5,
       "end": 170.17,
       "chant": "villains, villains",
@@ -502,7 +491,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-46",
+      "id": "wgu-45",
       "start": 173.34,
       "end": 176.05,
       "chant": "B-A (B-A) B-Y (B-Y) M-O (M-O) N (N)",
@@ -513,7 +502,7 @@ export default {
       "leadTimeSec": 1.5
     },
     {
-      "id": "wgu-47",
+      "id": "wgu-46",
       "start": 176.05,
       "end": 177.39,
       "chant": "We go up",
@@ -524,7 +513,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-48",
+      "id": "wgu-47",
       "start": 177.39,
       "end": 178.6,
       "chant": "killas, killas",
@@ -535,7 +524,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-49",
+      "id": "wgu-48",
       "start": 178.6,
       "end": 180.01,
       "chant": "We go up",
@@ -546,7 +535,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-50",
+      "id": "wgu-49",
       "start": 180.01,
       "end": 181.6,
       "chant": "villains, villains",
@@ -557,7 +546,7 @@ export default {
       "leadTimeSec": 0.8
     },
     {
-      "id": "wgu-51",
+      "id": "wgu-50",
       "start": 186,
       "end": 188.27,
       "chant": "We go up!",
@@ -568,7 +557,7 @@ export default {
       "leadTimeSec": 1
     },
     {
-      "id": "wgu-52",
+      "id": "wgu-51",
       "start": 188.27,
       "end": 192,
       "chant": "BABYMONSTER! MONSTIEZ!",
