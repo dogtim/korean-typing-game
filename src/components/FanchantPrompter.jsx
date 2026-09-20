@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FANCHANT_TYPES, getFanchantStatusAtTime } from '../utils/fanchantData';
-import { Sparkles, Volume2, VolumeX, RotateCcw, Flame, Info, Eye, EyeOff } from 'lucide-react';
+import { Volume2, VolumeX, RotateCcw, Flame, Info, Eye, EyeOff } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 export default function FanchantPrompter({
@@ -186,10 +186,6 @@ export default function FanchantPrompter({
           </div>
         ) : (
           <div className="chant-idle-card">
-            <div className="idle-indicator">
-              <Sparkles size={20} className="sparkle-soft" />
-              <span>聽音樂感受節奏，隨時準備大聲應援！</span>
-            </div>
             {upcomingCue && (
               <div className="next-cue-peek">
                 <span className="peek-label">下一處應援預告：</span>

@@ -16,7 +16,6 @@ import {
   Repeat,
   RotateCcw,
   X,
-  Edit3,
   Clock,
   Check,
   Locate,
@@ -126,10 +125,6 @@ export default function KpopVideoMode({
   const [_typedKeys, setTypedKeys] = useState('');
   const [typedText, setTypedText] = useState('');
   const [activeKeyPressed, setActiveKeyPressed] = useState([]);
-
-  // Timestamp editing state
-  const [editingLineIdx, setEditingLineIdx] = useState(-1);
-  const [editTimeValue, setEditTimeValue] = useState('');
 
   // Voice recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -378,48 +373,6 @@ export default function KpopVideoMode({
     const parts = remainder.split('.');
     const wholeSecs = String(parts[0]).padStart(2, '0');
     return `${m}:${wholeSecs}${parts[1] && parts[1] !== '0' ? '.' + parts[1] : ''}`;
-  };
-
-  // Update timestamp in state
-  const updateLineTimestamp = (lineIdx, newStartSeconds) => {
-    const currentList = Array.from(song.lyrics);
-    if (!currentList[lineIdx]) return;
-    const targetLine = { ...currentList[lineIdx] };
-    const duration = (targetLine.end > targetLine.start) ? (targetLine.end - targetLine.start) : 3;
-    targetLine.start = Math.max(0, parseFloat(newStartSeconds) || 0);
-    targetLine.end = targetLine.start + duration;
-    currentList[lineIdx] = targetLine;
-
-    setCustomLyrics(currentList);
-  };
-
-  // Sync line timestamp to current video playback time
-  // Hold Shift to ripple-shift this line and all following lines!
-  const handleSyncToCurrentTime = (e, lineIdx) => {
-    e.stopPropagation();
-    const roundedTime = Math.round(currentTime * 10) / 10;
-
-    if (e.shiftKey) {
-      const currentList = customLyrics ? [...customLyrics] : [...song.lyrics];
-      const target = currentList[lineIdx];
-      if (target) {
-        const delta = Math.round((roundedTime - target.start) * 10) / 10;
-        for (let i = lineIdx; i < currentList.length; i++) {
-          const l = currentList[i];
-          const newStart = Math.max(0, Math.round((l.start + delta) * 10) / 10);
-          const newEnd = Math.max(newStart + 0.5, Math.round(((l.end || newStart + 3) + delta) * 10) / 10);
-          currentList[i] = { ...l, start: newStart, end: newEnd };
-        }
-        setCustomLyrics(currentList);
-        sound.playCorrect();
-        setSyncToastMessage(`🌊 Ripple shifted lines #${lineIdx + 1} ~ #${currentList.length} by ${delta > 0 ? '+' : ''}${delta}s!`);
-        setTimeout(() => setSyncToastMessage(null), 3000);
-        return;
-      }
-    }
-
-    updateLineTimestamp(lineIdx, roundedTime);
-    sound.playKeyPress();
   };
 
   // Resolved filename for saving and exporting
@@ -973,7 +926,7 @@ export default function KpopVideoMode({
   // Typing practice logic & Live Sync Studio shortcut handler
   const handleGlobalKeyDown = useCallback((e) => {
     // If Live Sync Studio is active and user is not in a text input or practice mode:
-    if (isSyncStudioOpen && !practiceMode && editingLineIdx === -1 && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    if (isSyncStudioOpen && !practiceMode && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
       if (e.key === ' ' || e.code === 'Space') {
         e.preventDefault();
         toggleVideoPlayback();
@@ -1070,7 +1023,6 @@ export default function KpopVideoMode({
   }, [
     isSyncStudioOpen,
     practiceMode,
-    editingLineIdx,
     toggleVideoPlayback,
     setStartToLiveTime,
     setEndToLiveTime,
@@ -1782,7 +1734,6 @@ export default function KpopVideoMode({
 
             {song.lyrics.map((line, idx) => {
               const isActive = idx === activeLineIdx;
-              const isEditingThisTime = editingLineIdx === idx;
               const isInRange = isMultiSelected && idx >= selectedRange[0] && idx <= selectedRange[1];
               const isRangeStart = isMultiSelected && idx === selectedRange[0];
               const isRangeEnd = isMultiSelected && idx === selectedRange[1];
@@ -1823,70 +1774,6 @@ export default function KpopVideoMode({
                   }}
                   title={hasChant ? "點擊練習此段（含應援法）· Shift + Click 選取多行" : "Click to select · Shift + Click to select multiple consecutive lyrics to loop"}
                 >
-                  <div className="time-badge-container" onClick={(e) => e.stopPropagation()}>
-                    {isSyncStudioOpen ? (
-                      <div className="sync-studio-row-times" title="Sentence Start ~ End. Click this row to edit in Studio">
-                        <span className="sync-row-badge start" title="Start Time">
-                          S: {formatTimeMinutesSeconds(line.start)}
-                        </span>
-                        <span className="sync-row-sep">~</span>
-                        <span className="sync-row-badge end" title="End Time">
-                          E: {formatTimeMinutesSeconds(line.end || line.start + 3)}
-                        </span>
-                      </div>
-                    ) : isEditingThisTime ? (
-                      <div className="time-badge-editor">
-                        <input
-                          type="text"
-                          className="time-edit-input"
-                          value={editTimeValue}
-                          onChange={(e) => setEditTimeValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              const parsedSec = parseSRTTimeToSeconds(editTimeValue);
-                              updateLineTimestamp(idx, parsedSec);
-                              setEditingLineIdx(-1);
-                            } else if (e.key === 'Escape') {
-                              setEditingLineIdx(-1);
-                            }
-                          }}
-                          autoFocus
-                        />
-                        <button
-                          className="time-save-btn"
-                          title="Save Timestamp"
-                          onClick={() => {
-                            const parsedSec = parseSRTTimeToSeconds(editTimeValue);
-                            updateLineTimestamp(idx, parsedSec);
-                            setEditingLineIdx(-1);
-                          }}
-                        >
-                          <Check size={12} />
-                        </button>
-                      </div>
-                    ) : (
-                      <div
-                        className="time-badge"
-                        title="Click to edit timestamp manually"
-                        onClick={() => {
-                          setEditingLineIdx(idx);
-                          setEditTimeValue(formatTimeMinutesSeconds(line.start));
-                        }}
-                      >
-                        {formatTimeMinutesSeconds(line.start)}
-                        <Edit3 size={10} className="edit-time-icon" />
-                      </div>
-                    )}
-                    {!isSyncStudioOpen && (
-                      <button
-                        className="sync-now-btn"
-                        title="Sync timestamp to current video time (Tip: Hold Shift to ripple shift this & all following lines!)"
-                        onClick={(e) => handleSyncToCurrentTime(e, idx)}
-                      >
-                        <Clock size={10} /> Sync
-                      </button>
-                    )}
-                  </div>
 
                   <div className="lyric-content">
                     <div className="lyric-ko-row">
