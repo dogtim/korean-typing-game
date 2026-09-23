@@ -9,7 +9,7 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "deploy": "vite build && firebase deploy --only hosting",
+    "deploy": "vite build && npx -y firebase-tools deploy --only hosting",
     "tool": "node tools/cli.js"
   },
   "dependencies": {
