@@ -1222,7 +1222,8 @@ export default function KpopVideoMode({
                   : (isMultiSelected ? `Loop Range (${rangeCount} lines)` : 'Loop Sentence')}
             </button>
 
-            <button
+            {/* Practice Typing temporarily hidden while typing series is in progress */}
+            {/* <button
               className={`action-btn ${practiceMode ? 'active-purple' : ''}`}
               onClick={(e) => {
                 e.currentTarget.blur();
@@ -1230,7 +1231,7 @@ export default function KpopVideoMode({
               }}
             >
               <Type size={18} /> {practiceMode ? 'Typing Practice ON' : 'Practice Typing'}
-            </button>
+            </button> */}
 
             <button
               className={`action-btn ${isSyncStudioOpen ? 'active-amber' : ''}`}

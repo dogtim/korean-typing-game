@@ -26,8 +26,8 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState(() => {
-    const savedLang = localStorage.getItem('pop_learning_lang') || 'korean';
-    return savedLang === 'hokkien' ? 'kpop' : 'lessons';
+    // Default to 'kpop' (Song Practice) while typing/lessons series is WIP
+    return 'kpop';
   });
   const [autoPlayVideoId, setAutoPlayVideoId] = useState(null);
 
@@ -72,9 +72,9 @@ export default function App() {
     }
   }, []);
 
-  // Ensure disallowed tabs in Hokkien mode redirect to Song Practice ('kpop')
+  // Ensure hidden tabs ('lessons', 'lyrics-ref') or disallowed tabs in Hokkien mode redirect to Song Practice ('kpop')
   useEffect(() => {
-    if (learningLanguage === 'hokkien' && (activeTab === 'lessons' || activeTab === 'kpop-game' || activeTab === 'lyrics-ref')) {
+    if (activeTab === 'lessons' || activeTab === 'lyrics-ref' || (learningLanguage === 'hokkien' && activeTab === 'kpop-game')) {
       setActiveTab('kpop');
     }
   }, [learningLanguage, activeTab]);

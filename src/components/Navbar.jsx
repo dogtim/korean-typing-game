@@ -16,7 +16,7 @@ export default function Navbar({
         <div className="brand-logo">{isHokkien ? '台' : '한'}</div>
         <div className="brand-info">
           <h1 className="brand-title">{isHokkien ? 'Hokkien PopPop' : 'Hangul PopPop'}</h1>
-          <span className="brand-subtitle">{isHokkien ? 'Taiwanese Typing, Singing & Tones' : 'Korean Typing & Listening Game'}</span>
+          <span className="brand-subtitle">{isHokkien ? 'Taiwanese' : 'Korean'}</span>
         </div>
       </div>
 
@@ -43,7 +43,8 @@ export default function Navbar({
       )}
 
       <nav className="navbar-tabs">
-        {!isHokkien && (
+        {/* Lessons (WIP) / Typing series temporarily hidden until complete */}
+        {/* {!isHokkien && (
           <button
             className={`tab-btn ${activeTab === 'lessons' ? 'active' : ''}`}
             onClick={() => setActiveTab('lessons')}
@@ -51,7 +52,7 @@ export default function Navbar({
             <BookOpen className="tab-icon" size={18} />
             <span>Lessons (WIP)</span>
           </button>
-        )}
+        )} */}
 
         <button
           className={`tab-btn ${activeTab === 'kpop' ? 'active' : ''}`}
@@ -71,7 +72,8 @@ export default function Navbar({
           </button>
         )}
 
-        {!isHokkien && (
+        {/* Lyrics Hub (WIP) temporarily hidden */}
+        {/* {!isHokkien && (
           <button
             className={`tab-btn ${activeTab === 'lyrics-ref' ? 'active' : ''}`}
             onClick={() => setActiveTab('lyrics-ref')}
@@ -80,7 +82,7 @@ export default function Navbar({
             <BookMarked className="tab-icon" size={18} />
             <span>Lyrics Hub (WIP)</span>
           </button>
-        )}
+        )} */}
 
         {showAdminTab && (
           <button

@@ -11,7 +11,13 @@ An interactive, gamified Korean learning and typing web application. Master Kore
 
 ## ✨ Features Overview
 
-### 1. ⌨️ Core Hangul Lessons & Typing Engine
+### 1. ⌨️ Core Hangul Lessons & Typing Engine *(🚧 WIP / 暫時隱藏)*
+
+> ⚠️ **Status Note (暫時隱藏說明)**：
+> Hangul Lessons & Core Typing 系列目前升級規劃中，已先自主導航（Navbar）暫時隱藏，待課程體系與各關卡功能完整後再行開放。
+> 目前請優先使用 **🎬 Song Practice (歌曲跟唱與練習)** 與 **🎮 K-Pop Game (互動挑戰競技場)**。
+> *(The Typing & Lessons series is temporarily hidden from the main navigation while under active development and will be reopened when fully polished.)*
+
 - **100% QWERTY-to-Hangul Conversion**: Practice Korean typing on any standard QWERTY keyboard without altering your operating system's language input settings. Keystrokes (e.g., typing `g k s f m f`) automatically compose into Korean syllables (`한글`).
 - **Interactive Dubeolsik (두벌식) Keyboard**: Real-time visual keyboard featuring finger-placement guidance, color-coded finger zones (pinky, ring, middle, index), and dynamic active key feedback.
 - **Native Audio & Speech Pronunciation**: Hear native Korean pronunciations powered by Web Speech API for individual letters, syllables, and vocabulary words.
@@ -216,7 +222,7 @@ korean-typing-game/
 │   │   ├── BadgeModal.jsx      # Achievement badges & user stats modal
 │   │   ├── KpopGameMode.jsx    # Interactive K-Pop challenge game coordinator
 │   │   ├── KpopVideoMode.jsx   # YouTube video player & synchronized lyric viewer
-│   │   ├── LessonMode.jsx      # Core Hangul curriculum & typing lessons
+│   │   ├── LessonMode.jsx      # Core Hangul curriculum & typing lessons (WIP - temporarily hidden)
 │   │   ├── Navbar.jsx          # Top navigation bar & tab switcher
 │   │   ├── ReviewNotebookModal.jsx # Review notebook for missed questions
 │   │   ├── VideoSelectModal.jsx    # Song catalog & video picker
