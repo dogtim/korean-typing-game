@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, Search, Play, Check, Music, Film, Sparkles, Disc3, Layers } from 'lucide-react';
+import { X, Search, Play, Check, Music, Film, Sparkles, Disc3 } from 'lucide-react';
 import { KPOP_SONG_PRESETS, ALBUM_METADATA } from '../utils/kpopSongs';
-import { getSongDifficulty, DIFFICULTY_LEVEL_FILTERS } from '../utils/songDifficulty';
+import { getSongDifficulty } from '../utils/songDifficulty';
 
 export default function VideoSelectModal({
   isOpen,
@@ -13,8 +13,6 @@ export default function VideoSelectModal({
   learningLanguage = 'korean'
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAlbumFilter, setSelectedAlbumFilter] = useState('ALL');
-  const [selectedLevelFilter, setSelectedLevelFilter] = useState('ALL');
 
   // Close on Escape key press
   useEffect(() => {
@@ -36,8 +34,6 @@ export default function VideoSelectModal({
   useEffect(() => {
     if (isOpen) {
       setSearchQuery('');
-      setSelectedAlbumFilter('ALL');
-      setSelectedLevelFilter('ALL');
       setSelectedLangFilter(learningLanguage === 'hokkien' ? 'hokkien' : 'ALL');
     }
   }, [isOpen, learningLanguage]);
@@ -70,15 +66,9 @@ export default function VideoSelectModal({
             return false;
           }
         }
-        // Difficulty level filter
-        if (selectedLevelFilter !== 'ALL') {
-          if (difficulty.level !== selectedLevelFilter) {
-            return false;
-          }
-        }
         return true;
       });
-  }, [presets, searchQuery, selectedLevelFilter, selectedLangFilter]);
+  }, [presets, searchQuery, selectedLangFilter]);
 
   // Group presets into Album Sections
   const groupedByAlbum = useMemo(() => {
@@ -103,26 +93,8 @@ export default function VideoSelectModal({
       albumMap.get(albumKey).songs.push({ preset, index, difficulty });
     });
 
-    const sorted = Array.from(albumMap.values()).sort((a, b) => a.order - b.order);
-
-    if (selectedAlbumFilter === 'ALL') {
-      return sorted;
-    }
-    return sorted.filter((group) => group.albumName === selectedAlbumFilter);
-  }, [filteredPresets, selectedAlbumFilter]);
-
-  // Extract all available album names for filter pills
-  const availableAlbums = useMemo(() => {
-    const set = new Set();
-    presets.forEach((p) => {
-      set.add(p.album || 'Unkonw');
-    });
-    return Array.from(set).sort((a, b) => {
-      const orderA = ALBUM_METADATA[a]?.order ?? 999;
-      const orderB = ALBUM_METADATA[b]?.order ?? 999;
-      return orderA - orderB;
-    });
-  }, [presets]);
+    return Array.from(albumMap.values()).sort((a, b) => a.order - b.order);
+  }, [filteredPresets]);
 
   if (!isOpen) return null;
 
@@ -202,54 +174,7 @@ export default function VideoSelectModal({
           </button>
         </div>
 
-        {/* Difficulty Level Quick-Filter Pills */}
-        <div className="video-level-pills-bar">
-          {DIFFICULTY_LEVEL_FILTERS.map((levelItem) => {
-            const count = presets.filter((p) => {
-              if (levelItem.id === 'ALL') return true;
-              const diff = getSongDifficulty(p);
-              return diff.level === levelItem.id;
-            }).length;
 
-            return (
-              <button
-                key={levelItem.id}
-                type="button"
-                className={`level-pill-btn level-pill-${levelItem.id} ${selectedLevelFilter === levelItem.id ? 'is-active' : ''}`}
-                onClick={() => setSelectedLevelFilter(levelItem.id)}
-              >
-                <span className="level-dot" />
-                <span>{levelItem.label}</span>
-                <span className="pill-count">({count})</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Album Quick-Filter Pills */}
-        <div className="video-album-pills-bar">
-          <button
-            type="button"
-            className={`album-pill-btn ${selectedAlbumFilter === 'ALL' ? 'is-active' : ''}`}
-            onClick={() => setSelectedAlbumFilter('ALL')}
-          >
-            <Layers size={13} /> All Albums ({presets.length})
-          </button>
-          {availableAlbums.map((albumName) => {
-            const count = presets.filter((p) => (p.album || 'Unkonw') === albumName).length;
-            const isUnkonw = albumName === 'Unkonw';
-            return (
-              <button
-                key={albumName}
-                type="button"
-                className={`album-pill-btn ${selectedAlbumFilter === albumName ? 'is-active' : ''} ${isUnkonw ? 'is-unkonw' : ''}`}
-                onClick={() => setSelectedAlbumFilter(albumName)}
-              >
-                <Disc3 size={13} /> {albumName} ({count})
-              </button>
-            );
-          })}
-        </div>
 
         {/* Video Grid List grouped by Album Section */}
         <div className="video-cards-grid-container">

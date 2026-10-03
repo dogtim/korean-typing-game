@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FANCHANT_TYPES, getFanchantStatusAtTime } from '../utils/fanchantData';
-import { RotateCcw, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 export default function FanchantPrompter({
@@ -12,7 +12,8 @@ export default function FanchantPrompter({
 }) {
   const showRoman = true;
   const soundEnabled = true;
-  const lightstickActive = true;
+  // 暫時隱藏應援手燈 (Disabled per user request)
+  const lightstickActive = false;
 
   // Lightstick appearance style: 'official' (default) or 'classic' (SVG vector)
   const [lightstickStyle, setLightstickStyle] = useState(() => {
@@ -72,7 +73,6 @@ export default function FanchantPrompter({
         {/* Background Singer Lyrics (Dimmed) */}
         {activeLine?.ko && (
           <div className="prompter-bg-singer">
-            <span className="singer-label">🎤 歌手演唱中：</span>
             <span className="singer-lyrics">"{activeLine.ko}"</span>
           </div>
         )}
@@ -102,15 +102,6 @@ export default function FanchantPrompter({
                 <span>{activeCue.tip}</span>
               </div>
             )}
-
-            <button
-              type="button"
-              className="chant-reseek-btn"
-              onClick={() => onSeek && onSeek(Math.max(0, activeCue.start - 1.5))}
-              title="倒回 1.5 秒重新練習這一句應援"
-            >
-              <RotateCcw size={13} /> 重新練習這句
-            </button>
           </div>
         ) : isCountingDown && upcomingCue ? (
           <div className="chant-countdown-card">

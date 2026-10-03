@@ -837,11 +837,17 @@ export default function KpopVideoMode({
           videoId: activeVideoId,
           playerVars: {
             autoplay: 1,
+            playsinline: 1,
             modestbranding: 1,
             rel: 0,
-            enablejsapi: 1
+            enablejsapi: 1,
+            origin: typeof window !== 'undefined' ? window.location.origin : '',
+            widget_referrer: typeof window !== 'undefined' ? window.location.href : ''
           },
           events: {
+            onError: (event) => {
+              console.warn('YouTube Player error code:', event.data);
+            },
             onStateChange: (event) => {
               if (event.data === window.YT.PlayerState.PLAYING) {
                 setIsPlaying(true);

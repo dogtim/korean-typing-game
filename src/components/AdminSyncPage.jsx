@@ -104,9 +104,12 @@ export default function AdminSyncPage({ onPlayNow }) {
         videoId,
         playerVars: {
           autoplay: 0,
+          playsinline: 1,
           modestbranding: 1,
           rel: 0,
-          enablejsapi: 1
+          enablejsapi: 1,
+          origin: typeof window !== 'undefined' ? window.location.origin : '',
+          widget_referrer: typeof window !== 'undefined' ? window.location.href : ''
         },
         events: {
           onReady: (event) => {
