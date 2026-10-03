@@ -134,4 +134,8 @@ function adminSyncApiPlugin() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), adminSyncApiPlugin()],
+  server: {
+    host: true, // 支援區域網路連線 (0.0.0.0)，手機與電腦在同一 Wi-Fi 下可直接瀏覽
+  },
 })
+
