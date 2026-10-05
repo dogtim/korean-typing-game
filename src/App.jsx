@@ -9,6 +9,7 @@ import KpopVideoMode from './components/KpopVideoMode';
 import KpopGameMode from './components/KpopGameMode';
 import AdminSyncPage from './components/AdminSyncPage';
 import LyricsReferencePage from './components/LyricsReferencePage';
+import ConcertWall from './components/ConcertWall';
 import { KPOP_SONG_PRESETS } from './utils/kpopSongs';
 
 const defaultSongIndex = KPOP_SONG_PRESETS.findIndex(
@@ -180,7 +181,7 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${activeTab === 'concert' ? 'is-concert-mode' : ''}`}>
       {/* Top Header */}
       <Navbar
         activeTab={activeTab}
@@ -214,6 +215,10 @@ export default function App() {
             onSelectSong={setSelectedPracticeSong}
             learningLanguage={learningLanguage}
           />
+        )}
+
+        {activeTab === 'concert' && (
+          <ConcertWall />
         )}
 
         {activeTab === 'admin' && import.meta.env.DEV && (

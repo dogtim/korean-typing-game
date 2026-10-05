@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Tv, Gamepad2, BookMarked, Wrench } from 'lucide-react';
+import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -71,6 +71,16 @@ export default function Navbar({
             <span>K-Pop Game</span>
           </button>
         )}
+
+        <button
+          className={`tab-btn concert-tab-highlight ${activeTab === 'concert' ? 'active' : ''}`}
+          onClick={() => setActiveTab('concert')}
+          title="BABYMONSTER 演唱會多視角播放牆 (Concert Wall)"
+        >
+          <Radio className="tab-icon" size={18} />
+          <span>Concert Wall</span>
+          <span className="live-nav-badge">LIVE</span>
+        </button>
 
         {/* Lyrics Hub (WIP) temporarily hidden */}
         {/* {!isHokkien && (

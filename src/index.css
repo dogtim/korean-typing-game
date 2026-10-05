@@ -53,6 +53,11 @@ body {
   flex-direction: column;
   gap: 20px;
   min-height: 100vh;
+  transition: max-width 0.3s ease;
+}
+
+.app-container.is-concert-mode {
+  max-width: 1540px;
 }
 
 /* Glassmorphism Helper */
@@ -4071,6 +4076,37 @@ body {
   border-color: #fbbf24;
   color: #fbbf24;
   box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+}
+
+/* Navbar highlight for Concert Wall tab */
+.tab-btn.concert-tab-highlight {
+  border: 1px solid rgba(225, 29, 72, 0.4);
+  background: rgba(225, 29, 72, 0.08);
+  position: relative;
+}
+
+.tab-btn.concert-tab-highlight:hover {
+  background: rgba(225, 29, 72, 0.18);
+  border-color: #f43f5e;
+}
+
+.tab-btn.concert-tab-highlight.active {
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.3), rgba(139, 92, 246, 0.3));
+  border-color: #fb7185;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(225, 29, 72, 0.4);
+}
+
+.live-nav-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #e11d48;
+  color: #fff;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 6px rgba(225, 29, 72, 0.6);
+  margin-left: 2px;
 }
 
 .game-arena-shortcut-btn {
