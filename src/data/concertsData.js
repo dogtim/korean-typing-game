@@ -70,36 +70,42 @@ export const CONCERT_PRESETS = [
             {
               slotId: 0,
               name: 'CAM 1',
-              title: 'DRIP 巨蛋主舞台走位全景 (Full Stage Choreography)',
-              tag: '主舞台全景',
-              videoId: 'Zp-Jhuhq0bQ',
+              title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026, Night 1 (京セラドーム 大阪 1日目)',
+              tag: '京瓷巨蛋 Day 1 現場',
+              videoId: 'je7aZ-pGcDk',
               offset: 0,
-              description: '大阪巨蛋中央舞台與雷射燈光全開編舞。'
+              description: '2026.09.22 京瓷巨蛋首日現場直擊，震撼 4 萬 5 千名觀眾熱烈歡呼。'
             },
             {
               slotId: 1,
               name: 'CAM 2',
-              title: 'DRIP 舞蹈動作精準直拍 (Performance Focus)',
-              tag: '舞蹈焦點',
-              videoId: 'cxhqqpVk65Q',
+              title: 'BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME CHOOM WORLD TOUR',
+              tag: '京瓷巨蛋 Day 2 現場',
+              videoId: '6QnZyKUFAoU',
               offset: 0,
-              description: '成員隊形切換與標誌性轉身動作特寫。'
+              description: '2026.09.23 京瓷巨蛋第二日大舞台現場，全開麥炸裂巨蛋。'
             },
             {
               slotId: 2,
               name: 'CAM 3',
-              title: '京瓷巨蛋 DRIP 現場熱浪直擊 (Dome Arena Live)',
-              tag: '搖滾區近景',
-              videoId: 'w-W1C1h3DoU',
+              title: 'BABYMONSTER - ‘춤 (CHOOM)’ Live at WORLD TOUR [CHOOM] IN KYOCERA DOME OSAKA',
+              tag: '巨蛋主打曲現場',
+              videoId: 'cB4StGH94qI',
               offset: 0,
-              description: '前排搖滾區震撼音效與成員互動視角。'
+              description: '京瓷巨蛋主打演出視角，燈光雷射秀與萬人整齊應援。'
             }
           ],
           availableAngles: [
-            { id: 'drip_ang_1', title: 'DRIP 巨蛋主舞台走位全景', tag: '主舞台全景', videoId: 'Zp-Jhuhq0bQ', author: 'Live Mix', badge: 'CAM 1' },
-            { id: 'drip_ang_2', title: 'DRIP 舞蹈動作精準直拍', tag: '舞蹈焦點', videoId: 'cxhqqpVk65Q', author: 'BABYMONSTER', badge: 'CAM 2' },
-            { id: 'drip_ang_3', title: '京瓷巨蛋 DRIP 現場熱浪直擊', tag: '搖滾區近景', videoId: 'w-W1C1h3DoU', author: 'Dome Fancam', badge: 'CAM 3' },
-            { id: 'drip_ang_4', title: '巨蛋第一排舞台視角 (Front Row)', tag: '搖滾區特寫', videoId: 'L87eoGi26S0', author: 'Live Archive', badge: 'CAM 4' }
+            { id: 'drip_cam_1', title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026, Night 1 (京セラドーム 1日目)', tag: '京瓷巨蛋 Day 1 現場', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: 'CAM 1' },
+            { id: 'drip_cam_2', title: 'BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME CHOOM WORLD TOUR', tag: '京瓷巨蛋 Day 2 現場', videoId: '6QnZyKUFAoU', author: 'MONSTIEZ2203', badge: 'CAM 2' },
+            { id: 'drip_cam_3', title: 'BABYMONSTER - ‘춤 (CHOOM)’ Live at WORLD TOUR IN KYOCERA DOME OSAKA', tag: '巨蛋主打曲現場', videoId: 'cB4StGH94qI', author: 'MONSTIEZ', badge: 'CAM 3' },
+            { id: 'drip_cam_4', title: 'BABYMONSTER ENCORE in Kyocera Dome Osaka 2026 Day 1 (巨蛋安可視角)', tag: '巨蛋安可全景', videoId: 'S7dRry_GmrE', author: 'kiamonztie', badge: 'CAM 4' },
+            { id: 'drip_cam_5', title: 'BABYMONSTER LIVE PERFOMANCE KYOCERA DOME OSAKA - THE CROWD', tag: '9萬觀眾燈海氛圍', videoId: 'UOZ7u36aiWY', author: 'Yoel', badge: 'CAM 5' },
+            { id: 'drip_cam_6', title: 'BABYMONSTER World Tour CHOOM at Kyocera Dome Day 2 in Osaka Japan', tag: '大阪 Day 2 全場實況', videoId: 'T6AH56gGyCU', author: 'KPOP CRAXE', badge: 'CAM 6' },
+            { id: 'drip_cam_7', title: 'BABYMONSTER WORLD TOUR CHOOM 2026-27 IN OSAKA AT KYOCERA DOME DAY 1', tag: '巨蛋搖滾區直擊', videoId: '39J8a2OgRGQ', author: 'babymonster Haram', badge: 'CAM 7' },
+            { id: 'drip_cam_8', title: 'BABYMONSTER in Kyocera Dome Osaka 2026 Day 1 Live Stage', tag: '巨蛋主舞台特寫', videoId: 'IT_78ewOyzw', author: 'kiamonztie', badge: 'CAM 8' },
+            { id: 'drip_cam_9', title: '[4K] 260922-260923 BABYMONSTER ASA 아사 \'TEMPLE\' 직캠 | KYOCERA DOME OSAKA', tag: 'Asa 巨蛋直拍', videoId: 'iWoodjQ7p8g', author: 'miracle.', badge: 'CAM 9' },
+            { id: 'drip_cam_10', title: '260923 \'SUPER BASS\' BABYMONSTER PHARITA solo 직캠 ㅣ KYOCERA DOME OSAKA', tag: 'Pharita 巨蛋直拍', videoId: 'uILoaUwvAko', author: 'horizon', badge: 'CAM 10' }
           ]
         },
         {

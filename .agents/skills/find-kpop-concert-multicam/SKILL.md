@@ -7,7 +7,8 @@ description: >-
   setlist, and (2) search and organize 10 distinct multi-angle YouTube videos/fancams
   (CAM 1 to CAM 10: center stage, member-focused cams, VIP pit, upper stand lightstick
   wave, live band mix) for synchronized multi-camera playback in Hangul PopPop's
-  Concert Video Wall.
+  Concert Video Wall. Enforces multilingual search (Korean, Japanese, Chinese, English)
+  and STRICT exclusion of YouTube Shorts.
 ---
 
 # Find K-Pop Concert Multi-Cam & Fancams SOP (K-Pop 演唱會歌單與十視角影片檢索技能)
@@ -24,12 +25,74 @@ Use the bundled fast helper script for instant search:
 # 1. Search full setlist / songs performed at a specific concert venue:
 node .agents/skills/find-kpop-concert-multicam/scripts/search_fancams.mjs --artist "BABYMONSTER" --venue "KYOCERA DOME OSAKA" --setlist
 
-# 2. Search 10 distinct camera angles for a specific song at that concert:
-node .agents/skills/find-kpop-concert-multicam/scripts/search_fancams.mjs --artist "BABYMONSTER" --venue "KYOCERA DOME OSAKA" --song "SHEESH"
+# 2. Search 10 distinct camera angles for a specific song (Auto-enforces Multilingual + NO Shorts):
+node .agents/skills/find-kpop-concert-multicam/scripts/search_fancams.mjs --artist "BABYMONSTER" --venue "KYOCERA DOME OSAKA" --song "DRIP"
 
 # 3. Output in JSON format (ready to paste into src/data/concertsData.js):
 node .agents/skills/find-kpop-concert-multicam/scripts/search_fancams.mjs --artist "BABYMONSTER" --venue "KYOCERA DOME OSAKA" --song "DRIP" --json
 ```
+
+---
+
+## 🌐 Multilingual Query Strategy (韓文、日文、中文、英文四語檢索規範)
+
+When searching for fancams, **always cross-reference multi-language keywords** to capture official broadcasts, Japanese local concert recordings, Korean music show 4K fancams, and overseas fan uploads:
+
+| 語言 | 團體 / 地點關鍵字 | 舞台 / 直拍關鍵字 | 成員名稱對照表 (BABYMONSTER) |
+| :--- | :--- | :--- | :--- |
+| **韓文 (KO)** | `베이비몬스터`, `쿄세라돔`, `오사카 콘서트` | `직캠`, `풀캠 4K`, `무대`, `앙코르` | `아현` (Ahyeon), `아사` (Asa), `루카` (Ruka), `파리타` (Pharita), `치키타` (Chiquita), `라미` (Rami), `로라` (Rora) |
+| **日文 (JA)** | `ベイビーモンスター`, `ベビモン`, `京セラドーム 大阪` | `ライブ`, `ファンカム 4K`, `フルステージ`, `アンコール` | `アヒョン`, `アサ`, `ルカ`, `ファリタ`, `チキータ`, `ラミ`, `ローラ` |
+| **中文 (ZH)** | `BABYMONSTER`, `大阪巨蛋`, `日本巡迴演唱會` | `現場直拍`, `全景 4K`, `搖滾區`, `安可`, `手燈海` | `鄭雅譞`, `ASA`, `RUKA`, `PHARITA`, `CHIQUITA`, `RAMI`, `RORA` |
+| **英文 (EN)** | `BABYMONSTER`, `Kyocera Dome Osaka`, `CHOOM Tour` | `full fancam 4K`, `center cam`, `VIP pit`, `lightstick wave` | Ahyeon, Asa, Ruka, Pharita, Chiquita, Rami, Rora |
+
+---
+
+## 🏛️ 100% Strict Venue-Matching Policy (100% 場館地點絕對鎖定原則)
+
+**MANDATORY**: 當使用者指定特定演唱會場館（如 `KYOCERA DOME OSAKA` 京瓷巨蛋、`KSPO DOME`、`SUMMER SONIC TOKYO`）時，**全部 10 個機位必須 100% 嚴格錄製於該場館演出現場**：
+1. **零跨站替換原則 (Zero Cross-City Substitution)**：
+   - **嚴格禁止**拿同一巡迴的其他城市站點（例如：首爾、馬尼拉、澳門、台北、香港）混充指定場館。
+   - 所有 10 支影片的標題、錄影地點或演出紀錄，必須經查核確認為該指定場館當日/當場次（例如：京瓷巨蛋 2026.09.22 Day 1 / 2026.09.23 Day 2）。
+2. **場館視角組合架構**（當單一曲目的成員直拍數量受場地管制限制時）：
+   - `CAM 1 ~ CAM 2`：場館 Day 1 / Day 2 主舞台完整直擊
+   - `CAM 3 ~ CAM 4`：主打歌曲現場 / 安可狂歡視角
+   - `CAM 5 ~ CAM 6`：9 萬觀眾歡呼聲與巨蛋看台手燈海氛圍
+   - `CAM 7 ~ CAM 8`：搖滾區直擊與中央舞台特寫
+   - `CAM 9 ~ CAM 10`：該場館公開之成員個人直拍或 Solo 舞台直拍
+3. **場館關鍵字強制查驗**：
+   - 韓文：`쿄세라돔`, `오사카 돔`
+   - 日文：`京セラドーム`, `京セラドーム大阪`, `京セラ`
+   - 中文：`京瓷巨蛋`, `大阪巨蛋`
+   - 英文：`Kyocera Dome Osaka`, `Kyocera Dome`
+
+---
+
+## 📅 2026 Year-Priority Policy (2026 年份與巡演現場絕對優先原則)
+
+**MANDATORY**: Concert Wall 專為巡迴演唱會現場打造，影片檢索必須**以 2026 年份及巡迴演唱會現場為主**：
+1. **優先採集 2026 年巡演/音樂節現場**：
+   - 包含 `2026-27 WORLD TOUR [CHOOM]` 各地巡迴（日本、首爾、香港、馬尼拉、澳門、台北等）與 2026 大型音樂節（如 Summer Sonic 2026、TIMA 2026）。
+   - **禁止/避免**以 2024 年舊電視打歌棚錄舞台充數，應全面使用 2026 年最新巡演與演唱會現場真實視角。
+2. **關鍵字強制嵌入 2026**：
+   - 韓文：`2026 베이비몬스터 [곡명] 콘서트 직캠 / 춤 CHOOM 투어`
+   - 日文：`2026 ベビモン [曲名] ライブ / 京セラドーム`
+   - 中文：`2026 BABYMONSTER [歌名] 巡迴演唱會 / 現場直拍`
+   - 英文：`2026 BABYMONSTER WORLD TOUR CHOOM [Song] 4K fancam`
+
+---
+
+## 🚫 Strict YouTube Shorts Exclusion Policy (嚴格排除短影音規範)
+
+**MANDATORY**: Multi-Cam Concert Wall requires horizontal (16:9) full-length stage recordings. **Never include YouTube Shorts** (垂直短影音).
+
+### Shorts Detection & Verification Protocol:
+1. **Title / URL Regex Check**:
+   - Immediately filter out any video whose title, hashtag, or URL matches:
+     `/#shorts?|shorts?|#tiktok/i`
+2. **HTTP HEAD Status Verification (Zero False-Positives)**:
+   - Query `https://www.youtube.com/shorts/${videoId}` via HTTP HEAD with `redirect: 'manual'`:
+     - **HTTP 200 OK**: The video is registered as a Short on YouTube -> **REJECT**.
+     - **HTTP 302 / 303 Redirect** (redirects to `/watch?v=${videoId}`): The video is a regular horizontal video -> **ACCEPT**.
 
 ---
 
@@ -47,7 +110,7 @@ When gathering 10 multi-angle videos for a song, classify each video into this s
 | **CAM 6** | **Chiquita 舞蹈動作焦點 (Chiquita Focus Cam)** | `Chiquita 直拍` | 忙內反差萌、超強彈性與極限力量感舞蹈焦點 |
 | **CAM 7** | **Rami 靈魂歌聲直拍 (Rami Focus Cam)** | `Rami 直拍` | 獨特厚實靈魂音色、生嗓開麥與即興轉音特寫 |
 | **CAM 8** | **Rora 情感特寫焦點 (Rora Focus Cam)** | `Rora 直拍` | 抒情段落深情眼神、甜美微笑道歉與主旋律和聲 |
-| **CAM 9** | **搖滾特區前排直擊 (VIP Pit / Floor Arena)** | `搖滾區近景` | 最貼近舞台的低角度視角、強烈現場低音震盪與零距離沉浸感 |
+| **CAM 9** | **搖滾特區/巨蛋直擊 (VIP Pit / Dome Arena Cam)** | `巨蛋現場直擊` | 最貼近舞台的低角度視角、強烈現場低音震盪與零距離沉浸感 |
 | **CAM 10** | **看台手燈海與震撼全景 (Upper Stand Wave)** | `全場燈海` | 高處俯瞰 9 萬觀眾紅色手燈海波浪、雷射燈光秀與全場震撼大合唱 |
 
 ---
@@ -75,14 +138,15 @@ When the user specifies an artist and venue (e.g. *Baby Monster* at *KYOCERA DOM
 
 ### Phase 2: Find 10 Multi-Angle Videos for Selected Song (十角度影片檢索)
 
-Once the user selects a song (e.g. `SHEESH`, `DRIP`, `BATTER UP`, `WE GO UP`, `PSYCHO`):
+Once the user selects a song (e.g. `DRIP`, `SHEESH`, `BATTER UP`, `WE GO UP`, `PSYCHO`):
 
-1. Execute the multi-angle search:
+1. Execute the multi-angle search with multilingual queries and Shorts filter:
    ```bash
    node .agents/skills/find-kpop-concert-multicam/scripts/search_fancams.mjs --artist "<Artist>" --venue "<Venue>" --song "<Song Title>"
    ```
 2. For each of the 10 camera angles:
    - Ensure the video ID is valid (11 characters).
+   - Verify it is a full horizontal video (reject all Shorts).
    - Prefer 4K / 60fps / 1080p high quality fancams.
    - Verify the recording is from the target venue or the official tour performance.
 3. Present the 10-camera table with clickable Markdown links:
@@ -104,26 +168,14 @@ To immediately display these 10 angles inside the web app's **Concert Wall**:
    ```javascript
    availableAngles: [
      {
-       id: 'angle_osaka_cam1',
-       title: '京瓷巨蛋大舞台全景 (Center Stage 4K)',
+       id: 'drip_cam1',
+       title: 'BABYMONSTER 1st WORLD TOUR IN JAPAN - DRIP -Encore- [4K]',
        tag: '全景主視角',
-       videoId: '<11_CHAR_ID>',
-       author: '<Uploader>',
+       videoId: 'm6A1bCKDrRs',
+       author: 'CrushMixes',
        badge: 'CAM 1'
      },
      // ... CAM 2 to CAM 10
    ]
    ```
 5. Test locally at `http://localhost:5174/` on the **Concert Wall** tab.
-
----
-
-## 💡 Example Prompt Scenarios
-
-- **Scenario 1 (Setlist Discovery)**:
-  - *User*: "我想看 BABYMONSTER 大阪巨蛋 (KYOCERA DOME OSAKA) 的演唱會，先幫我列出整場表演歌單。"
-  - *Action*: Execute Phase 1 -> Output structured setlist -> Ask user which song to expand.
-
-- **Scenario 2 (10-Camera Fancam Search)**:
-  - *User*: "幫我找大阪巨蛋的 SHEESH，我要 10 個不同角度的影片！"
-  - *Action*: Execute Phase 2 -> Run `search_fancams.mjs` -> Output 10-camera table -> Offer integration into `concertsData.js`.
