@@ -47,12 +47,22 @@ export default function ConcertWall() {
 
   // When active concert changes, update slots and reuse existing players via loadVideoById
   useEffect(() => {
-    const newSlots = activeConcert.defaultSlots.map(s => ({ ...s }));
-    setSlots(newSlots);
     setActiveFocusIndex(0);
     setActiveAudioIndex(0);
 
-    newSlots.forEach((slot, idx) => {
+    const firstSong = activeConcert.setlist?.mainSet?.[0];
+    const initialSlots = (firstSong && firstSong.slots && firstSong.slots.length > 0)
+      ? firstSong.slots.map(s => ({ ...s }))
+      : activeConcert.defaultSlots.map(s => ({ ...s }));
+
+    setSlots(initialSlots);
+
+    if (firstSong) {
+      setSelectedSongId(firstSong.id);
+      setActiveSetlistCategory('mainSet');
+    }
+
+    initialSlots.forEach((slot, idx) => {
       const p = playersRef.current[idx];
       if (p && typeof p.loadVideoById === 'function') {
         try {
@@ -494,6 +504,56 @@ export default function ConcertWall() {
 
   return (
     <div className="concert-wall-container">
+      {/* Prominent Concert Switcher Cards (頂部演唱會場次切換卡片) */}
+      <section className="concert-top-switcher-panel">
+        <div className="switcher-title-row">
+          <div className="switcher-title-badge">
+            <Radio size={14} color="#f43f5e" />
+            <span>選擇演唱會現場 (SELECT LIVE CONCERT)</span>
+          </div>
+          <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
+        </div>
+
+        <div className="concert-switcher-cards-grid">
+          {CONCERT_PRESETS.map((concert, idx) => {
+            const isActive = selectedConcertIndex === idx;
+            return (
+              <button
+                key={concert.id}
+                type="button"
+                className={`concert-card-btn ${isActive ? 'is-active' : ''}`}
+                onClick={() => setSelectedConcertIndex(idx)}
+                style={{
+                  '--accent-color': concert.themeColor || '#e11d48'
+                }}
+              >
+                <div className="card-btn-header">
+                  <span className="card-category-tag">
+                    {idx === 0 ? '巨蛋巡演 2026' : (idx === 1 ? '夏日音樂祭 2026' : '世界巡演')}
+                  </span>
+                  {isActive ? (
+                    <span className="card-playing-badge">
+                      <span className="pulse-dot"></span> 播放中
+                    </span>
+                  ) : (
+                    <span className="card-switch-label">點擊切換</span>
+                  )}
+                </div>
+
+                <div className="card-btn-title">{concert.title}</div>
+                <div className="card-btn-subtitle">{concert.subTitle}</div>
+
+                <div className="card-btn-meta">
+                  <span>{concert.venue}</span>
+                  <span>•</span>
+                  <span>{concert.date}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Concert Info & Hero Banner */}
       <section className="concert-header-card">
         <div className="concert-header-glow"></div>
@@ -517,22 +577,6 @@ export default function ConcertWall() {
             <h2 className="concert-main-title">{activeConcert.title}</h2>
             <div className="concert-subtitle">{activeConcert.subTitle}</div>
             <p className="concert-desc-text">{activeConcert.description}</p>
-          </div>
-
-          {/* Concert Selector Pills */}
-          <div className="concert-selector-bar">
-            <span className="concert-selector-label">切換演唱會:</span>
-            {CONCERT_PRESETS.map((concert, idx) => (
-              <button
-                key={concert.id}
-                type="button"
-                className={`concert-select-btn ${selectedConcertIndex === idx ? 'active' : ''}`}
-                onClick={() => setSelectedConcertIndex(idx)}
-              >
-                <Music2 size={14} />
-                <span>{concert.subTitle.split('(')[0] || concert.title}</span>
-              </button>
-            ))}
           </div>
         </div>
       </section>

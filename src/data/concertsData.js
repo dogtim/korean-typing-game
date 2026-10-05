@@ -723,49 +723,243 @@ export const CONCERT_PRESETS = [
     ]
   },
   {
-    id: 'babymonster_summer_sonic_live',
-    title: 'BABYMONSTER LIVE @ SUMMER SONIC JAPAN',
-    subTitle: 'TOKYO & OSAKA FESTIVAL SPECIAL (夏日音樂祭全開麥)',
+    id: 'babymonster_summer_sonic_2026',
+    title: 'BABYMONSTER AT SUMMER SONIC 2026',
+    subTitle: 'TOKYO MARINE STAGE (ZOZO MARINE STADIUM)',
     artist: 'BABYMONSTER (베이비몬스터)',
-    venue: 'Summer Sonic Mountain Stage (Osaka & Tokyo)',
-    date: '2024 - 2026',
-    attendance: 'Outdoor Festival Arena',
-    themeColor: '#f59e0b',
-    description: '日本最大夏日音樂祭 Summer Sonic 萬人燃爆現場！全開麥 Live 樂團版本震撼演繹，多角度直擊超強現場實力。',
+    venue: 'ZOZO Marine Stadium, Tokyo, Japan (Marine Stage)',
+    date: '2026.08.14',
+    attendance: '35,000+ Fans (Marine Stage Headline)',
+    themeColor: '#0284c7',
+    description: 'BABYMONSTER 震撼日本指標性音樂祭 SUMMER SONIC 2026！在千葉海洋球場（ZOZO Marine Stadium）頂著酷暑盛夏帶來的全開麥狂潮，現場樂團編排炸裂三萬五千名樂迷。',
+    
+    // Categorized Setlist for Summer Sonic 2026
+    setlist: {
+      mainSet: [
+        {
+          id: 'intro_we_go_up',
+          title: 'INTRO + WE GO UP',
+          koreanTitle: 'WE GO UP',
+          tag: '音樂祭震撼開場',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'Summer Sonic 2026 海洋球場開場全景', tag: '音樂祭全景', videoId: '9Y-95rgsDDY', offset: 0, description: '東京海洋球場全景主舞台，開場狂烈低音全開麥。' },
+            { slotId: 1, name: 'CAM 2', title: 'WE GO UP 現場樂隊舞台直擊', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', offset: 0, description: '全場萬人起立跟跳，全開麥爆發力。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 舞台特寫鏡頭', tag: '舞台特寫', videoId: '_zV0QTAHd5I', offset: 0, description: '成員高難度舞蹈編排與現場律動。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_wgu_1', title: 'Summer Sonic 2026 海洋球場開場全景', tag: '音樂祭全景', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_wgu_2', title: 'WE GO UP 現場樂隊舞台直擊', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' },
+            { id: 'ss26_wgu_3', title: 'Summer Sonic 舞台特寫鏡頭', tag: '舞台特寫', videoId: '_zV0QTAHd5I', author: 'Stage Mix', badge: 'CAM 3' }
+          ]
+        },
+        {
+          id: 'choom',
+          title: '춤 (CHOOM)',
+          koreanTitle: '춤 (CHOOM)',
+          tag: '巡演同名神曲',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: '춤 (CHOOM) Summer Sonic 現場全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 180, description: '戶外球場主舞台，酷暑下極限刀群舞。' },
+            { slotId: 1, name: 'CAM 2', title: '춤 (CHOOM) 萬人合唱搖滾視角', tag: '萬人合唱', videoId: 'xJuXrgbx-8I', offset: 180, description: '全場應援齊聲高喊，戶外音樂祭專屬狂歡。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 現場直擊', tag: '現場直擊', videoId: 'GUVKry85Gxw', offset: 0, description: '中央大舞台特寫與樂團合奏。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_choom_1', title: '춤 (CHOOM) Summer Sonic 現場全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_choom_2', title: '춤 (CHOOM) 萬人合唱搖滾視角', tag: '萬人合唱', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' },
+            { id: 'ss26_choom_3', title: 'Summer Sonic 2026 現場直擊', tag: '現場直擊', videoId: 'GUVKry85Gxw', author: 'Tokyo Live', badge: 'CAM 3' }
+          ]
+        },
+        {
+          id: 'moon',
+          title: 'MOON',
+          koreanTitle: 'MOON',
+          tag: '清爽夏日律動',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'MOON Summer Sonic 海洋球場現場', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 360, description: '黃昏海風吹拂下的清亮歌聲。' },
+            { slotId: 1, name: 'CAM 2', title: 'MOON 樂團編排搖滾全景', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', offset: 360, description: '輕快律動與現場樂手即興搭配。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 現場特寫鏡頭', tag: '舞台特寫', videoId: 'WuelifqxMLs', offset: 0, description: '成員甜美互動與大合唱。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_moon_1', title: 'MOON Summer Sonic 海洋球場現場', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_moon_2', title: 'MOON 樂團編排搖滾全景', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        },
+        {
+          id: 'drip',
+          title: 'DRIP (Summer Sonic Live)',
+          koreanTitle: 'DRIP',
+          tag: '全場最炸焦點',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO', tag: '音樂祭主舞台', videoId: 'DoUU_UE1g34', offset: 0, description: 'Summer Sonic 2026 東京海洋球場完整主舞台視角。' },
+            { slotId: 1, name: 'CAM 2', title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam', tag: '4K 超清直拍', videoId: 'tcLinHHnu90', offset: 0, description: '超高清 4K 現場搖滾區直拍，全開麥高音炸裂。' },
+            { slotId: 2, name: 'CAM 3', title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026]', tag: '全景合唱', videoId: 'xJuXrgbx-8I', offset: 520, description: '三萬五千人全場大合跳，震耳欲聾的尖叫浪潮。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_drip_1', title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO', tag: '音樂祭主舞台', videoId: 'DoUU_UE1g34', author: 'Summer Sonic JP', badge: 'CAM 1' },
+            { id: 'ss26_drip_2', title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam', tag: '4K 超清直拍', videoId: 'tcLinHHnu90', author: 'Tokyo Live Cam', badge: 'CAM 2' },
+            { id: 'ss26_drip_3', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026', tag: '全景合唱', videoId: '9Y-95rgsDDY', author: 'K-Festival Archive', badge: 'CAM 3' },
+            { id: 'ss26_drip_4', title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026]', tag: '搖滾區視角', videoId: 'xJuXrgbx-8I', author: 'MusicWave JP', badge: 'CAM 4' },
+            { id: 'ss26_drip_5', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN', tag: '球場全景', videoId: '_zV0QTAHd5I', author: 'Festival Fan', badge: 'CAM 5' }
+          ]
+        },
+        {
+          id: 'forever',
+          title: 'FOREVER',
+          koreanTitle: 'FOREVER',
+          tag: '夏日清涼合唱',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'FOREVER Summer Sonic 海洋球場萬人合唱', tag: '萬人大合唱', videoId: '9Y-95rgsDDY', offset: 700, description: '全場觀眾齊聲高歌，夏日祭典最高潮。' },
+            { slotId: 1, name: 'CAM 2', title: 'FOREVER 現場樂團版本直擊', tag: '現場樂團', videoId: 'xJuXrgbx-8I', offset: 700, description: '重低音鼓點與貝斯改編，極限全開麥。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 舞台實況', tag: '舞台實況', videoId: 'GUVKry85Gxw', offset: 300, description: '陽光直射下的青春活力與流暢隊形。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_for_1', title: 'FOREVER Summer Sonic 海洋球場萬人合唱', tag: '萬人大合唱', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_for_2', title: 'FOREVER 現場樂團版本直擊', tag: '現場樂團', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        },
+        {
+          id: 'really_like_you',
+          title: 'Really Like You',
+          koreanTitle: 'Really Like You',
+          tag: '清甜抒情律動',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'Really Like You Summer Sonic 現場全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 900, description: '戶外球場微風中唱出清甜心動和聲。' },
+            { slotId: 1, name: 'CAM 2', title: 'Really Like You 樂團合奏直擊', tag: '樂隊合奏', videoId: 'xJuXrgbx-8I', offset: 900, description: '現場鍵盤與吉他點綴，主唱組深情詮釋。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 舞台側拍視角', tag: '側台特寫', videoId: '_zV0QTAHd5I', offset: 500, description: '成員可愛走位與全場互動微笑。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_rly_1', title: 'Really Like You Summer Sonic 現場全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_rly_2', title: 'Really Like You 樂團合奏直擊', tag: '樂隊合奏', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        },
+        {
+          id: 'i_like_it',
+          title: 'I LIKE IT',
+          koreanTitle: 'I LIKE IT',
+          tag: '嘻哈熱舞狂歡',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'I LIKE IT Summer Sonic 舞台炸裂全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 1100, description: '饒舌快嘴連擊與震撼戶外音浪。' },
+            { slotId: 1, name: 'CAM 2', title: 'I LIKE IT 現場搖滾區直擊', tag: '搖滾區視角', videoId: 'xJuXrgbx-8I', offset: 1100, description: '超強節奏感讓三萬五千人同步跳躍。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 現場直擊', tag: '現場直擊', videoId: 'WuelifqxMLs', offset: 400, description: '重低音震感與帥氣舞台氣場。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_ili_1', title: 'I LIKE IT Summer Sonic 舞台炸裂全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_ili_2', title: 'I LIKE IT 現場搖滾區直擊', tag: '搖滾區視角', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        },
+        {
+          id: 'hot_sauce',
+          title: 'HOT SAUCE',
+          koreanTitle: 'HOT SAUCE',
+          tag: '酷暑熱辣嗨歌',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'HOT SAUCE Summer Sonic 酷暑嗨翻全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 1300, description: '盛夏球場噴水與熱浪衝擊。' },
+            { slotId: 1, name: 'CAM 2', title: 'HOT SAUCE 樂團狂歡現場', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', offset: 1300, description: '快節奏快感與熱辣舞蹈。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 舞台特寫鏡頭', tag: '舞台特寫', videoId: '_zV0QTAHd5I', offset: 700, description: '成員揮灑汗水全開麥演唱。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_hs_1', title: 'HOT SAUCE Summer Sonic 酷暑嗨翻全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_hs_2', title: 'HOT SAUCE 樂團狂歡現場', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        },
+        {
+          id: 'sugar_honey_ice_tea',
+          title: 'SUGAR HONEY ICE TEA',
+          koreanTitle: 'SUGAR HONEY ICE TEA',
+          tag: '清爽甜美夏日曲',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'SUGAR HONEY ICE TEA 海洋球場清爽唱跳', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 1500, description: '如同冰紅茶般沁人心脾的清爽舞台。' },
+            { slotId: 1, name: 'CAM 2', title: 'SUGAR HONEY ICE TEA 樂團現場改編', tag: '樂隊改編', videoId: 'xJuXrgbx-8I', offset: 1500, description: '輕爵士律動與超強現場和聲。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 現場側錄', tag: '現場側錄', videoId: 'GUVKry85Gxw', offset: 600, description: '成員全場走位向看台樂迷揮手互動。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_shit_1', title: 'SUGAR HONEY ICE TEA 海洋球場清爽唱跳', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_shit_2', title: 'SUGAR HONEY ICE TEA 樂團現場改編', tag: '樂隊改編', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        }
+      ],
+      soloStages: [],
+      encore: [
+        {
+          id: 'batter_up_remix',
+          title: 'BATTER UP (Summer Sonic REMIX)',
+          koreanTitle: 'BATTER UP (Remix)',
+          tag: '安可大合唱神曲',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'BATTER UP (Summer Sonic Remix) 萬人狂唱全景', tag: '安可全景', videoId: '9Y-95rgsDDY', offset: 1700, description: '三萬五千人全場大合唱 BATTER UP，球場屋頂掀翻感。' },
+            { slotId: 1, name: 'CAM 2', title: 'BATTER UP 搖滾重金屬樂團現場', tag: '重金屬樂團', videoId: 'xJuXrgbx-8I', offset: 1700, description: '超重吉他 Solo 與電貝斯全力轟鳴。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 安可大舞台', tag: '安可大舞台', videoId: 'WuelifqxMLs', offset: 800, description: '成員滿場奔跑與全場熱血互動。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_bu_1', title: 'BATTER UP (Summer Sonic Remix) 萬人狂唱全景', tag: '安可全景', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_bu_2', title: 'BATTER UP 搖滾重金屬樂團現場', tag: '重金屬樂團', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        },
+        {
+          id: 'sheesh_remix',
+          title: 'SHEESH (Summer Sonic Band REMIX)',
+          koreanTitle: 'SHEESH (Band Remix)',
+          tag: '音樂祭壓軸炸場',
+          performer: 'BABYMONSTER',
+          slots: [
+            { slotId: 0, name: 'CAM 1', title: 'SHEESH (Band Remix) 壓軸萬人齊跳', tag: '壓軸全景', videoId: '9Y-95rgsDDY', offset: 1900, description: '全場壓軸大爆發，煙火與雷射齊放。' },
+            { slotId: 1, name: 'CAM 2', title: 'SHEESH 樂手狂飆與高音生嗓對決', tag: '高音爆發', videoId: 'xJuXrgbx-8I', offset: 1900, description: 'Ahyeon 與 Rami 雙主唱極限高音生嗓對飆。' },
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 謝幕與謝禮', tag: '謝幕鞠躬', videoId: '_zV0QTAHd5I', offset: 950, description: '九十分鐘燃爆音樂祭完美落幕。' }
+          ],
+          availableAngles: [
+            { id: 'ss26_sh_1', title: 'SHEESH (Band Remix) 壓軸萬人齊跳', tag: '壓軸全景', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_sh_2', title: 'SHEESH 樂手狂飆與高音生嗓對決', tag: '高音爆發', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' }
+          ]
+        }
+      ]
+    },
     defaultSlots: [
       {
         slotId: 0,
         name: 'CAM 1',
-        title: '全開麥串燒 (SHEESH + BATTER UP + FOREVER)',
-        tag: '音樂節全曲',
-        videoId: 'JAFLqbej8Rw',
+        title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO',
+        tag: '音樂祭主舞台',
+        videoId: 'DoUU_UE1g34',
         offset: 0,
-        description: '音樂節完整熱門歌曲串燒現場，萬人齊跳尖叫。'
+        description: 'Summer Sonic 2026 東京海洋球場完整主舞台視角。'
       },
       {
         slotId: 1,
         name: 'CAM 2',
-        title: 'SHEESH 搖滾重金屬改編版 (Rock Band Live)',
-        tag: '樂團搖滾',
-        videoId: 'xPcBqfjOgus',
+        title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam',
+        tag: '4K 超清直拍',
+        videoId: 'tcLinHHnu90',
         offset: 0,
-        description: '現場樂手超炸鼓點與貝斯，搭配少女們超燃開麥。'
+        description: '超高清 4K 現場搖滾區直拍，全開麥高音炸裂。'
       },
       {
         slotId: 2,
         name: 'CAM 3',
-        title: 'Pharita "SHEESH Remix" 4K 現場直拍',
-        tag: '成員直拍',
-        videoId: 'mPfUS0AVerA',
+        title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026',
+        tag: '全景主視角',
+        videoId: '9Y-95rgsDDY',
         offset: 0,
-        description: 'Summer Sonic 現場超清 4K 成員舞台直拍。'
+        description: '音樂祭完整熱門歌曲串燒現場，萬人齊跳尖叫。'
       }
     ],
     availableAngles: [
-      { id: 'angle_ss_1', title: '全開麥串燒 (SHEESH + BATTER UP + FOREVER)', tag: '音樂節全曲', videoId: 'JAFLqbej8Rw', author: 'Live Archive', badge: 'CAM 1' },
-      { id: 'angle_ss_2', title: 'SHEESH 搖滾重金屬改編版 (Rock Band Live)', tag: '樂團搖滾', videoId: 'xPcBqfjOgus', author: 'Sonic Rock', badge: 'CAM 2' },
-      { id: 'angle_ss_3', title: 'Pharita "SHEESH Remix" 4K 現場直拍', tag: '成員直拍', videoId: 'mPfUS0AVerA', author: 'Fancam Live', badge: 'CAM 3' },
-      { id: 'angle_ss_4', title: 'Summer Sonic 幕後紀實與日本巡演花絮', tag: '幕後紀實', videoId: 'tO-4QFfSsCo', author: 'BABYMONSTER Official', badge: 'CAM 4' }
+      { id: 'angle_ss_1', title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO', tag: '音樂祭主舞台', videoId: 'DoUU_UE1g34', author: 'Summer Sonic JP', badge: 'CAM 1' },
+      { id: 'angle_ss_2', title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam', tag: '4K 超清直拍', videoId: 'tcLinHHnu90', author: 'Tokyo Live Cam', badge: 'CAM 2' },
+      { id: 'angle_ss_3', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 3' },
+      { id: 'angle_ss_4', title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026]', tag: '搖滾區視角', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 4' },
+      { id: 'angle_ss_5', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN', tag: '球場全景', videoId: '_zV0QTAHd5I', author: 'Tokyo Stage', badge: 'CAM 5' },
+      { id: 'angle_ss_6', title: 'BABYMONSTER - SUMMER SONIC 2026 TOKYO', tag: '現場直擊', videoId: 'GUVKry85Gxw', author: 'Live Sound', badge: 'CAM 6' },
+      { id: 'angle_ss_7', title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO 260814', tag: '直擊現場', videoId: 'WuelifqxMLs', author: 'SonicWave', badge: 'CAM 7' },
+      { id: 'angle_ss_8', title: 'Summer Sonic 2026 & 日本巡演花絮紀實', tag: '幕後花絮', videoId: 'tO-4QFfSsCo', author: 'BABYMONSTER Official', badge: 'CAM 8' }
     ]
   },
   {
