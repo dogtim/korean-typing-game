@@ -761,6 +761,97 @@
   overflow: hidden !important;
 }
 
+/* Mode 4: Dual-Split (CAM 1 & CAM 2 side-by-side 1:1, CAM 3 hidden offscreen) */
+.video-wall-stage.mode-dual-split {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.video-wall-stage.mode-dual-split .video-slot-card.slot-index-0,
+.video-wall-stage.mode-dual-split .video-slot-card.slot-index-1 {
+  display: flex;
+  width: 100%;
+}
+
+.video-wall-stage.mode-dual-split .video-slot-card.slot-index-2 {
+  position: absolute !important;
+  top: -99999px !important;
+  left: -99999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+/* Dual Mode Status/Switcher Bar */
+.dual-mode-nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.dual-nav-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #e0f2fe;
+}
+
+.dual-reopen-cam-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 9999px;
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dual-reopen-cam-btn:hover {
+  background: rgba(56, 189, 248, 0.28);
+  border-color: #38bdf8;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Close CAM 3 Button in Header */
+.slot-close-cam-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 6px;
+  color: #f87171;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slot-close-cam-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #f87171;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 /* Single Mode Quick Camera Switcher Bar */
 .single-mode-nav-bar {
   display: flex;
@@ -1276,7 +1367,8 @@
    RESPONSIVE ADAPTATIONS
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
-  .video-wall-stage.mode-tri-split {
+  .video-wall-stage.mode-tri-split,
+  .video-wall-stage.mode-dual-split {
     grid-template-columns: 1fr;
   }
   .video-wall-stage.mode-cinema {

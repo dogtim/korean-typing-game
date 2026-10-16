@@ -6,6 +6,7 @@ export const CONCERT_PRESETS = [
     id: 'babymonster_kyocera_dome_osaka_2026',
     title: '2026-27 BABYMONSTER WORLD TOUR [CHOOM] IN JAPAN',
     subTitle: 'SPECIAL LIVE AT KYOCERA DOME OSAKA (京瓷大阪巨蛋)',
+    categoryTag: '巨蛋巡演 2026',
     artist: 'BABYMONSTER (베이비몬스터)',
     venue: 'Kyocera Dome Osaka, Japan (京瓷大阪巨蛋)',
     date: '2026.09.22 - 2026.09.23',
@@ -726,6 +727,7 @@ export const CONCERT_PRESETS = [
     id: 'babymonster_summer_sonic_2026',
     title: 'BABYMONSTER AT SUMMER SONIC 2026',
     subTitle: 'TOKYO MARINE STAGE (ZOZO MARINE STADIUM)',
+    categoryTag: '夏日音樂祭 2026',
     artist: 'BABYMONSTER (베이비몬스터)',
     venue: 'ZOZO Marine Stadium, Tokyo, Japan (Marine Stage)',
     date: '2026.08.14',
@@ -963,9 +965,131 @@ export const CONCERT_PRESETS = [
     ]
   },
   {
+    id: 'budaixi_lianhua_zhiji',
+    title: '布袋戲',
+    subTitle: '霹靂武道列傳：蓮華之擊 (佛魔終戰・AI動漫 vs 正劇原典雙視角)',
+    categoryTag: '經典布袋戲',
+    artist: '霹靂布袋戲 (PILI PUPPETRY)',
+    venue: '萬年果・佛魔終極決戰特區',
+    date: '傳世經典武道列傳',
+    attendance: '道友億萬盛讚',
+    themeColor: '#eab308',
+    description: '霹靂布袋戲史詩級名場面「蓮華之擊」！收錄正劇原汁原味經典武道列傳，以及當代超燃 AI 動漫重製版。雙視角同步播放，見證吞佛童子、一步蓮華與襲滅天來的佛魔對決！',
+    
+    // Categorized Setlist for 布袋戲
+    setlist: {
+      mainSet: [
+        {
+          id: 'lian_hua_zhi_ji',
+          title: '蓮華之擊 (佛魔終戰)',
+          koreanTitle: '연화의 일격 (불마종전)',
+          tag: '武道列傳巔峰戰',
+          performer: '吞佛童子 x 一步蓮華 vs 襲滅天來',
+          slots: [
+            {
+              slotId: 0,
+              name: 'CAM 1',
+              title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
+              tag: 'AI動漫版',
+              videoId: 'NEhqMfAGCQA',
+              offset: 0,
+              description: '全新 AI 動漫風格重繪演繹，極致戰鬥打擊感與華麗特效。'
+            },
+            {
+              slotId: 1,
+              name: 'CAM 2',
+              title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜吞佛童子 一步蓮華 共渡襲滅天來業障！',
+              tag: '正劇經典版',
+              videoId: 'aUYcs25AUOk',
+              offset: 0,
+              description: '霹靂布袋戲官方正片武道列傳，一代操偶大師與八音才子黃文擇配音原聲。'
+            },
+            {
+              slotId: 2,
+              name: 'CAM 3',
+              title: '【雙重視角比較】蓮華之擊 分鏡與細節對照',
+              tag: '雙視角對比',
+              videoId: 'NEhqMfAGCQA',
+              offset: 0,
+              description: '同段打鬥的分鏡設計與招式特寫對照。'
+            }
+          ],
+          availableAngles: [
+            {
+              id: 'bdx_cam_1',
+              title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
+              tag: 'AI動漫版',
+              videoId: 'NEhqMfAGCQA',
+              author: '真一隻布袋喵',
+              badge: 'CAM 1'
+            },
+            {
+              id: 'bdx_cam_2',
+              title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜霹靂布袋戲PILI',
+              tag: '正劇經典版',
+              videoId: 'aUYcs25AUOk',
+              author: 'PILI 霹靂布袋戲',
+              badge: 'CAM 2'
+            }
+          ]
+        }
+      ],
+      soloStages: [],
+      encore: []
+    },
+    defaultSlots: [
+      {
+        slotId: 0,
+        name: 'CAM 1',
+        title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
+        tag: 'AI動漫版',
+        videoId: 'NEhqMfAGCQA',
+        offset: 0,
+        description: '全新 AI 動漫風格重繪演繹，極致戰鬥打擊感與華麗特效。'
+      },
+      {
+        slotId: 1,
+        name: 'CAM 2',
+        title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜吞佛童子 一步蓮華 共渡襲滅天來業障！',
+        tag: '正劇經典版',
+        videoId: 'aUYcs25AUOk',
+        offset: 0,
+        description: '霹靂布袋戲官方正片武道列傳，一代操偶大師與八音才子黃文擇配音原聲。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
+        title: '【雙重視角比較】蓮華之擊 分鏡與細節對照',
+        tag: '雙視角對比',
+        videoId: 'NEhqMfAGCQA',
+        offset: 0,
+        description: '同段打鬥的分鏡設計與招式特寫對照。'
+      }
+    ],
+    availableAngles: [
+      {
+        id: 'bdx_cam_1',
+        title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
+        tag: 'AI動漫版',
+        videoId: 'NEhqMfAGCQA',
+        author: '真一隻布袋喵',
+        badge: 'CAM 1'
+      },
+      {
+        id: 'bdx_cam_2',
+        title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜霹靂布袋戲PILI',
+        tag: '正劇經典版',
+        videoId: 'aUYcs25AUOk',
+        author: 'PILI 霹靂布袋戲',
+        badge: 'CAM 2'
+      }
+    ]
+  },
+  {
     id: 'babymonster_hello_monsters_world_tour',
     title: '1ST WORLD TOUR [HELLO MONSTERS]',
     subTitle: 'KANAGAWA & SEOUL ARENA STAGES (世界巡演震撼現場)',
+    categoryTag: '世界巡演',
     artist: 'BABYMONSTER (베이비몬스터)',
     venue: 'Pia Arena MM & KSPO Dome',
     date: '2025.02 - 2025.05',

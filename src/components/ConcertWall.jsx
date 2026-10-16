@@ -16,9 +16,9 @@ import {
   RefreshCw,
   ExternalLink,
   Flame,
-  Music2,
-  ListMusic,
-  Mic2
+  Columns2,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { CONCERT_PRESETS } from '../data/concertsData';
 import './ConcertWall.css';
@@ -38,8 +38,7 @@ export default function ConcertWall() {
   const [selectedConcertIndex, setSelectedConcertIndex] = useState(0);
   const activeConcert = CONCERT_PRESETS[selectedConcertIndex] || CONCERT_PRESETS[0];
 
-  // Setlist category and selected song state
-  const [activeSetlistCategory, setActiveSetlistCategory] = useState('mainSet'); // 'mainSet' | 'soloStages' | 'encore'
+  // Selected song state for angles library
   const [selectedSongId, setSelectedSongId] = useState('sheesh');
 
   // Active slots (default 3 cameras)
@@ -59,7 +58,6 @@ export default function ConcertWall() {
 
     if (firstSong) {
       setSelectedSongId(firstSong.id);
-      setActiveSetlistCategory('mainSet');
     }
 
     initialSlots.forEach((slot, idx) => {
@@ -213,34 +211,7 @@ export default function ConcertWall() {
     }, 100);
   }, [initPlayer, activeAudioIndex]);
 
-  // Handle song selection from the Setlist form
-  const handleSelectSong = useCallback((songItem) => {
-    if (!songItem || !songItem.slots) return;
-    setSelectedSongId(songItem.id);
-    const newSlots = songItem.slots.map(s => ({ ...s }));
-    setSlots(newSlots);
-    setActiveFocusIndex(0);
-    setActiveAudioIndex(0);
 
-    newSlots.forEach((slot, idx) => {
-      const p = playersRef.current[idx];
-      if (p && typeof p.loadVideoById === 'function') {
-        try {
-          p.loadVideoById(slot.videoId);
-          if (idx === 0) {
-            p.unMute();
-            p.setVolume(100);
-          } else {
-            p.mute();
-          }
-        } catch (_e) {
-          initPlayer(idx, slot.videoId);
-        }
-      } else {
-        initPlayer(idx, slot.videoId);
-      }
-    });
-  }, [initPlayer]);
 
   // Handle Audio Solo Switch
   const handleSelectAudio = useCallback((targetIndex) => {
@@ -256,6 +227,19 @@ export default function ConcertWall() {
       }
     });
   }, []);
+
+  // Handle Layout Switch: 'tri-split' | 'dual-split' | 'cinema' | 'single'
+  const handleSetLayoutMode = useCallback((mode) => {
+    setLayoutMode(mode);
+    if (mode === 'dual-split') {
+      if (activeAudioIndex === 2) {
+        handleSelectAudio(0);
+      }
+      if (activeFocusIndex === 2) {
+        setActiveFocusIndex(0);
+      }
+    }
+  }, [activeAudioIndex, activeFocusIndex, handleSelectAudio]);
 
   // Handle Master Play / Pause All
   const handleMasterTogglePlay = useCallback(() => {
@@ -414,6 +398,21 @@ export default function ConcertWall() {
             >
               <Plus size={13} />
             </button>
+            {/* If CAM 3, button to turn off CAM 3 and switch to dual-split */}
+            {index === 2 && (
+              <button
+                type="button"
+                className="slot-close-cam-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSetLayoutMode('dual-split');
+                }}
+                title="關閉 CAM 3，讓 CAM 1 & CAM 2 畫面放大 (雙畫面模式)"
+              >
+                <EyeOff size={13} />
+                <span>關閉 CAM 3</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -528,8 +527,14 @@ export default function ConcertWall() {
                 }}
               >
                 <div className="card-btn-header">
-                  <span className="card-category-tag">
-                    {idx === 0 ? '巨蛋巡演 2026' : (idx === 1 ? '夏日音樂祭 2026' : '世界巡演')}
+                  <span
+                    className="card-category-tag"
+                    style={{
+                      borderColor: `${concert.themeColor || '#fb7185'}66`,
+                      color: concert.themeColor || '#fb7185'
+                    }}
+                  >
+                    {concert.categoryTag || '經典演繹'}
                   </span>
                   {isActive ? (
                     <span className="card-playing-badge">
@@ -581,110 +586,6 @@ export default function ConcertWall() {
         </div>
       </section>
 
-      {/* Concert Setlist Form Panel (演唱會表演歌單表單) */}
-      {activeConcert.setlist && (
-        <section className="concert-setlist-card">
-          <div className="setlist-card-header">
-            <div className="setlist-header-title-row">
-              <div className="setlist-title-main">
-                <ListMusic size={18} color="#e11d48" />
-                <span>全場表演歌單 (點擊即時載入該首歌曲 3 角度畫面)</span>
-              </div>
-              {activePlayingSong && (
-                <div className="setlist-current-pill">
-                  <div className="audio-equalizer-bars">
-                    <span className="eq-bar"></span>
-                    <span className="eq-bar"></span>
-                    <span className="eq-bar"></span>
-                  </div>
-                  <span>現正播放: <strong>{activePlayingSong.title}</strong></span>
-                </div>
-              )}
-            </div>
-
-            {/* Setlist Category Tabs: Main Set | Solo Stages | Encore */}
-            <div className="setlist-category-tabs">
-              <button
-                type="button"
-                className={`setlist-tab-btn ${activeSetlistCategory === 'mainSet' ? 'active' : ''}`}
-                onClick={() => setActiveSetlistCategory('mainSet')}
-              >
-                <Music2 size={14} />
-                <span>🎵 Main Set (主舞台曲目)</span>
-                <span className="setlist-tab-count">{activeConcert.setlist.mainSet?.length || 0}</span>
-              </button>
-              <button
-                type="button"
-                className={`setlist-tab-btn ${activeSetlistCategory === 'soloStages' ? 'active' : ''}`}
-                onClick={() => setActiveSetlistCategory('soloStages')}
-              >
-                <Mic2 size={14} />
-                <span>🌟 Solo Stages (個人舞台)</span>
-                <span className="setlist-tab-count">{activeConcert.setlist.soloStages?.length || 0}</span>
-              </button>
-              <button
-                type="button"
-                className={`setlist-tab-btn ${activeSetlistCategory === 'encore' ? 'active' : ''}`}
-                onClick={() => setActiveSetlistCategory('encore')}
-              >
-                <Sparkles size={14} />
-                <span>🎉 Encore (安可與二次安可)</span>
-                <span className="setlist-tab-count">{activeConcert.setlist.encore?.length || 0}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Song Items Grid */}
-          <div className="setlist-songs-grid">
-            {(activeConcert.setlist[activeSetlistCategory] || []).map((songItem, sIdx) => {
-              const isPlayingSong = selectedSongId === songItem.id;
-              return (
-                <div
-                  key={songItem.id}
-                  className={`setlist-song-item ${isPlayingSong ? 'is-playing' : ''}`}
-                  onClick={() => handleSelectSong(songItem)}
-                >
-                  <div className="setlist-song-number">
-                    {sIdx + 1 < 10 ? `0${sIdx + 1}` : sIdx + 1}
-                  </div>
-
-                  <div className="setlist-song-info">
-                    <div className="setlist-song-title-row">
-                      <span className="setlist-song-title">{songItem.title}</span>
-                      <span className="setlist-song-tag">{songItem.tag}</span>
-                    </div>
-                    <div className="setlist-song-meta">
-                      <span className="setlist-song-performer">{songItem.performer}</span>
-                      {songItem.koreanTitle && songItem.koreanTitle !== songItem.title && (
-                        <span className="setlist-song-kr">({songItem.koreanTitle})</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="setlist-song-action">
-                    {isPlayingSong ? (
-                      <div className="now-playing-pill">
-                        <div className="audio-equalizer-bars">
-                          <span className="eq-bar"></span>
-                          <span className="eq-bar"></span>
-                          <span className="eq-bar"></span>
-                        </div>
-                        <span>播放中</span>
-                      </div>
-                    ) : (
-                      <div className="play-cam-pill">
-                        <Play size={12} fill="currentColor" />
-                        <span>切換 3 視角</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
       {/* Master Director Console (導播同步控制台) */}
       <section className="director-console-bar">
         {/* Left: Master Play/Pause & Sync */}
@@ -734,7 +635,7 @@ export default function ConcertWall() {
             <button
               type="button"
               className={`layout-btn ${layoutMode === 'tri-split' ? 'active' : ''}`}
-              onClick={() => setLayoutMode('tri-split')}
+              onClick={() => handleSetLayoutMode('tri-split')}
               title="三畫面等寬並排 (Tri-Split)"
             >
               <LayoutGrid size={14} />
@@ -742,8 +643,17 @@ export default function ConcertWall() {
             </button>
             <button
               type="button"
+              className={`layout-btn ${layoutMode === 'dual-split' ? 'active' : ''}`}
+              onClick={() => handleSetLayoutMode('dual-split')}
+              title="雙畫面模式：關閉 CAM 3，讓 CAM 1 與 CAM 2 超大畫面並排放大"
+            >
+              <Columns2 size={14} />
+              <span>雙畫面 (關 CAM 3)</span>
+            </button>
+            <button
+              type="button"
               className={`layout-btn ${layoutMode === 'cinema' ? 'active' : ''}`}
-              onClick={() => setLayoutMode('cinema')}
+              onClick={() => handleSetLayoutMode('cinema')}
               title="電影導演模式：主畫面大螢幕 + 側邊 2 畫面"
             >
               <Layers size={14} />
@@ -752,7 +662,7 @@ export default function ConcertWall() {
             <button
               type="button"
               className={`layout-btn ${layoutMode === 'single' ? 'active' : ''}`}
-              onClick={() => setLayoutMode('single')}
+              onClick={() => handleSetLayoutMode('single')}
               title="單一全景模式"
             >
               <Tv size={14} />
@@ -766,6 +676,25 @@ export default function ConcertWall() {
       <section className={`video-wall-stage mode-${layoutMode} focus-idx-${activeFocusIndex}`}>
         {slots.map((slot, idx) => renderPlayerCard(slot, idx))}
       </section>
+
+      {/* In Dual-Split mode, show notice with quick button to reopen CAM 3 */}
+      {layoutMode === 'dual-split' && (
+        <div className="dual-mode-nav-bar">
+          <div className="dual-nav-info">
+            <EyeOff size={14} color="#38bdf8" />
+            <span>已開啟<strong>雙畫面放大模式</strong>（CAM 3 已關閉，CAM 1 與 CAM 2 享有最大可視面積）</span>
+          </div>
+          <button
+            type="button"
+            className="dual-reopen-cam-btn"
+            onClick={() => handleSetLayoutMode('tri-split')}
+            title="重新開啟 CAM 3 還原三分割"
+          >
+            <Eye size={13} />
+            <span>開啟 CAM 3 (還原三分割)</span>
+          </button>
+        </div>
+      )}
 
       {/* In Single mode, show quick camera switcher tabs below */}
       {layoutMode === 'single' && (
