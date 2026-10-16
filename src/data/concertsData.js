@@ -684,6 +684,14 @@ export const CONCERT_PRESETS = [
       ]
     },
 
+    songs: [
+      { id: 'sheesh', title: 'SHEESH', tag: '代表作炸場' },
+      { id: 'drip', title: 'DRIP', tag: '巨蛋主打' },
+      { id: 'we_go_up', title: 'WE GO UP', tag: '震撼開場' },
+      { id: 'psycho', title: 'PSYCHO', tag: '特別改編' },
+      { id: 'clik_clak', title: 'CLIK CLAK', tag: '黑金嘻哈' }
+    ],
+
     // Default 3 Slots (initial load is SHEESH)
     defaultSlots: [
       {
@@ -693,6 +701,7 @@ export const CONCERT_PRESETS = [
         tag: '全景主視角',
         videoId: '60Hx2Tdsxzw',
         offset: 0,
+        songCues: { sheesh: 0.0 },
         description: '大阪巨蛋中央大舞台全景，重金屬現場鼓點全開麥。'
       },
       {
@@ -702,6 +711,7 @@ export const CONCERT_PRESETS = [
         tag: 'Ahyeon 直拍',
         videoId: 'nQa8CKSSIkw',
         offset: 0,
+        songCues: { sheesh: 0.0 },
         description: '超高清 4K 個人直拍，高音爆發與舞台狂野表情。'
       },
       {
@@ -711,16 +721,21 @@ export const CONCERT_PRESETS = [
         tag: 'Asa 特寫',
         videoId: 'kRoTXaF470I',
         offset: 0,
+        songCues: { sheesh: 0.0 },
         description: '快嘴饒舌連擊與流暢律動近身特寫。'
       }
     ],
     availableAngles: [
-      { id: 'ang_default_1', title: '京瓷巨蛋大舞台 (Full Dome Stage View)', tag: '全景主視角', videoId: 'SyxYiwd9TFo', author: 'KpopVault', badge: 'CAM 1' },
-      { id: 'ang_default_2', title: 'Pharita 專屬焦點直拍 (4K Focus)', tag: '成員直拍', videoId: 'QfphPJtUiHc', author: 'supergaga', badge: 'CAM 2' },
-      { id: 'ang_default_3', title: 'ASA "TEMPLE" 獨舞饒舌爆發 (Asa Solo)', tag: '個人舞台特寫', videoId: 'iWoodjQ7p8g', author: 'miracle.', badge: 'CAM 3' },
-      { id: 'ang_default_4', title: 'Psycho 神級改編翻唱現場 (Psycho Live)', tag: '熱門特別舞台', videoId: '2giUibg3Jpg', author: 'kiamonztie', badge: 'CAM 4' },
-      { id: 'ang_default_5', title: '謝幕巡場與粉絲互動視角 (Send-off Focus)', tag: '巡場與謝幕', videoId: 'MzoW7IFMA7M', author: 'supergaga', badge: 'CAM 5' },
-      { id: 'ang_default_6', title: 'SHEESH REMIX 樂團炸場版 (Live Band Version)', tag: '樂團搖滾版', videoId: '60Hx2Tdsxzw', author: 'YG Entertainment', badge: 'CAM 6' }
+      { id: 'ang_kyd_1', title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026, Night 1 (京セラドーム 1日目)', tag: '京瓷巨蛋 Day 1 現場', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: 'CAM 1', songCues: { sheesh: 110.0, drip: 0.0 } },
+      { id: 'ang_kyd_2', title: 'BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME CHOOM WORLD TOUR', tag: '京瓷巨蛋 Day 2 現場', videoId: '6QnZyKUFAoU', author: 'MONSTIEZ2203', badge: 'CAM 2', songCues: { sheesh: 115.0, drip: 5.0 } },
+      { id: 'ang_kyd_3', title: 'BABYMONSTER - ‘춤 (CHOOM)’ Live at WORLD TOUR IN KYOCERA DOME OSAKA', tag: '巨蛋主打曲現場', videoId: 'cB4StGH94qI', author: 'MONSTIEZ', badge: 'CAM 3', songCues: { drip: 0.0 } },
+      { id: 'ang_kyd_4', title: 'BABYMONSTER ENCORE in Kyocera Dome Osaka 2026 Day 1 (巨蛋安可視角)', tag: '巨蛋安可全景', videoId: 'S7dRry_GmrE', author: 'kiamonztie', badge: 'CAM 4', songCues: { drip: 45.0 } },
+      { id: 'ang_kyd_5', title: 'BABYMONSTER LIVE PERFOMANCE KYOCERA DOME OSAKA - THE CROWD', tag: '9萬觀眾燈海氛圍', videoId: 'UOZ7u36aiWY', author: 'Yoel', badge: 'CAM 5', songCues: { sheesh: 0.0 } },
+      { id: 'ang_kyd_6', title: '京瓷巨蛋 SHEESH 樂團搖滾炸場版 (Live Band Version)', tag: '樂團搖滾版', videoId: '60Hx2Tdsxzw', author: 'YG Entertainment', badge: 'CAM 6', songCues: { sheesh: 0.0 } },
+      { id: 'ang_kyd_7', title: 'Ahyeon 4K 焦點直拍 (Ahyeon Salute Pose Focus)', tag: 'Ahyeon 直拍', videoId: 'nQa8CKSSIkw', author: 'supergaga', badge: 'CAM 7', songCues: { sheesh: 0.0 } },
+      { id: 'ang_kyd_8', title: 'Asa 饒舌快嘴與舞台特寫 (Asa Focus Cam)', tag: 'Asa 特寫', videoId: 'kRoTXaF470I', author: 'M2', badge: 'CAM 8', songCues: { sheesh: 0.0 } },
+      { id: 'ang_kyd_9', title: '[4K] 260922-260923 BABYMONSTER ASA \'TEMPLE\' 직캠 | KYOCERA DOME OSAKA', tag: 'Asa 巨蛋直拍', videoId: 'iWoodjQ7p8g', author: 'miracle.', badge: 'CAM 9', songCues: { sheesh: 180.0 } },
+      { id: 'ang_kyd_10', title: '260923 \'SUPER BASS\' BABYMONSTER PHARITA solo 직캠 ㅣ KYOCERA DOME OSAKA', tag: 'Pharita 巨蛋直拍', videoId: 'uILoaUwvAko', author: 'horizon', badge: 'CAM 10', songCues: { sheesh: 210.0 } }
     ]
   },
   {
@@ -924,44 +939,160 @@ export const CONCERT_PRESETS = [
         }
       ]
     },
+    songs: [
+      { id: 'we_go_up', title: 'WE GO UP', tag: '音樂祭開場' },
+      { id: 'choom', title: '춤 (CHOOM)', tag: '極限刀群舞' },
+      { id: 'drip', title: 'DRIP', tag: '全場最炸焦點' },
+      { id: 'forever', title: 'FOREVER', tag: '萬人大合唱' },
+      { id: 'sheesh', title: 'SHEESH', tag: '壓軸樂團版' }
+    ],
     defaultSlots: [
       {
         slotId: 0,
         name: 'CAM 1',
-        title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO',
-        tag: '音樂祭主舞台',
-        videoId: 'DoUU_UE1g34',
-        offset: 0,
-        description: 'Summer Sonic 2026 東京海洋球場完整主舞台視角。'
-      },
-      {
-        slotId: 1,
-        name: 'CAM 2',
-        title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam',
-        tag: '4K 超清直拍',
-        videoId: 'tcLinHHnu90',
-        offset: 0,
-        description: '超高清 4K 現場搖滾區直拍，全開麥高音炸裂。'
-      },
-      {
-        slotId: 2,
-        name: 'CAM 3',
         title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026',
         tag: '全景主視角',
         videoId: '9Y-95rgsDDY',
         offset: 0,
+        songCues: {
+          we_go_up: 8.0,
+          choom: 179.0,
+          drip: 519.0,
+          forever: 699.0,
+          sheesh: 1699.0
+        },
         description: '音樂祭完整熱門歌曲串燒現場，萬人齊跳尖叫。'
+      },
+      {
+        slotId: 1,
+        name: 'CAM 2',
+        title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026]',
+        tag: '搖滾區視角',
+        videoId: 'xJuXrgbx-8I',
+        offset: 0,
+        songCues: {
+          we_go_up: 14.0,
+          choom: 185.0,
+          drip: 525.0,
+          forever: 705.0,
+          sheesh: 1705.0
+        },
+        description: '搖滾區近距離直拍，現場音浪與成員熱舞直擊。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
+        title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN',
+        tag: '球場全景',
+        videoId: '_zV0QTAHd5I',
+        offset: 0,
+        songCues: {
+          we_go_up: 82.0,
+          choom: 253.0,
+          drip: 593.0
+        },
+        description: 'ZOZO Marine Stadium 千葉海洋球場全景廣角。'
       }
     ],
     availableAngles: [
-      { id: 'angle_ss_1', title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO', tag: '音樂祭主舞台', videoId: 'DoUU_UE1g34', author: 'Summer Sonic JP', badge: 'CAM 1' },
-      { id: 'angle_ss_2', title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam', tag: '4K 超清直拍', videoId: 'tcLinHHnu90', author: 'Tokyo Live Cam', badge: 'CAM 2' },
-      { id: 'angle_ss_3', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 3' },
-      { id: 'angle_ss_4', title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026]', tag: '搖滾區視角', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 4' },
-      { id: 'angle_ss_5', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN', tag: '球場全景', videoId: '_zV0QTAHd5I', author: 'Tokyo Stage', badge: 'CAM 5' },
-      { id: 'angle_ss_6', title: 'BABYMONSTER - SUMMER SONIC 2026 TOKYO', tag: '現場直擊', videoId: 'GUVKry85Gxw', author: 'Live Sound', badge: 'CAM 6' },
-      { id: 'angle_ss_7', title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO 260814', tag: '直擊現場', videoId: 'WuelifqxMLs', author: 'SonicWave', badge: 'CAM 7' },
-      { id: 'angle_ss_8', title: 'Summer Sonic 2026 & 日本巡演花絮紀實', tag: '幕後花絮', videoId: 'tO-4QFfSsCo', author: 'BABYMONSTER Official', badge: 'CAM 8' }
+      {
+        id: 'angle_ss_1',
+        title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026',
+        tag: '全景主視角',
+        videoId: '9Y-95rgsDDY',
+        author: 'Summer Live',
+        badge: 'CAM 1',
+        songCues: {
+          we_go_up: 8.0,
+          choom: 179.0,
+          drip: 519.0,
+          forever: 699.0,
+          sheesh: 1699.0
+        }
+      },
+      {
+        id: 'angle_ss_2',
+        title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026]',
+        tag: '搖滾區視角',
+        videoId: 'xJuXrgbx-8I',
+        author: 'Festival Cam',
+        badge: 'CAM 2',
+        songCues: {
+          we_go_up: 14.0,
+          choom: 185.0,
+          drip: 525.0,
+          forever: 705.0,
+          sheesh: 1705.0
+        }
+      },
+      {
+        id: 'angle_ss_3',
+        title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN',
+        tag: '球場全景',
+        videoId: '_zV0QTAHd5I',
+        author: 'Tokyo Stage',
+        badge: 'CAM 3',
+        songCues: {
+          we_go_up: 82.0,
+          choom: 253.0,
+          drip: 593.0
+        }
+      },
+      {
+        id: 'angle_ss_4',
+        title: 'BABYMONSTER - DRIP | SUMMER SONIC 2026 TOKYO',
+        tag: '音樂祭主舞台',
+        videoId: 'DoUU_UE1g34',
+        author: 'Summer Sonic JP',
+        badge: 'CAM 4',
+        songCues: { drip: 0.0 }
+      },
+      {
+        id: 'angle_ss_5',
+        title: '260814 BABYMONSTER - DRIP live @Summer Sonic 2026 4K Fancam',
+        tag: '4K 超清直拍',
+        videoId: 'tcLinHHnu90',
+        author: 'Tokyo Live Cam',
+        badge: 'CAM 5',
+        songCues: { drip: 2.0 }
+      },
+      {
+        id: 'angle_ss_6',
+        title: 'BABYMONSTER - SUMMER SONIC 2026 TOKYO',
+        tag: '現場直擊',
+        videoId: 'GUVKry85Gxw',
+        author: 'Live Sound',
+        badge: 'CAM 6',
+        songCues: {
+          we_go_up: 12.0,
+          choom: 183.0,
+          drip: 523.0
+        }
+      },
+      {
+        id: 'angle_ss_7',
+        title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO 260814',
+        tag: '直擊現場',
+        videoId: 'WuelifqxMLs',
+        author: 'SonicWave',
+        badge: 'CAM 7',
+        songCues: {
+          we_go_up: 14.0,
+          choom: 185.0,
+          drip: 525.0
+        }
+      },
+      {
+        id: 'angle_ss_8',
+        title: 'Summer Sonic 2026 & 日本巡演花絮紀實',
+        tag: '幕後花絮',
+        videoId: 'tO-4QFfSsCo',
+        author: 'BABYMONSTER Official',
+        badge: 'CAM 8',
+        songCues: {
+          drip: 5.0
+        }
+      }
     ]
   },
   {

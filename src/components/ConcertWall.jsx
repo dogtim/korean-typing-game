@@ -18,7 +18,8 @@ import {
   Flame,
   Columns2,
   Eye,
-  EyeOff
+  EyeOff,
+  Disc
 } from 'lucide-react';
 import { CONCERT_PRESETS } from '../data/concertsData';
 import './ConcertWall.css';
@@ -38,47 +39,11 @@ export default function ConcertWall() {
   const [selectedConcertIndex, setSelectedConcertIndex] = useState(0);
   const activeConcert = CONCERT_PRESETS[selectedConcertIndex] || CONCERT_PRESETS[0];
 
-  // Selected song state for angles library
-  const [selectedSongId, setSelectedSongId] = useState('sheesh');
-
-  // Active slots (default 3 cameras)
+  // Active slots (default 3 cameras for active concert)
   const [slots, setSlots] = useState(() => activeConcert.defaultSlots.map(s => ({ ...s })));
 
-  // When active concert changes, update slots and reuse existing players via loadVideoById
-  useEffect(() => {
-    setActiveFocusIndex(0);
-    setActiveAudioIndex(0);
-
-    const firstSong = activeConcert.setlist?.mainSet?.[0];
-    const initialSlots = (firstSong && firstSong.slots && firstSong.slots.length > 0)
-      ? firstSong.slots.map(s => ({ ...s }))
-      : activeConcert.defaultSlots.map(s => ({ ...s }));
-
-    setSlots(initialSlots);
-
-    if (firstSong) {
-      setSelectedSongId(firstSong.id);
-    }
-
-    initialSlots.forEach((slot, idx) => {
-      const p = playersRef.current[idx];
-      if (p && typeof p.loadVideoById === 'function') {
-        try {
-          p.loadVideoById(slot.videoId);
-          if (idx === 0) {
-            p.unMute();
-            p.setVolume(100);
-          } else {
-            p.mute();
-          }
-        } catch (_e) {
-          initPlayer(idx, slot.videoId);
-        }
-      } else {
-        initPlayer(idx, slot.videoId);
-      }
-    });
-  }, [selectedConcertIndex]);
+  // Active synchronized song selection (錨點同步歌曲)
+  const [activeSongId, setActiveSongId] = useState(() => activeConcert.songs?.[0]?.id || null);
 
   // Layout mode: 'tri-split' | 'cinema' | 'single'
   const [layoutMode, setLayoutMode] = useState('cinema');
@@ -102,25 +67,25 @@ export default function ConcertWall() {
   const isApiReadyRef = useRef(false);
 
   // Initialize a single player by index
-  const initPlayer = useCallback((index, videoId) => {
+  const initPlayer = useCallback((index, videoId, startSeconds = 0) => {
     if (!window.YT || !window.YT.Player) return;
 
     const elementId = `concert-yt-player-${index}`;
-    const domEl = document.getElementById(elementId);
-    if (!domEl) return;
-
-    // Destroy existing player if any
-    if (playersRef.current[index] && playersRef.current[index].destroy) {
-      try {
-        playersRef.current[index].destroy();
-      } catch (_e) {}
+    const container = document.getElementById(`concert-yt-container-${index}`);
+    
+    // Always recreate fresh div to guarantee clean YouTube Player instantiation
+    if (container) {
+      container.innerHTML = `<div id="${elementId}" class="yt-iframe-embed"></div>`;
+    } else if (!document.getElementById(elementId)) {
+      return;
     }
 
     try {
       playersRef.current[index] = new window.YT.Player(elementId, {
         videoId: videoId,
         playerVars: {
-          autoplay: 0,
+          autoplay: 1,
+          start: Math.floor(startSeconds) || 0,
           playsinline: 1,
           modestbranding: 1,
           rel: 0,
@@ -130,6 +95,9 @@ export default function ConcertWall() {
         },
         events: {
           onReady: (event) => {
+            if (startSeconds > 0 && typeof event.target.seekTo === 'function') {
+              try { event.target.seekTo(startSeconds, true); } catch (_e) {}
+            }
             // Unmute only if activeAudioIndex matches this slot
             if (index === activeAudioIndex) {
               event.target.unMute();
@@ -147,6 +115,65 @@ export default function ConcertWall() {
       console.error(`Failed to init player ${index}:`, err);
     }
   }, [activeAudioIndex]);
+
+  // Look up a video's specific cue seconds for a song
+  const findVideoSongCue = useCallback((videoId, songId) => {
+    if (!songId || !videoId) return null;
+    const angle = activeConcert.availableAngles?.find(a => a.videoId === videoId);
+    if (angle?.songCues && typeof angle.songCues[songId] === 'number') {
+      return angle.songCues[songId];
+    }
+    const defaultSlot = activeConcert.defaultSlots?.find(s => s.videoId === videoId);
+    if (defaultSlot?.songCues && typeof defaultSlot.songCues[songId] === 'number') {
+      return defaultSlot.songCues[songId];
+    }
+    return null;
+  }, [activeConcert]);
+
+  // When active concert changes, update slots and reuse existing players via loadVideoById
+  useEffect(() => {
+    setActiveFocusIndex(0);
+    setActiveAudioIndex(0);
+    const firstSong = activeConcert.songs?.[0]?.id || null;
+    setActiveSongId(firstSong);
+
+    const initialSlots = activeConcert.defaultSlots.map(s => ({ ...s }));
+    setSlots(initialSlots);
+
+    initialSlots.forEach((slot, idx) => {
+      const p = playersRef.current[idx];
+      let loaded = false;
+      const initialCue = firstSong ? findVideoSongCue(slot.videoId, firstSong) : (slot.offset || 0);
+      const startSec = initialCue !== null ? initialCue : (slot.offset || 0);
+
+      if (p && typeof p.loadVideoById === 'function') {
+        try {
+          p.loadVideoById({
+            videoId: slot.videoId,
+            startSeconds: startSec
+          });
+          if (idx === 0) {
+            p.unMute();
+            p.setVolume(100);
+          } else {
+            p.mute();
+          }
+          loaded = true;
+        } catch (_e) {
+          try {
+            p.cueVideoById({
+              videoId: slot.videoId,
+              startSeconds: startSec
+            });
+            loaded = true;
+          } catch (_e2) {}
+        }
+      }
+      if (!loaded) {
+        initPlayer(idx, slot.videoId, startSec);
+      }
+    });
+  }, [selectedConcertIndex, activeConcert.defaultSlots, activeConcert.songs, findVideoSongCue, initPlayer]);
 
   // Load YouTube IFrame API script once
   useEffect(() => {
@@ -176,10 +203,10 @@ export default function ConcertWall() {
         }
       });
     };
-  }, [activeConcert.id]);
+  }, []);
 
-  // Update slot video without destroying the player iframe if loadVideoById is available
-  const updateSlotVideo = useCallback((slotIndex, newVideoId, newTitle, newTag) => {
+  // Update slot video with automatic song timeline synchronization
+  const updateSlotVideo = useCallback((slotIndex, newVideoId, newTitle, newTag, angleSongCues) => {
     setSlots(prev => {
       const copy = [...prev];
       copy[slotIndex] = {
@@ -192,24 +219,87 @@ export default function ConcertWall() {
       return copy;
     });
 
+    // Calculate synchronized target time if an active song is selected
+    let targetStartSeconds = 0;
+    if (activeSongId) {
+      const newAngleCue = (angleSongCues && typeof angleSongCues[activeSongId] === 'number')
+        ? angleSongCues[activeSongId]
+        : findVideoSongCue(newVideoId, activeSongId);
+
+      if (newAngleCue !== null) {
+        // Find reference player and elapsed time in the song
+        const refPlayer = playersRef.current[activeFocusIndex] || playersRef.current[0];
+        const refSlot = slots[activeFocusIndex] || slots[0];
+        const refCue = refSlot ? findVideoSongCue(refSlot.videoId, activeSongId) : null;
+
+        if (refPlayer && typeof refPlayer.getCurrentTime === 'function' && refCue !== null) {
+          try {
+            const curTime = refPlayer.getCurrentTime() || 0;
+            const elapsed = Math.max(0, curTime - refCue);
+            targetStartSeconds = newAngleCue + elapsed;
+          } catch (_e) {
+            targetStartSeconds = newAngleCue;
+          }
+        } else {
+          targetStartSeconds = newAngleCue;
+        }
+      }
+    }
+
     const player = playersRef.current[slotIndex];
+    let loaded = false;
+
     if (player && typeof player.loadVideoById === 'function') {
       try {
-        player.loadVideoById(newVideoId);
+        player.loadVideoById({
+          videoId: newVideoId,
+          startSeconds: targetStartSeconds
+        });
         if (slotIndex !== activeAudioIndex) {
           player.mute();
         } else {
           player.unMute();
           player.setVolume(100);
         }
-        return;
-      } catch (_e) {}
+        loaded = true;
+      } catch (_e) {
+        try {
+          player.cueVideoById({
+            videoId: newVideoId,
+            startSeconds: targetStartSeconds
+          });
+          loaded = true;
+        } catch (_e2) {}
+      }
     }
 
-    setTimeout(() => {
-      initPlayer(slotIndex, newVideoId);
-    }, 100);
-  }, [initPlayer, activeAudioIndex]);
+    if (!loaded) {
+      initPlayer(slotIndex, newVideoId, targetStartSeconds);
+    }
+  }, [initPlayer, activeAudioIndex, activeSongId, findVideoSongCue, activeFocusIndex, slots]);
+
+  // Jump all cameras to the cue point of the chosen song
+  const handleJumpToSong = useCallback((songId) => {
+    setActiveSongId(songId);
+
+    slots.forEach((slot, idx) => {
+      const cueTime = findVideoSongCue(slot.videoId, songId);
+      if (cueTime !== null) {
+        setSlots(prev => {
+          const next = [...prev];
+          next[idx] = { ...next[idx], offset: 0 };
+          return next;
+        });
+
+        const p = playersRef.current[idx];
+        if (p && typeof p.seekTo === 'function') {
+          try {
+            p.seekTo(cueTime, true);
+          } catch (_e) {}
+        }
+      }
+    });
+  }, [slots, findVideoSongCue]);
 
 
 
@@ -308,9 +398,9 @@ export default function ConcertWall() {
     });
   }, []);
 
-  // Quick swap from bottom angle gallery into a camera slot
+  // Quick swap from bottom angle gallery into a camera slot with song cue synchronization
   const handleApplyAngleToSlot = useCallback((angleItem, targetSlotIndex) => {
-    updateSlotVideo(targetSlotIndex, angleItem.videoId, angleItem.title, angleItem.tag);
+    updateSlotVideo(targetSlotIndex, angleItem.videoId, angleItem.title, angleItem.tag, angleItem.songCues);
   }, [updateSlotVideo]);
 
   // Submit custom YouTube URL modal
@@ -417,7 +507,7 @@ export default function ConcertWall() {
         </div>
 
         {/* Video Player Frame */}
-        <div className="player-aspect-wrapper">
+        <div id={`concert-yt-container-${index}`} className="player-aspect-wrapper">
           <div id={`concert-yt-player-${index}`} className="yt-iframe-embed"></div>
         </div>
 
@@ -489,17 +579,7 @@ export default function ConcertWall() {
       </div>
     );
   };
-  const allSetlistSongs = activeConcert.setlist ? [
-    ...(activeConcert.setlist.mainSet || []),
-    ...(activeConcert.setlist.soloStages || []),
-    ...(activeConcert.setlist.encore || [])
-  ] : [];
-
-  const activePlayingSong = allSetlistSongs.find(s => s.id === selectedSongId) || allSetlistSongs[0];
-
-  const currentAvailableAngles = (activePlayingSong && activePlayingSong.availableAngles && activePlayingSong.availableAngles.length > 0)
-    ? activePlayingSong.availableAngles
-    : (activeConcert.availableAngles || []);
+  const currentAvailableAngles = activeConcert.availableAngles || [];
 
   return (
     <div className="concert-wall-container">
@@ -585,6 +665,38 @@ export default function ConcertWall() {
           </div>
         </div>
       </section>
+
+      {/* Song Sync Anchor Bar (曲目同步錨點切換列) */}
+      {activeConcert.songs && activeConcert.songs.length > 0 && (
+        <section className="song-sync-bar">
+          <div className="song-sync-bar-header">
+            <div className="song-sync-title">
+              <Disc size={15} color="#e11d48" />
+              <span>同步曲目錨點 (SYNC SONG ANCHORS)</span>
+            </div>
+            <span className="song-sync-hint">點選歌曲，3 機位將自動對齊該曲精確開始秒數</span>
+          </div>
+
+          <div className="song-sync-pills-row">
+            {activeConcert.songs.map((song) => {
+              const isSelected = activeSongId === song.id;
+              return (
+                <button
+                  key={song.id}
+                  type="button"
+                  className={`song-sync-pill ${isSelected ? 'is-active' : ''}`}
+                  onClick={() => handleJumpToSong(song.id)}
+                  title={`跳轉至 ${song.title} 同步播放`}
+                >
+                  <span className="pill-dot"></span>
+                  <span className="pill-name">🎵 {song.title}</span>
+                  {song.tag && <span className="pill-tag">{song.tag}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Master Director Console (導播同步控制台) */}
       <section className="director-console-bar">
@@ -724,61 +836,78 @@ export default function ConcertWall() {
             <div className="angles-gallery-title">
               <Flame size={18} color="#e11d48" />
               <span>
-                《{activePlayingSong?.title || activeConcert.subTitle.split('(')[0]}》視角庫 (點擊替換至 CAM 1 / 2 / 3)
+                《{activeConcert.title}》視角庫 (點擊替換至 CAM 1 / 2 / 3)
               </span>
             </div>
             <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
-              共有 {currentAvailableAngles.length} 個精彩角度
+              共有 {currentAvailableAngles.length} 個本場專屬視角
             </span>
           </div>
 
           <div className="angles-gallery-grid">
-            {currentAvailableAngles.map((angle) => (
-              <div key={angle.id} className="angle-item-card">
-                <div className="angle-item-thumb-row">
-                  <img
-                    src={`https://img.youtube.com/vi/${angle.videoId}/hqdefault.jpg`}
-                    alt={angle.title}
-                    loading="lazy"
-                  />
-                  <span className="angle-item-tag">{angle.tag}</span>
-                </div>
+            {currentAvailableAngles.map((angle) => {
+              const inCam1 = slots[0]?.videoId === angle.videoId;
+              const inCam2 = slots[1]?.videoId === angle.videoId;
+              const inCam3 = slots[2]?.videoId === angle.videoId;
 
-                <div className="angle-item-info">
-                  <div className="angle-item-title" title={angle.title}>
-                    {angle.title}
+              return (
+                <div key={angle.id} className="angle-item-card">
+                  <div className="angle-item-thumb-row">
+                    <img
+                      src={`https://img.youtube.com/vi/${angle.videoId}/hqdefault.jpg`}
+                      alt={angle.title}
+                      loading="lazy"
+                    />
+                    <span className="angle-item-tag">{angle.tag}</span>
                   </div>
-                  <div className="angle-item-author">上傳者: {angle.author}</div>
-                </div>
 
-                <div className="angle-swap-actions">
-                  <button
-                    type="button"
-                    className="swap-to-cam-btn"
-                    onClick={() => handleApplyAngleToSlot(angle, 0)}
-                    title={`替換至 CAM 1: ${angle.title}`}
-                  >
-                    替換 CAM 1
-                  </button>
-                  <button
-                    type="button"
-                    className="swap-to-cam-btn"
-                    onClick={() => handleApplyAngleToSlot(angle, 1)}
-                    title={`替換至 CAM 2: ${angle.title}`}
-                  >
-                    替換 CAM 2
-                  </button>
-                  <button
-                    type="button"
-                    className="swap-to-cam-btn"
-                    onClick={() => handleApplyAngleToSlot(angle, 2)}
-                    title={`替換至 CAM 3: ${angle.title}`}
-                  >
-                    替換 CAM 3
-                  </button>
+                  <div className="angle-item-info">
+                    <div className="angle-item-title" title={angle.title}>
+                      {angle.title}
+                    </div>
+                    <div className="angle-item-meta-row">
+                      <span className="angle-item-author">上傳者: {angle.author}</span>
+                      {activeSongId && angle.songCues && typeof angle.songCues[activeSongId] === 'number' ? (
+                        <span className="angle-song-cue-pill">
+                          🎯 {activeConcert.songs?.find(s => s.id === activeSongId)?.title || activeSongId} @ {Math.floor(angle.songCues[activeSongId] / 60)}:{String(Math.floor(angle.songCues[activeSongId] % 60)).padStart(2, '0')}
+                        </span>
+                      ) : activeSongId ? (
+                        <span className="angle-song-cue-pill cue-missing">
+                          未標註此曲
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="angle-swap-actions">
+                    <button
+                      type="button"
+                      className={`swap-to-cam-btn ${inCam1 ? 'is-current-cam' : ''}`}
+                      onClick={() => handleApplyAngleToSlot(angle, 0)}
+                      title={`替換至 CAM 1: ${angle.title}`}
+                    >
+                      {inCam1 ? '✓ CAM 1 播放中' : '替換 CAM 1'}
+                    </button>
+                    <button
+                      type="button"
+                      className={`swap-to-cam-btn ${inCam2 ? 'is-current-cam' : ''}`}
+                      onClick={() => handleApplyAngleToSlot(angle, 1)}
+                      title={`替換至 CAM 2: ${angle.title}`}
+                    >
+                      {inCam2 ? '✓ CAM 2 播放中' : '替換 CAM 2'}
+                    </button>
+                    <button
+                      type="button"
+                      className={`swap-to-cam-btn ${inCam3 ? 'is-current-cam' : ''}`}
+                      onClick={() => handleApplyAngleToSlot(angle, 2)}
+                      title={`替換至 CAM 3: ${angle.title}`}
+                    >
+                      {inCam3 ? '✓ CAM 3 播放中' : '替換 CAM 3'}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}
