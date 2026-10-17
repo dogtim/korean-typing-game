@@ -13,7 +13,6 @@ import {
   Radio,
   Sliders,
   Plus,
-  RefreshCw,
   ExternalLink,
   Flame,
   Columns2,
@@ -857,14 +856,6 @@ export default function ConcertWall() {
               <span className="live-pulse-dot"></span>
               <span>LIVE CONCERT 3-CAM WALL</span>
             </div>
-            <div className="concert-venue-pill">
-              <Radio size={13} color="#f43f5e" />
-              <span>{activeConcert.venue}</span>
-              <span>•</span>
-              <span>{activeConcert.date}</span>
-              <span>•</span>
-              <span style={{ color: '#fb7185', fontWeight: 600 }}>{activeConcert.attendance}</span>
-            </div>
           </div>
 
           <div className="concert-title-area">
@@ -902,7 +893,6 @@ export default function ConcertWall() {
                 <span>下一首</span>
                 <SkipForward size={13} />
               </button>
-              <span className="song-sync-hint">點選歌曲，3 機位將在背景持續同步播放</span>
             </div>
           </div>
 
@@ -939,16 +929,6 @@ export default function ConcertWall() {
           >
             {isMasterPlaying ? <Pause size={16} /> : <Play size={16} />}
             <span>{isMasterPlaying ? '同步暫停 All' : '一鍵全播 All'}</span>
-          </button>
-
-          <button
-            type="button"
-            className="console-btn-secondary"
-            onClick={handleSyncAllTimestamps}
-            title="將其他視角的時間校準對齊至主焦點畫面"
-          >
-            <RefreshCw size={14} />
-            <span>對齊主畫面時間</span>
           </button>
         </div>
 
@@ -1062,9 +1042,6 @@ export default function ConcertWall() {
       {/* In Coverflow 3D mode, show quick indicator navigation bar */}
       {layoutMode === 'coverflow' && (
         <div className="coverflow-mode-nav-bar">
-          <div className="coverflow-hint-text">
-            <span>✨ 3D 立體舞臺：點擊側邊視角、左右拖曳或按鍵盤 <strong>←</strong> / <strong>→</strong> 鍵快速滑動</span>
-          </div>
           <div className="coverflow-pills-row">
             {slots.map((slot, idx) => (
               <button
