@@ -989,7 +989,9 @@ export const CONCERT_PRESETS = [
         songCues: {
           we_go_up: 82.0,
           choom: 253.0,
-          drip: 593.0
+          drip: 593.0,
+          forever: 773.0,
+          sheesh: 1773.0
         },
         description: 'ZOZO Marine Stadium 千葉海洋球場全景廣角。'
       }
@@ -1035,7 +1037,9 @@ export const CONCERT_PRESETS = [
         songCues: {
           we_go_up: 82.0,
           choom: 253.0,
-          drip: 593.0
+          drip: 593.0,
+          forever: 773.0,
+          sheesh: 1773.0
         }
       },
       {

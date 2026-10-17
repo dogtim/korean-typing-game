@@ -19,7 +19,12 @@ import {
   Columns2,
   Eye,
   EyeOff,
-  Disc
+  Disc,
+  Box,
+  ChevronLeft,
+  ChevronRight,
+  SkipBack,
+  SkipForward
 } from 'lucide-react';
 import { CONCERT_PRESETS } from '../data/concertsData';
 import './ConcertWall.css';
@@ -66,7 +71,18 @@ export default function ConcertWall() {
   const playersRef = useRef([null, null, null]);
   const isApiReadyRef = useRef(false);
 
-  // Initialize a single player by index
+  // Keep refs for activeAudioIndex and activeFocusIndex to prevent recreation of initPlayer
+  const activeAudioIndexRef = useRef(activeAudioIndex);
+  useEffect(() => {
+    activeAudioIndexRef.current = activeAudioIndex;
+  }, [activeAudioIndex]);
+
+  const activeFocusIndexRef = useRef(activeFocusIndex);
+  useEffect(() => {
+    activeFocusIndexRef.current = activeFocusIndex;
+  }, [activeFocusIndex]);
+
+  // Initialize a single player by index (stable, never re-created)
   const initPlayer = useCallback((index, videoId, startSeconds = 0) => {
     if (!window.YT || !window.YT.Player) return;
 
@@ -99,12 +115,16 @@ export default function ConcertWall() {
               try { event.target.seekTo(startSeconds, true); } catch (_e) {}
             }
             // Unmute only if activeAudioIndex matches this slot
-            if (index === activeAudioIndex) {
+            if (index === activeAudioIndexRef.current) {
               event.target.unMute();
               event.target.setVolume(100);
             } else {
               event.target.mute();
             }
+            // Ensure background cameras also start playing immediately so they never freeze
+            try {
+              event.target.playVideo();
+            } catch (_e) {}
           },
           onError: (err) => {
             console.warn(`Concert Player ${index} Error:`, err.data);
@@ -114,7 +134,7 @@ export default function ConcertWall() {
     } catch (err) {
       console.error(`Failed to init player ${index}:`, err);
     }
-  }, [activeAudioIndex]);
+  }, []);
 
   // Look up a video's specific cue seconds for a song
   const findVideoSongCue = useCallback((videoId, songId) => {
@@ -132,12 +152,15 @@ export default function ConcertWall() {
 
   // When active concert changes, update slots and reuse existing players via loadVideoById
   useEffect(() => {
+    const currentPreset = CONCERT_PRESETS[selectedConcertIndex];
+    if (!currentPreset) return;
+
     setActiveFocusIndex(0);
     setActiveAudioIndex(0);
-    const firstSong = activeConcert.songs?.[0]?.id || null;
+    const firstSong = currentPreset.songs?.[0]?.id || null;
     setActiveSongId(firstSong);
 
-    const initialSlots = activeConcert.defaultSlots.map(s => ({ ...s }));
+    const initialSlots = currentPreset.defaultSlots.map(s => ({ ...s }));
     setSlots(initialSlots);
 
     initialSlots.forEach((slot, idx) => {
@@ -158,6 +181,9 @@ export default function ConcertWall() {
           } else {
             p.mute();
           }
+          try {
+            p.playVideo();
+          } catch (_e) {}
           loaded = true;
         } catch (_e) {
           try {
@@ -173,7 +199,7 @@ export default function ConcertWall() {
         initPlayer(idx, slot.videoId, startSec);
       }
     });
-  }, [selectedConcertIndex, activeConcert.defaultSlots, activeConcert.songs, findVideoSongCue, initPlayer]);
+  }, [selectedConcertIndex]);
 
   // Load YouTube IFrame API script once
   useEffect(() => {
@@ -278,7 +304,7 @@ export default function ConcertWall() {
     }
   }, [initPlayer, activeAudioIndex, activeSongId, findVideoSongCue, activeFocusIndex, slots]);
 
-  // Jump all cameras to the cue point of the chosen song
+  // Jump all cameras to the cue point of the chosen song without reloading
   const handleJumpToSong = useCallback((songId) => {
     setActiveSongId(songId);
 
@@ -292,33 +318,107 @@ export default function ConcertWall() {
         });
 
         const p = playersRef.current[idx];
-        if (p && typeof p.seekTo === 'function') {
+        if (p) {
+          // Direct seek without recreating or reloading player
+          if (typeof p.seekTo === 'function') {
+            try {
+              p.seekTo(cueTime, true);
+            } catch (_e) {}
+          }
+          // Active camera is audible; left and right cameras are muted in background
+          if (idx === activeFocusIndex) {
+            if (p.unMute) p.unMute();
+            if (p.setVolume) p.setVolume(100);
+          } else {
+            if (p.mute) p.mute();
+          }
+          // CRUCIAL: All 3 cameras must play simultaneously so left and right continue playing!
+          if (typeof p.playVideo === 'function') {
+            try {
+              p.playVideo();
+            } catch (_e) {}
+          }
+        }
+      }
+    });
+
+    setIsMasterPlaying(true);
+  }, [slots, findVideoSongCue, activeFocusIndex]);
+
+  // Next and Previous Song jumps for seamless setlist progression
+  const handleNextSong = useCallback(() => {
+    const songs = activeConcert.songs || [];
+    if (songs.length === 0) return;
+    const currentIdx = songs.findIndex(s => s.id === activeSongId);
+    const nextIdx = (currentIdx + 1) % songs.length;
+    handleJumpToSong(songs[nextIdx].id);
+  }, [activeConcert.songs, activeSongId, handleJumpToSong]);
+
+  const handlePrevSong = useCallback(() => {
+    const songs = activeConcert.songs || [];
+    if (songs.length === 0) return;
+    const currentIdx = songs.findIndex(s => s.id === activeSongId);
+    const prevIdx = (currentIdx - 1 + songs.length) % songs.length;
+    handleJumpToSong(songs[prevIdx].id);
+  }, [activeConcert.songs, activeSongId, handleJumpToSong]);
+
+  // Seamless Focus & Camera Transition without reloading iframe
+  const seamlessSwitchFocus = useCallback((targetIndex, fromIndex) => {
+    setActiveAudioIndex(targetIndex);
+    setActiveFocusIndex(targetIndex);
+
+    // Unmute target camera; mute other cameras but KEEP ALL PLAYING
+    playersRef.current.forEach((player, idx) => {
+      if (player) {
+        if (idx === targetIndex) {
+          if (player.unMute) player.unMute();
+          if (player.setVolume) player.setVolume(100);
+        } else {
+          if (player.mute) player.mute();
+        }
+        // Ensure every camera continues playing in the background
+        if (typeof player.playVideo === 'function') {
           try {
-            p.seekTo(cueTime, true);
+            const state = player.getPlayerState ? player.getPlayerState() : -1;
+            if (state !== 1 && state !== 3) {
+              player.playVideo();
+            }
           } catch (_e) {}
         }
       }
     });
-  }, [slots, findVideoSongCue]);
 
-
+    // Check drift against current active song and realign seamlessly only if drifted > 0.4s
+    if (activeSongId && typeof fromIndex === 'number' && fromIndex !== targetIndex) {
+      const fromPlayer = playersRef.current[fromIndex];
+      const targetPlayer = playersRef.current[targetIndex];
+      const fromSlot = slots[fromIndex];
+      const targetSlot = slots[targetIndex];
+      if (fromPlayer && targetPlayer && fromSlot && targetSlot) {
+        const fromCue = findVideoSongCue(fromSlot.videoId, activeSongId);
+        const targetCue = findVideoSongCue(targetSlot.videoId, activeSongId);
+        if (typeof fromCue === 'number' && typeof targetCue === 'number') {
+          try {
+            const fromCurTime = fromPlayer.getCurrentTime ? (fromPlayer.getCurrentTime() || 0) : 0;
+            const elapsed = Math.max(0, fromCurTime - fromCue);
+            const idealTarget = targetCue + elapsed;
+            const actualTarget = targetPlayer.getCurrentTime ? (targetPlayer.getCurrentTime() || 0) : idealTarget;
+            // Only seek if drift exceeds 0.4 seconds, so no unnecessary audio stutter
+            if (Math.abs(actualTarget - idealTarget) > 0.4 && typeof targetPlayer.seekTo === 'function') {
+              targetPlayer.seekTo(idealTarget, true);
+            }
+          } catch (_e) {}
+        }
+      }
+    }
+  }, [activeSongId, findVideoSongCue, slots]);
 
   // Handle Audio Solo Switch
   const handleSelectAudio = useCallback((targetIndex) => {
-    setActiveAudioIndex(targetIndex);
-    playersRef.current.forEach((player, idx) => {
-      if (player && player.mute && player.unMute) {
-        if (idx === targetIndex) {
-          player.unMute();
-          player.setVolume(100);
-        } else {
-          player.mute();
-        }
-      }
-    });
-  }, []);
+    seamlessSwitchFocus(targetIndex, activeFocusIndex);
+  }, [seamlessSwitchFocus, activeFocusIndex]);
 
-  // Handle Layout Switch: 'tri-split' | 'dual-split' | 'cinema' | 'single'
+  // Handle Layout Switch: 'tri-split' | 'dual-split' | 'cinema' | 'single' | 'coverflow'
   const handleSetLayoutMode = useCallback((mode) => {
     setLayoutMode(mode);
     if (mode === 'dual-split') {
@@ -330,6 +430,81 @@ export default function ConcertWall() {
       }
     }
   }, [activeAudioIndex, activeFocusIndex, handleSelectAudio]);
+
+  // Coverflow 3D Slide Handlers (左右滑動切換視角，絲滑無縫接上)
+  const handleCoverflowPrev = useCallback(() => {
+    setActiveFocusIndex(prev => {
+      const nextIdx = (prev - 1 + 3) % 3;
+      seamlessSwitchFocus(nextIdx, prev);
+      return nextIdx;
+    });
+  }, [seamlessSwitchFocus]);
+
+  const handleCoverflowNext = useCallback(() => {
+    setActiveFocusIndex(prev => {
+      const nextIdx = (prev + 1) % 3;
+      seamlessSwitchFocus(nextIdx, prev);
+      return nextIdx;
+    });
+  }, [seamlessSwitchFocus]);
+
+  // Touch and Mouse Drag / Swipe Handlers for Coverflow
+  const touchStartXRef = useRef(null);
+  const isDraggingRef = useRef(false);
+
+  const handleStageTouchStart = (e) => {
+    if (layoutMode !== 'coverflow') return;
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleStageTouchEnd = (e) => {
+    if (layoutMode !== 'coverflow' || touchStartXRef.current === null) return;
+    const diff = e.changedTouches[0].clientX - touchStartXRef.current;
+    touchStartXRef.current = null;
+    if (diff > 45) {
+      handleCoverflowPrev();
+    } else if (diff < -45) {
+      handleCoverflowNext();
+    }
+  };
+
+  const handleStageMouseDown = (e) => {
+    if (layoutMode !== 'coverflow') return;
+    if (e.target.closest('button') || e.target.closest('input')) return;
+    touchStartXRef.current = e.clientX;
+    isDraggingRef.current = true;
+  };
+
+  const handleStageMouseUp = (e) => {
+    if (layoutMode !== 'coverflow' || !isDraggingRef.current || touchStartXRef.current === null) return;
+    const diff = e.clientX - touchStartXRef.current;
+    touchStartXRef.current = null;
+    isDraggingRef.current = false;
+    if (diff > 45) {
+      handleCoverflowPrev();
+    } else if (diff < -45) {
+      handleCoverflowNext();
+    }
+  };
+
+  // Keyboard Navigation (← / → 箭頭滑動切換視角)
+  useEffect(() => {
+    if (layoutMode !== 'coverflow') return;
+
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handleCoverflowPrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleCoverflowNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [layoutMode, handleCoverflowPrev, handleCoverflowNext]);
 
   // Handle Master Play / Pause All
   const handleMasterTogglePlay = useCallback(() => {
@@ -427,15 +602,41 @@ export default function ConcertWall() {
     const isAudible = activeAudioIndex === index;
     const isFocused = activeFocusIndex === index;
 
+    // Calculate 3D Coverflow relative position relative to activeFocusIndex
+    const coverflowDiff = (index - activeFocusIndex + 3) % 3;
+    let coverflowPosClass = '';
+    if (layoutMode === 'coverflow') {
+      if (coverflowDiff === 0) coverflowPosClass = 'coverflow-pos-center';
+      else if (coverflowDiff === 1) coverflowPosClass = 'coverflow-pos-right';
+      else if (coverflowDiff === 2) coverflowPosClass = 'coverflow-pos-left';
+    }
+
     return (
       <div
         key={`slot-card-stable-${index}`}
-        className={`video-slot-card slot-index-${index} ${isAudible ? 'is-active-audio' : ''} ${isFocused ? 'is-active-focus' : ''}`}
+        className={`video-slot-card slot-index-${index} ${isAudible ? 'is-active-audio' : ''} ${isFocused ? 'is-active-focus' : ''} ${coverflowPosClass}`}
         onClick={() => {
-          // Clicking any card brings it into focus & sets its audio
-          setActiveFocusIndex(index);
+          if (activeFocusIndex !== index) {
+            seamlessSwitchFocus(index, activeFocusIndex);
+          }
         }}
       >
+        {/* Coverflow Click Shield for Side Cards to allow instant click-to-center */}
+        {layoutMode === 'coverflow' && coverflowDiff !== 0 && (
+          <div
+            className="coverflow-click-shield"
+            onClick={(e) => {
+              e.stopPropagation();
+              seamlessSwitchFocus(index, activeFocusIndex);
+            }}
+            title="點擊置中此視角 (無縫切換主畫面與音訊)"
+          >
+            <div className="coverflow-focus-prompt">
+              <Maximize2 size={15} />
+              <span>點擊移至中央</span>
+            </div>
+          </div>
+        )}
         {/* Top Header of Card */}
         <div className="slot-card-header">
           <div className="slot-header-left">
@@ -674,7 +875,27 @@ export default function ConcertWall() {
               <Disc size={15} color="#e11d48" />
               <span>同步曲目錨點 (SYNC SONG ANCHORS)</span>
             </div>
-            <span className="song-sync-hint">點選歌曲，3 機位將自動對齊該曲精確開始秒數</span>
+            <div className="song-sync-actions">
+              <button
+                type="button"
+                className="song-step-btn"
+                onClick={handlePrevSong}
+                title="上一首 (左右視角持續無縫同步播放)"
+              >
+                <SkipBack size={13} />
+                <span>上一首</span>
+              </button>
+              <button
+                type="button"
+                className="song-step-btn"
+                onClick={handleNextSong}
+                title="下一首 (左右視角持續無縫同步播放)"
+              >
+                <span>下一首</span>
+                <SkipForward size={13} />
+              </button>
+              <span className="song-sync-hint">點選歌曲，3 機位將在背景持續同步播放</span>
+            </div>
           </div>
 
           <div className="song-sync-pills-row">
@@ -746,6 +967,15 @@ export default function ConcertWall() {
           <div className="layout-switch-group">
             <button
               type="button"
+              className={`layout-btn ${layoutMode === 'coverflow' ? 'active' : ''}`}
+              onClick={() => handleSetLayoutMode('coverflow')}
+              title="立體三分割 (3D Coverflow)：立體環繞舞台，支援左右滑動切換"
+            >
+              <Box size={14} />
+              <span>立體三分割</span>
+            </button>
+            <button
+              type="button"
               className={`layout-btn ${layoutMode === 'tri-split' ? 'active' : ''}`}
               onClick={() => handleSetLayoutMode('tri-split')}
               title="三畫面等寬並排 (Tri-Split)"
@@ -785,9 +1015,66 @@ export default function ConcertWall() {
       </section>
 
       {/* Main Video Wall Stage - All 3 slots permanently mounted in DOM */}
-      <section className={`video-wall-stage mode-${layoutMode} focus-idx-${activeFocusIndex}`}>
+      <section
+        className={`video-wall-stage mode-${layoutMode} focus-idx-${activeFocusIndex}`}
+        onTouchStart={handleStageTouchStart}
+        onTouchEnd={handleStageTouchEnd}
+        onMouseDown={handleStageMouseDown}
+        onMouseUp={handleStageMouseUp}
+      >
+        {layoutMode === 'coverflow' && (
+          <>
+            <button
+              type="button"
+              className="coverflow-nav-arrow coverflow-arrow-left"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCoverflowPrev();
+              }}
+              title="向左滑動 (前一個視角)"
+            >
+              <ChevronLeft size={28} />
+            </button>
+            <button
+              type="button"
+              className="coverflow-nav-arrow coverflow-arrow-right"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCoverflowNext();
+              }}
+              title="向右滑動 (後一個視角)"
+            >
+              <ChevronRight size={28} />
+            </button>
+          </>
+        )}
         {slots.map((slot, idx) => renderPlayerCard(slot, idx))}
       </section>
+
+      {/* In Coverflow 3D mode, show quick indicator navigation bar */}
+      {layoutMode === 'coverflow' && (
+        <div className="coverflow-mode-nav-bar">
+          <div className="coverflow-hint-text">
+            <span>✨ 3D 立體舞臺：點擊側邊視角、左右拖曳或按鍵盤 <strong>←</strong> / <strong>→</strong> 鍵快速滑動</span>
+          </div>
+          <div className="coverflow-pills-row">
+            {slots.map((slot, idx) => (
+              <button
+                key={`coverflow-pill-${idx}`}
+                type="button"
+                className={`coverflow-nav-pill ${activeFocusIndex === idx ? 'is-active' : ''}`}
+                onClick={() => {
+                  seamlessSwitchFocus(idx, activeFocusIndex);
+                }}
+              >
+                <span className="pill-dot"></span>
+                <span className="pill-cam-name">{slot.name || `CAM ${idx + 1}`}</span>
+                <span className="pill-cam-tag">{slot.tag}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* In Dual-Split mode, show notice with quick button to reopen CAM 3 */}
       {layoutMode === 'dual-split' && (
