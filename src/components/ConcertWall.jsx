@@ -82,6 +82,14 @@ export default function ConcertWall() {
     activeFocusIndexRef.current = activeFocusIndex;
   }, [activeFocusIndex]);
 
+  // Gallery Horizontal Scroll Ref and Handler
+  const galleryScrollRef = useRef(null);
+  const handleScrollGallery = useCallback((offset) => {
+    if (galleryScrollRef.current) {
+      galleryScrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  }, []);
+
   // Initialize a single player by index (stable, never re-created)
   const initPlayer = useCallback((index, videoId, startSeconds = 0) => {
     if (!window.YT || !window.YT.Player) return;
@@ -1126,12 +1134,32 @@ export default function ConcertWall() {
                 《{activeConcert.title}》視角庫 (點擊替換至 CAM 1 / 2 / 3)
               </span>
             </div>
-            <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
-              共有 {currentAvailableAngles.length} 個本場專屬視角
-            </span>
+            <div className="angles-gallery-header-right">
+              <span className="angles-gallery-count">
+                共有 {currentAvailableAngles.length} 個本場專屬視角 (左右滑動瀏覽)
+              </span>
+              <div className="angles-gallery-scroll-btns">
+                <button
+                  type="button"
+                  className="gallery-scroll-btn"
+                  onClick={() => handleScrollGallery(-320)}
+                  title="向左滑動視角列表"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  className="gallery-scroll-btn"
+                  onClick={() => handleScrollGallery(320)}
+                  title="向右滑動視角列表"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="angles-gallery-grid">
+          <div className="angles-gallery-grid" ref={galleryScrollRef}>
             {currentAvailableAngles.map((angle) => {
               const inCam1 = slots[0]?.videoId === angle.videoId;
               const inCam2 = slots[1]?.videoId === angle.videoId;

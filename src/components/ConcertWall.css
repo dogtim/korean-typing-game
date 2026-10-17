@@ -1638,17 +1638,83 @@
   color: #fff;
 }
 
+.angles-gallery-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.angles-gallery-count {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.angles-gallery-scroll-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gallery-scroll-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-scroll-btn:hover {
+  background: #e11d48;
+  border-color: #f43f5e;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(225, 29, 72, 0.6);
+}
+
 .angles-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  gap: 16px;
+  padding: 4px 6px 14px 6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom Horizontal Scrollbar */
+.angles-gallery-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.angles-gallery-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+}
+
+.angles-gallery-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(225, 29, 72, 0.5), rgba(244, 63, 94, 0.85));
+  border-radius: 9999px;
+}
+
+.angles-gallery-grid::-webkit-scrollbar-thumb:hover {
+  background: #f43f5e;
 }
 
 .angle-item-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: rgba(22, 30, 49, 0.7);
+  flex: 0 0 280px;
+  width: 280px;
+  min-width: 280px;
+  scroll-snap-align: start;
+  background: rgba(22, 30, 49, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
   padding: 12px;
@@ -1657,9 +1723,10 @@
 }
 
 .angle-item-card:hover {
-  background: rgba(30, 41, 67, 0.85);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  background: rgba(30, 41, 67, 0.9);
+  border-color: rgba(244, 63, 94, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .angle-item-thumb-row {

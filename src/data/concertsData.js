@@ -779,12 +779,12 @@ export const CONCERT_PRESETS = [
           slots: [
             { slotId: 0, name: 'CAM 1', title: '춤 (CHOOM) Summer Sonic 現場全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 180, description: '戶外球場主舞台，酷暑下極限刀群舞。' },
             { slotId: 1, name: 'CAM 2', title: '춤 (CHOOM) 萬人合唱搖滾視角', tag: '萬人合唱', videoId: 'xJuXrgbx-8I', offset: 180, description: '全場應援齊聲高喊，戶外音樂祭專屬狂歡。' },
-            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 現場直擊', tag: '現場直擊', videoId: 'GUVKry85Gxw', offset: 0, description: '中央大舞台特寫與樂團合奏。' }
+            { slotId: 2, name: 'CAM 3', title: '춤 (CHOOM) 球場全景特寫鏡頭', tag: '球場全景', videoId: '_zV0QTAHd5I', offset: 253, description: '中央大舞台特寫與樂團合奏。' }
           ],
           availableAngles: [
             { id: 'ss26_choom_1', title: '춤 (CHOOM) Summer Sonic 現場全景', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
             { id: 'ss26_choom_2', title: '춤 (CHOOM) 萬人合唱搖滾視角', tag: '萬人合唱', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' },
-            { id: 'ss26_choom_3', title: 'Summer Sonic 2026 現場直擊', tag: '現場直擊', videoId: 'GUVKry85Gxw', author: 'Tokyo Live', badge: 'CAM 3' }
+            { id: 'ss26_choom_3', title: '춤 (CHOOM) 球場全景特寫鏡頭', tag: '球場全景', videoId: '_zV0QTAHd5I', author: 'Tokyo Stage', badge: 'CAM 3' }
           ]
         },
         {
@@ -831,7 +831,7 @@ export const CONCERT_PRESETS = [
           slots: [
             { slotId: 0, name: 'CAM 1', title: 'FOREVER Summer Sonic 海洋球場萬人合唱', tag: '萬人大合唱', videoId: '9Y-95rgsDDY', offset: 700, description: '全場觀眾齊聲高歌，夏日祭典最高潮。' },
             { slotId: 1, name: 'CAM 2', title: 'FOREVER 現場樂團版本直擊', tag: '現場樂團', videoId: 'xJuXrgbx-8I', offset: 700, description: '重低音鼓點與貝斯改編，極限全開麥。' },
-            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 舞台實況', tag: '舞台實況', videoId: 'GUVKry85Gxw', offset: 300, description: '陽光直射下的青春活力與流暢隊形。' }
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 球場全景實況', tag: '球場全景', videoId: '_zV0QTAHd5I', offset: 773, description: '陽光直射下的青春活力與流暢隊形。' }
           ],
           availableAngles: [
             { id: 'ss26_for_1', title: 'FOREVER Summer Sonic 海洋球場萬人合唱', tag: '萬人大合唱', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
@@ -895,7 +895,7 @@ export const CONCERT_PRESETS = [
           slots: [
             { slotId: 0, name: 'CAM 1', title: 'SUGAR HONEY ICE TEA 海洋球場清爽唱跳', tag: '全景主視角', videoId: '9Y-95rgsDDY', offset: 1500, description: '如同冰紅茶般沁人心脾的清爽舞台。' },
             { slotId: 1, name: 'CAM 2', title: 'SUGAR HONEY ICE TEA 樂團現場改編', tag: '樂隊改編', videoId: 'xJuXrgbx-8I', offset: 1500, description: '輕爵士律動與超強現場和聲。' },
-            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 現場側錄', tag: '現場側錄', videoId: 'GUVKry85Gxw', offset: 600, description: '成員全場走位向看台樂迷揮手互動。' }
+            { slotId: 2, name: 'CAM 3', title: 'Summer Sonic 2026 現場側錄', tag: '直擊現場', videoId: 'WuelifqxMLs', offset: 600, description: '成員全場走位向看台樂迷揮手互動。' }
           ],
           availableAngles: [
             { id: 'ss26_shit_1', title: 'SUGAR HONEY ICE TEA 海洋球場清爽唱跳', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
@@ -1062,24 +1062,11 @@ export const CONCERT_PRESETS = [
       },
       {
         id: 'angle_ss_6',
-        title: 'BABYMONSTER - SUMMER SONIC 2026 TOKYO',
-        tag: '現場直擊',
-        videoId: 'GUVKry85Gxw',
-        author: 'Live Sound',
-        badge: 'CAM 6',
-        songCues: {
-          we_go_up: 12.0,
-          choom: 183.0,
-          drip: 523.0
-        }
-      },
-      {
-        id: 'angle_ss_7',
         title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO 260814',
         tag: '直擊現場',
         videoId: 'WuelifqxMLs',
         author: 'SonicWave',
-        badge: 'CAM 7',
+        badge: 'CAM 6',
         songCues: {
           we_go_up: 14.0,
           choom: 185.0,
@@ -1087,12 +1074,12 @@ export const CONCERT_PRESETS = [
         }
       },
       {
-        id: 'angle_ss_8',
+        id: 'angle_ss_7',
         title: 'Summer Sonic 2026 & 日本巡演花絮紀實',
         tag: '幕後花絮',
         videoId: 'tO-4QFfSsCo',
         author: 'BABYMONSTER Official',
-        badge: 'CAM 8',
+        badge: 'CAM 7',
         songCues: {
           drip: 5.0
         }
