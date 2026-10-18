@@ -2,7 +2,7 @@
 // Provides multi-angle YouTube fancams and official live recordings for BABYMONSTER concerts
 
 export const CONCERT_CATEGORY_DEFINITIONS = [
-  { id: 'all', label: '全部現場', subTitle: '收錄 6 場大型公演', count: 6 },
+  { id: 'all_concert', label: 'ALL Concert', subTitle: '自由混搭三大巡演與音樂祭', color: '#f43f5e' },
   { id: 'hello_monsters', label: 'Hello Monsters', subTitle: '2025 首次世界巡演 (共 32 場)', color: '#a855f7' },
   { id: 'love_monsters', label: 'Love Monsters', subTitle: '2025–2026 Fan Concert 巡迴 (共 12 場)', color: '#ec4899' },
   { id: 'choom', label: 'Choom', subTitle: '2026–2027 第二輪世界巡演', color: '#f97316' },
@@ -10,6 +10,73 @@ export const CONCERT_CATEGORY_DEFINITIONS = [
 ];
 
 export const CONCERT_PRESETS = [
+  {
+    id: 'all_concerts_mix',
+    title: 'ALL CONCERT 跨世代巡迴終極混搭',
+    subTitle: 'HELLO MONSTERS × LOVE MONSTERS × CHOOM',
+    categoryTag: 'ALL CONCERT 自由混搭',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    venue: 'K-Arena Yokohama × 台北小巨蛋 × KSPO Dome',
+    date: '2025 - 2027 全巡演跨時代自由搭配',
+    attendance: 'Global All Tours Mix',
+    themeColor: '#f43f5e',
+    tourCategory: 'all_concert',
+    description: '【終極自由混搭模式】三大巡演同時在三機位同台競演！預設 CAM 1 為《Hello Monsters》(橫濱 4K 全場)、CAM 2 為《Love Monsters》(台北/日本 Fan Concert)、CAM 3 為《Choom》(首爾全場 1:40:55)。您可在下方任意將任一場演唱會指派給 CAM 1、CAM 2 或 CAM 3！',
+    defaultSlots: [
+      {
+        slotId: 0,
+        name: 'CAM 1',
+        title: 'HELLO MONSTERS IN JAPAN (K-Arena 橫濱 4K 全場)',
+        tag: 'Hello Monsters',
+        videoId: 'v0QTRX_fyPk',
+        offset: 0,
+        description: '2025 首次世界巡演日本橫濱站 4K 全場現場。'
+      },
+      {
+        slotId: 1,
+        name: 'CAM 2',
+        title: 'BABYMONSTER - WE GO UP Live at “LOVE MONSTERS”',
+        tag: 'Love Monsters',
+        videoId: 'wrJaWP4htHk',
+        offset: 0,
+        description: '2025–2026 亞洲 Fan Concert 巡迴全開麥現場。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
+        title: '260628 BABYMONSTER CHOOM WORLD TOUR IN SEOUL (Full)',
+        tag: 'Choom 世巡',
+        videoId: 'A3M7Nxt3_-Q',
+        offset: 0,
+        description: '2026–2027 第二輪世界巡演首爾站 1:40:55 全場長片。'
+      }
+    ],
+    availableAngles: [
+      // Hello Monsters
+      { id: 'all_hm_1', title: '[Hello Monsters] 橫濱 K-Arena 4K 全場 (2:13:49)', tag: 'Hello Monsters', videoId: 'v0QTRX_fyPk', author: 'Mokrij Vinograd', badge: 'HM 橫濱' },
+      { id: 'all_hm_2', title: '[Hello Monsters] 神奈川 Day 2 全場 (1:53:53)', tag: 'Hello Monsters', videoId: '81u-SQQyS4o', author: 'Bình Nguyễn', badge: 'HM 神奈川' },
+      { id: 'all_hm_3', title: '[Hello Monsters] 神奈川完整安可 (27:35)', tag: 'Hello Monsters', videoId: 't6Zeru_VdSg', author: 'Yakisoba Studio', badge: 'HM 安可' },
+      { id: 'all_hm_4', title: '[Hello Monsters] SHEESH 安可狂歡現場 (Encore Live 4K)', tag: 'Hello Monsters', videoId: 'edheIIVQ6Mg', author: 'Live Fan', badge: 'HM 4K' },
+      { id: 'all_hm_5', title: '[Hello Monsters] SHEESH 世界巡演主舞台震撼編舞', tag: 'Hello Monsters', videoId: 'kzrmNI2Grg8', author: 'World Stage', badge: 'HM 舞台' },
+
+      // Love Monsters
+      { id: 'all_lm_1', title: '[Love Monsters] WE GO UP Live at “LOVE MONSTERS”', tag: 'Love Monsters', videoId: 'wrJaWP4htHk', author: 'YG', badge: 'LM 主舞台' },
+      { id: 'all_lm_2', title: '[Love Monsters] 亞洲巡演官方預告 SPOT VIDEO', tag: 'Love Monsters', videoId: 'DOdK91viB7c', author: 'YG', badge: 'LM 預告' },
+      { id: 'all_lm_3', title: '[Love Monsters] Solo Stage 舞台特寫 4K Fancam', tag: 'Love Monsters', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'LM 特寫' },
+
+      // Choom
+      { id: 'all_ch_1', title: '[Choom] 260628 首爾 KSPO Dome 全場 (1:40:55)', tag: 'Choom 世巡', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: 'Choom 首爾' },
+      { id: 'all_ch_2', title: '[Choom] 馬尼拉站全場 (1:53:01)', tag: 'Choom 世巡', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: 'Choom 馬尼拉' },
+      { id: 'all_ch_3', title: '[Choom] 京瓷巨蛋 1日目現場 4K (Kyocera Dome)', tag: 'Choom 巨蛋', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: 'Choom 巨蛋' },
+      { id: 'all_ch_4', title: '[Choom] 京瓷巨蛋 SHEESH 樂團搖滾炸場版', tag: 'Choom 巨蛋', videoId: '60Hx2Tdsxzw', author: 'YG', badge: 'Choom 樂團' },
+      { id: 'all_ch_5', title: '[Choom] Asa 饒舌快嘴與舞台特寫', tag: 'Choom 特寫', videoId: 'kRoTXaF470I', author: 'M2', badge: 'Choom Asa' },
+
+      // Summer Sonic
+      { id: 'all_ss_1', title: '[Summer Sonic] 東京海洋球場開場全景', tag: '音樂祭', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'SS 全景' },
+      { id: 'all_ss_2', title: '[Summer Sonic] WE GO UP 現場樂隊舞台直擊', tag: '音樂祭', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'SS 樂團' },
+      { id: 'all_ss_3', title: '[Summer Sonic] DRIP 4K 超清搖滾區直拍', tag: '音樂祭', videoId: 'tcLinHHnu90', author: 'Tokyo Live', badge: 'SS DRIP' }
+    ]
+  },
   {
     id: 'babymonster_choom_seoul_manila_2026',
     title: '2026-27 BABYMONSTER WORLD TOUR [춤 (CHOOM)]',
