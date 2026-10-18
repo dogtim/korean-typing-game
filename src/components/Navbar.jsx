@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio } from 'lucide-react';
+import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio, GraduationCap } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -81,6 +81,18 @@ export default function Navbar({
           <span>Concert Wall</span>
           <span className="live-nav-badge">LIVE</span>
         </button>
+
+        {!isHokkien && (
+          <button
+            className={`tab-btn study-tab-highlight ${activeTab === 'lyric-study' ? 'active' : ''}`}
+            onClick={() => setActiveTab('lyric-study')}
+            title="K-Lyric Studio 韓語歌詞研習室 (Interactive Study Studio)"
+          >
+            <GraduationCap className="tab-icon" size={18} />
+            <span>Lyric Study</span>
+            <span className="live-nav-badge" style={{ background: 'linear-gradient(135deg, #ec4899, #8b5cf6)' }}>NEW</span>
+          </button>
+        )}
 
         {/* Lyrics Hub (WIP) temporarily hidden */}
         {/* {!isHokkien && (

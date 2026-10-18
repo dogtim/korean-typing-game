@@ -181,7 +181,7 @@ export default function App() {
   };
 
   return (
-    <div className={`app-container ${activeTab === 'concert' ? 'is-concert-mode' : ''}`}>
+    <div className={`app-container ${activeTab === 'concert' ? 'is-concert-mode' : ''} ${activeTab === 'lyric-study' ? 'is-study-mode' : ''}`}>
       {/* Top Header */}
       <Navbar
         activeTab={activeTab}
@@ -201,8 +201,9 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'kpop' && (
+        {(activeTab === 'kpop' || activeTab === 'lyric-study') && (
           <KpopVideoMode
+            initialView={activeTab === 'lyric-study' ? 'study' : 'karaoke'}
             onAddXp={handleAddXp}
             onSwitchToGame={() => setActiveTab('kpop-game')}
             loopTarget={loopTarget}
@@ -214,6 +215,13 @@ export default function App() {
             selectedSong={selectedPracticeSong}
             onSelectSong={setSelectedPracticeSong}
             learningLanguage={learningLanguage}
+            onViewModeChange={(mode) => {
+              if (mode === 'study' && activeTab !== 'lyric-study') {
+                setActiveTab('lyric-study');
+              } else if (mode === 'karaoke' && activeTab === 'lyric-study') {
+                setActiveTab('kpop');
+              }
+            }}
           />
         )}
 

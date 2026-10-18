@@ -60,6 +60,10 @@ body {
   max-width: 1540px;
 }
 
+.app-container.is-study-mode {
+  max-width: 1360px;
+}
+
 /* Glassmorphism Helper */
 .glassmorphism {
   background: var(--bg-card);
@@ -920,6 +924,220 @@ body {
 .select-video-trigger-btn:hover .trigger-chevron {
   color: var(--accent-pink);
   transform: translateY(2px);
+}
+
+/* Submode Switcher inside Song Practice (MV 練唱 vs 歌詞研習) */
+.practice-submode-switcher {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 4px;
+}
+
+.submode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.submode-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.submode-btn.active {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.5);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.25);
+}
+
+.submode-btn.study-btn.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(236, 72, 153, 0.4) 100%);
+  border-color: #c084fc;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+}
+
+.submode-pill-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* Study Mode Grid & Docked Video Bar */
+.kpop-main-grid.is-study-mode-active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.video-player-section.study-video-section {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.video-player-section.study-video-collapsed .video-wrapper,
+.video-player-section.study-video-collapsed .cc-subtitle-overlay,
+.video-player-section.study-video-collapsed .fanchant-prompter-container,
+.video-player-section.study-video-collapsed .video-actions-bar,
+.video-player-section.study-video-collapsed .loop-buffer-toolbar,
+.video-player-section.study-video-collapsed .sync-studio-panel,
+.video-player-section.study-video-collapsed .speech-recognition-box {
+  display: none !important;
+}
+
+.study-video-dock-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(15, 23, 42, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.dock-bar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.dock-bar-title strong {
+  color: #ffffff;
+}
+
+.dock-time-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #c4b5fd;
+}
+
+.dock-bar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dock-toggle-btn {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dock-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.dock-switch-back-btn {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dock-switch-back-btn:hover {
+  background: rgba(236, 72, 153, 0.3);
+  color: #ffffff;
+}
+
+/* WE GO UP Suggest Banner in Study Mode */
+.study-integrated-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.study-wgu-suggest-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.18) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3);
+  flex-wrap: wrap;
+}
+
+.wgu-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.wgu-banner-icon {
+  color: #f472b6;
+  flex-shrink: 0;
+}
+
+.wgu-banner-texts strong {
+  display: block;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.wgu-banner-texts span {
+  font-size: 12.5px;
+  color: #cbd5e1;
+}
+
+.wgu-load-btn {
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wgu-load-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.55);
 }
 
 /* Action Controls (Review Notebook) */

@@ -10,6 +10,8 @@ import VirtualKeyboard from './VirtualKeyboard';
 import VideoSelectModal from './VideoSelectModal';
 import FanchantPrompter from './FanchantPrompter';
 import { getFanchantForSong, FANCHANT_TYPES } from '../utils/fanchantData';
+import LyricStudyStudio from './LyricStudyStudio';
+import { WE_GO_UP_STUDY_DATA, findStudyDataForSong } from '../data/lyricsStudyData/weGoUpStudy';
 import {
   Sparkles,
   Type,
@@ -32,7 +34,10 @@ import {
   FileText,
   Play,
   Pause,
-  Flame
+  Flame,
+  GraduationCap,
+  Tv,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function KpopVideoMode({
@@ -46,8 +51,24 @@ export default function KpopVideoMode({
   onAutoPlayHandled,
   selectedSong = null,
   onSelectSong = null,
-  learningLanguage = 'korean'
+  learningLanguage = 'korean',
+  initialView = 'karaoke',
+  onViewModeChange = null
 }) {
+  const [activeViewMode, setActiveViewMode] = useState(() => initialView || 'karaoke');
+  const [showVideoInStudy, setShowVideoInStudy] = useState(true);
+
+  useEffect(() => {
+    if (initialView && initialView !== activeViewMode) {
+      setActiveViewMode(initialView);
+    }
+  }, [initialView, activeViewMode]);
+
+  const handleSwitchViewMode = useCallback((mode) => {
+    setActiveViewMode(mode);
+    onViewModeChange?.(mode);
+  }, [onViewModeChange]);
+
   const [selectedSongIdx, setSelectedSongIdx] = useState(() => selectedSong?.index ?? 0);
   const [activeVideoId, setActiveVideoId] = useState(() => selectedSong?.preset?.id || KPOP_SONG_PRESETS[0].id);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -77,6 +98,10 @@ export default function KpopVideoMode({
     return getFanchantForSong(activeVideoId) || getFanchantForSong(song.title);
   }, [activeVideoId, song.title]);
   const songHasFanchant = Boolean(currentFanchant);
+
+  const currentStudyData = useMemo(() => {
+    return findStudyDataForSong(activeVideoId) || findStudyDataForSong(song.title) || WE_GO_UP_STUDY_DATA;
+  }, [activeVideoId, song.title]);
 
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
   const [loopBufferSec, setLoopBufferSec] = useState(() => {
@@ -1101,6 +1126,31 @@ export default function KpopVideoMode({
           </button>
         </div>
 
+        {/* Practice Mode vs Lyrics Study Mode View Switcher */}
+        {!isHokkienSong && (
+          <div className="practice-submode-switcher">
+            <button
+              type="button"
+              className={`submode-btn ${activeViewMode === 'karaoke' ? 'active' : ''}`}
+              onClick={() => handleSwitchViewMode('karaoke')}
+              title="切換至 MV 練唱與即時字幕同步"
+            >
+              <Tv size={15} />
+              <span>MV 練唱</span>
+            </button>
+            <button
+              type="button"
+              className={`submode-btn study-btn ${activeViewMode === 'study' ? 'active' : ''}`}
+              onClick={() => handleSwitchViewMode('study')}
+              title="切換至歌詞深度研習 (拆解韓英單字、文法、發音與生活對話)"
+            >
+              <GraduationCap size={15} />
+              <span>歌詞研習</span>
+              <span className="submode-pill-badge">雙語 NEW</span>
+            </button>
+          </div>
+        )}
+
         {/* Action Controls: Review Notebook */}
         {onOpenReviewModal && (
           <div className="kpop-controls-actions">
@@ -1152,10 +1202,36 @@ export default function KpopVideoMode({
         </div>
       )}
 
-      {/* Main Grid: YouTube Video + Sync Lyrics CC Overlay */}
-      <div className="kpop-main-grid">
+      {/* Main Grid: YouTube Video + Sync Lyrics CC Overlay OR Lyric Study Studio */}
+      <div className={`kpop-main-grid ${activeViewMode === 'study' ? 'is-study-mode-active' : ''}`}>
         {/* Left Column: YouTube Video & CC Overlay */}
-        <div className="video-player-section glassmorphism">
+        <div className={`video-player-section glassmorphism ${activeViewMode === 'study' ? 'study-video-section' : ''} ${activeViewMode === 'study' && !showVideoInStudy ? 'study-video-collapsed' : ''}`}>
+          {activeViewMode === 'study' && (
+            <div className="study-video-dock-bar">
+              <div className="dock-bar-title">
+                <Tv size={14} />
+                <span>同步 MV 影片播放器：<strong>{song.title}</strong></span>
+                <span className="dock-time-pill">{formatTimeMinutesSeconds(currentTime)}</span>
+              </div>
+              <div className="dock-bar-controls">
+                <button
+                  type="button"
+                  className="dock-toggle-btn"
+                  onClick={() => setShowVideoInStudy(!showVideoInStudy)}
+                >
+                  {showVideoInStudy ? '▲ 收合影片以專注研習' : '▼ 展開同步 MV 影片'}
+                </button>
+                <button
+                  type="button"
+                  className="dock-switch-back-btn"
+                  onClick={() => handleSwitchViewMode('karaoke')}
+                >
+                  返回 MV 練唱
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="video-wrapper">
             <div id="youtube-player-element" className="yt-iframe-container"></div>
           </div>
@@ -1238,6 +1314,20 @@ export default function KpopVideoMode({
             >
               <Type size={18} /> {practiceMode ? 'Typing Practice ON' : 'Practice Typing'}
             </button> */}
+
+            {!isHokkienSong && (
+              <button
+                className={`action-btn ${activeViewMode === 'study' ? 'active-purple' : ''}`}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  handleSwitchViewMode(activeViewMode === 'study' ? 'karaoke' : 'study');
+                }}
+                title="切換歌詞深度研習 (拆解韓英單字膠囊、文法結構、發音音變與道地對話)"
+              >
+                <GraduationCap size={18} />
+                {activeViewMode === 'study' ? '返回 MV 練唱' : '歌詞研習 (Lyric Study)'}
+              </button>
+            )}
 
             <button
               className={`action-btn ${isSyncStudioOpen ? 'active-amber' : ''}`}
@@ -1616,7 +1706,8 @@ export default function KpopVideoMode({
         </div>
 
         {/* Right Column: Time-synced Lyrics List */}
-        <div className="lyrics-panel glassmorphism">
+        {activeViewMode === 'karaoke' && (
+          <div className="lyrics-panel glassmorphism">
           <div className="panel-header">
             <div className="panel-header-left">
               <span className="lyrics-header-hint">
@@ -1825,43 +1916,95 @@ export default function KpopVideoMode({
             })}
           </div>
         </div>
+        )}
       </div>
 
-      {/* Vowel / Syllable Breakdown Helper Card */}
-      <div className="vowel-breakdown-card glassmorphism">
-        <div className="vowel-card-header">
-          <Sparkles className="gold-icon" size={22} />
-          <div>
-            <h3>{isHokkienSong ? 'Hokkien Phonetic Breakdown (台語聲韻調分解)' : 'Syllable Breakdown'}</h3>
-            <span className="vowel-card-desc">
-              {isHokkienSong
-                ? 'Siann-bú (聲母 Initial) + Ūn-bú (韻母 Rime) + Siann-tiāu (聲調 8 Tones) · Tâi-lô & 方音符號'
-                : 'Click or hover each syllable to review consonants, vowels & batchim.'}
-            </span>
+      {/* When in Study Mode, render the integrated LyricStudyStudio */}
+      {activeViewMode === 'study' && (
+        <div className="study-integrated-wrapper">
+          {song.title !== 'WE GO UP' && (
+            <div className="study-wgu-suggest-banner glassmorphism">
+              <div className="wgu-banner-left">
+                <GraduationCap size={24} className="wgu-banner-icon" />
+                <div className="wgu-banner-texts">
+                  <strong>《WE GO UP》韓英雙語歌詞深度研習資料包已就緒！</strong>
+                  <span>目前播放中的歌曲為《{song.title}》，歌詞研習室現已收錄 BABYMONSTER《WE GO UP》完整 16 句韓英雙語深度解析。</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="wgu-load-btn"
+                onClick={() => {
+                  const wguIdx = KPOP_SONG_PRESETS.findIndex(p => p.title === 'WE GO UP');
+                  if (wguIdx !== -1) {
+                    handleSelectSongPreset(KPOP_SONG_PRESETS[wguIdx], wguIdx);
+                  }
+                }}
+              >
+                載入《WE GO UP》MV
+              </button>
+            </div>
+          )}
+
+          <LyricStudyStudio
+            songData={currentStudyData}
+            onPlaySentenceInGame={(timeSec) => {
+              if (song.title !== 'WE GO UP') {
+                const wguIdx = KPOP_SONG_PRESETS.findIndex(p => p.title === 'WE GO UP');
+                if (wguIdx !== -1) {
+                  handleSelectSongPreset(KPOP_SONG_PRESETS[wguIdx], wguIdx);
+                }
+              }
+              if (!showVideoInStudy) setShowVideoInStudy(true);
+              seekToTime(timeSec);
+              if (!isPlaying) {
+                toggleVideoPlayback();
+              }
+            }}
+            onBackToPractice={() => handleSwitchViewMode('karaoke')}
+            isEmbeddedInPractice={true}
+            activeVideoTime={currentTime}
+          />
+        </div>
+      )}
+
+      {/* Vowel / Syllable Breakdown Helper Card (Karaoke Practice View) */}
+      {activeViewMode === 'karaoke' && (
+        <div className="vowel-breakdown-card glassmorphism">
+          <div className="vowel-card-header">
+            <Sparkles className="gold-icon" size={22} />
+            <div>
+              <h3>{isHokkienSong ? 'Hokkien Phonetic Breakdown (台語聲韻調分解)' : 'Syllable Breakdown'}</h3>
+              <span className="vowel-card-desc">
+                {isHokkienSong
+                  ? 'Siann-bú (聲母 Initial) + Ūn-bú (韻母 Rime) + Siann-tiāu (聲調 8 Tones) · Tâi-lô & 方音符號'
+                  : 'Click or hover each syllable to review consonants, vowels & batchim.'}
+              </span>
+            </div>
+          </div>
+
+          {/* Vowels & Word Pronunciation List Tokens */}
+          <div className="vowels-tokens-grid">
+            {vowelTokens.map((token, idx) => (
+              <div key={idx} className="vowel-token-box" style={{ borderColor: token.color }}>
+                <div className="token-syllable">{token.char}</div>
+                <div className="token-vowel-badge" style={{ backgroundColor: token.color }}>
+                  {isHokkienSong
+                    ? `${token.syllable || token.char} · ${token.toneName || ''}`
+                    : `${token.syllableRom} (${token.vowel})`}
+                </div>
+                {isHokkienSong && token.initialDisplay && (
+                  <div className="token-hokkien-meta">
+                    <span className="meta-init">聲: {token.initialDisplay}</span>
+                    {token.vowel && <span className="meta-rime"> · 韻: {token.vowel}{token.coda || ''}</span>}
+                    {token.tonePitch && <span className="meta-pitch"> · {token.tonePitch}</span>}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Vowels & Word Pronunciation List Tokens */}
-        <div className="vowels-tokens-grid">
-          {vowelTokens.map((token, idx) => (
-            <div key={idx} className="vowel-token-box" style={{ borderColor: token.color }}>
-              <div className="token-syllable">{token.char}</div>
-              <div className="token-vowel-badge" style={{ backgroundColor: token.color }}>
-                {isHokkienSong
-                  ? `${token.syllable || token.char} · ${token.toneName || ''}`
-                  : `${token.syllableRom} (${token.vowel})`}
-              </div>
-              {isHokkienSong && token.initialDisplay && (
-                <div className="token-hokkien-meta">
-                  <span className="meta-init">聲: {token.initialDisplay}</span>
-                  {token.vowel && <span className="meta-rime"> · 韻: {token.vowel}{token.coda || ''}</span>}
-                  {token.tonePitch && <span className="meta-pitch"> · {token.tonePitch}</span>}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Optional Lyric Typing Trainer */}
       {practiceMode && (
