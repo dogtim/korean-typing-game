@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   Play,
   Pause,
@@ -21,9 +21,11 @@ import {
   Box,
   ChevronLeft,
   ChevronRight,
-  Calendar
+  Calendar,
+  Crown,
+  Heart
 } from 'lucide-react';
-import { CONCERT_PRESETS } from '../data/concertsData';
+import { CONCERT_PRESETS, CONCERT_CATEGORY_DEFINITIONS } from '../data/concertsData';
 import ConcertTourHistoryModal from './ConcertTourHistoryModal';
 import './ConcertWall.css';
 
@@ -59,6 +61,52 @@ export default function ConcertWall() {
 
   // Concert Tour History Floating Modal state
   const [isTourHistoryModalOpen, setIsTourHistoryModalOpen] = useState(false);
+
+  // Active concert category filter: 'all' | 'hello_monsters' | 'love_monsters' | 'choom' | 'others'
+  const [activeTourCategory, setActiveTourCategory] = useState('all');
+
+  // Categorized tours for the switcher panel
+  const tourCategoryList = useMemo(() => [
+    {
+      id: 'hello_monsters',
+      label: 'Hello Monsters',
+      subTitle: '2025 首次世界巡演 (共 32 場)',
+      color: '#a855f7',
+      icon: <Crown size={14} color="#a855f7" />
+    },
+    {
+      id: 'love_monsters',
+      label: 'Love Monsters',
+      subTitle: '2025–2026 Fan Concert 巡迴 (共 12 場)',
+      color: '#ec4899',
+      icon: <Heart size={14} color="#ec4899" />
+    },
+    {
+      id: 'choom',
+      label: 'Choom',
+      subTitle: '2026–2027 第二輪世界巡演',
+      color: '#f97316',
+      icon: <Flame size={14} color="#f97316" />
+    },
+    {
+      id: 'others',
+      label: '其他現場',
+      subTitle: 'Summer Sonic 2026 音樂祭等',
+      color: '#0284c7',
+      icon: <Radio size={14} color="#0284c7" />
+    }
+  ], []);
+
+  // Compute filtered / grouped categories for display
+  const categorizedSections = useMemo(() => {
+    return tourCategoryList.map(cat => ({
+      ...cat,
+      presets: CONCERT_PRESETS.filter(p => p.tourCategory === cat.id)
+    })).filter(cat => {
+      if (activeTourCategory === 'all') return cat.presets.length > 0;
+      return cat.id === activeTourCategory;
+    });
+  }, [tourCategoryList, activeTourCategory]);
 
   // Custom URL Modal state
   const [customModalSlot, setCustomModalSlot] = useState(null); // slotIndex or null
@@ -688,49 +736,103 @@ export default function ConcertWall() {
           </div>
         </div>
 
-        <div className="concert-switcher-cards-grid">
-          {CONCERT_PRESETS.map((concert, idx) => {
-            const isActive = selectedConcertIndex === idx;
+        {/* Category Tabs: 全部, Hello Monsters, Love Monsters, Choom, 其他 */}
+        <div className="concert-category-tabs-bar">
+          <button
+            type="button"
+            className={`concert-cat-tab-btn ${activeTourCategory === 'all' ? 'is-active' : ''}`}
+            onClick={() => setActiveTourCategory('all')}
+            style={{ '--cat-color': '#f43f5e' }}
+          >
+            <Sparkles size={13} color="#f43f5e" />
+            <span className="cat-tab-label">全部 (All)</span>
+            <span className="cat-tab-count">{CONCERT_PRESETS.length}</span>
+          </button>
+
+          {tourCategoryList.map((cat) => {
+            const count = CONCERT_PRESETS.filter(p => p.tourCategory === cat.id).length;
+            const isActive = activeTourCategory === cat.id;
             return (
               <button
-                key={concert.id}
+                key={cat.id}
                 type="button"
-                className={`concert-card-btn ${isActive ? 'is-active' : ''}`}
-                onClick={() => setSelectedConcertIndex(idx)}
-                style={{
-                  '--accent-color': concert.themeColor || '#e11d48'
-                }}
+                className={`concert-cat-tab-btn ${isActive ? 'is-active' : ''}`}
+                onClick={() => setActiveTourCategory(cat.id)}
+                style={{ '--cat-color': cat.color }}
               >
-                <div className="card-btn-header">
-                  <span
-                    className="card-category-tag"
-                    style={{
-                      borderColor: `${concert.themeColor || '#fb7185'}66`,
-                      color: concert.themeColor || '#fb7185'
-                    }}
-                  >
-                    {concert.categoryTag || '經典演繹'}
-                  </span>
-                  {isActive ? (
-                    <span className="card-playing-badge">
-                      <span className="pulse-dot"></span> 播放中
-                    </span>
-                  ) : (
-                    <span className="card-switch-label">點擊切換</span>
-                  )}
-                </div>
-
-                <div className="card-btn-title">{concert.title}</div>
-                <div className="card-btn-subtitle">{concert.subTitle}</div>
-
-                <div className="card-btn-meta">
-                  <span>{concert.venue}</span>
-                  <span>•</span>
-                  <span>{concert.date}</span>
-                </div>
+                {cat.icon}
+                <span className="cat-tab-label">{cat.label}</span>
+                <span className="cat-tab-count">{count}</span>
               </button>
             );
           })}
+        </div>
+
+        {/* Categorized Concert Sections & Cards */}
+        <div className="concert-category-sections-wrapper">
+          {categorizedSections.map((sec) => (
+            <div key={sec.id} className="concert-section-group">
+              <div className="concert-section-header">
+                <div className="concert-section-title-wrap">
+                  {sec.icon}
+                  <span className="concert-section-title">{sec.label}</span>
+                  <span className="concert-section-sub">• {sec.subTitle}</span>
+                </div>
+                <span className="concert-section-count-tag">
+                  {sec.presets.length} 場收錄
+                </span>
+              </div>
+
+              <div className="concert-switcher-cards-grid">
+                {sec.presets.map((concert) => {
+                  const isActive = activeConcert.id === concert.id;
+                  const globalIdx = CONCERT_PRESETS.findIndex(p => p.id === concert.id);
+
+                  return (
+                    <button
+                      key={concert.id}
+                      type="button"
+                      className={`concert-card-btn ${isActive ? 'is-active' : ''}`}
+                      onClick={() => {
+                        if (globalIdx !== -1) setSelectedConcertIndex(globalIdx);
+                      }}
+                      style={{
+                        '--accent-color': concert.themeColor || '#e11d48'
+                      }}
+                    >
+                      <div className="card-btn-header">
+                        <span
+                          className="card-category-tag"
+                          style={{
+                            borderColor: `${concert.themeColor || '#fb7185'}66`,
+                            color: concert.themeColor || '#fb7185'
+                          }}
+                        >
+                          {concert.categoryTag || sec.label}
+                        </span>
+                        {isActive ? (
+                          <span className="card-playing-badge">
+                            <span className="pulse-dot"></span> 播放中
+                          </span>
+                        ) : (
+                          <span className="card-switch-label">點擊切換</span>
+                        )}
+                      </div>
+
+                      <div className="card-btn-title">{concert.title}</div>
+                      <div className="card-btn-subtitle">{concert.subTitle}</div>
+
+                      <div className="card-btn-meta">
+                        <span>{concert.venue}</span>
+                        <span>•</span>
+                        <span>{concert.date}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

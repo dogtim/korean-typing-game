@@ -1,6 +1,14 @@
 // Concerts & Multi-Angle Live Feeds Dataset
 // Provides multi-angle YouTube fancams and official live recordings for BABYMONSTER concerts
 
+export const CONCERT_CATEGORY_DEFINITIONS = [
+  { id: 'all', label: '全部現場', subTitle: '收錄 6 場大型公演', count: 6 },
+  { id: 'hello_monsters', label: 'Hello Monsters', subTitle: '2025 首次世界巡演 (共 32 場)', color: '#a855f7' },
+  { id: 'love_monsters', label: 'Love Monsters', subTitle: '2025–2026 Fan Concert 巡迴 (共 12 場)', color: '#ec4899' },
+  { id: 'choom', label: 'Choom', subTitle: '2026–2027 第二輪世界巡演', color: '#f97316' },
+  { id: 'others', label: '其他現場', subTitle: 'Summer Sonic 2026 音樂祭等', color: '#0284c7' }
+];
+
 export const CONCERT_PRESETS = [
   {
     id: 'babymonster_choom_seoul_manila_2026',
@@ -12,6 +20,7 @@ export const CONCERT_PRESETS = [
     date: '2026.06.26 - 2026.09.05',
     attendance: 'World Tour Full Show',
     themeColor: '#f97316',
+    tourCategory: 'choom',
     description: 'CHOOM 世界巡演全場長片：CAM 1 首爾 260628 全場 (1:40:55)、CAM 2 馬尼拉 2026.09.05 全場 (1:53:01)、CAM 3 首爾 260626 Solo 舞台 4K 精選 (12:35，含官方章節時間碼)。三支影片皆可多視角同步播放與獨立切換。',
     // NOTE: Only the solo-compilation cues come from the uploader's chapter timestamps.
     // Full-show videos (A3M7Nxt3_-Q / BN61wzbvI7M) have no published timestamps yet — calibrate before adding cues.
@@ -80,6 +89,7 @@ export const CONCERT_PRESETS = [
     date: '2025.04.13',
     attendance: 'Arena World Tour (Japan)',
     themeColor: '#a855f7',
+    tourCategory: 'hello_monsters',
     description: 'HELLO MONSTERS 日本場全場長片：CAM 1 橫濱 K-Arena 4K 全場 (2:13:49)、CAM 2 神奈川 Day 2 全場 (1:53:53)、CAM 3 神奈川完整安可 (27:35)。歌單：DRIP (Remix)、BATTER UP、CLIK CLAK、LIKE THAT、SHEESH、成員 Solo、Woke Up In Tokyo、Love, Maybe、DREAM、BILLIONAIRE、Really Like You、CLAP YOUR HANDS + Go Away、FOREVER、Love In My Heart；安可 SHEESH、BATTER UP (Remix)、DRIP、Love In My Heart、Stuck In The Middle (Remix)。',
     // NOTE: None of these uploads publish chapter timestamps yet, so only the opening cue is set.
     // Calibrate per-song cues (e.g. via the sync-song-lyrics workflow) before adding more songs here.
@@ -125,6 +135,53 @@ export const CONCERT_PRESETS = [
     ]
   },
   {
+    id: 'babymonster_love_monsters_fan_concert',
+    title: '2025–2026 BABYMONSTER FAN CONCERT [LOVE MONSTERS]',
+    subTitle: 'TOKYO, NAGOYA, KOBE & TAIPEI (日本 / 台北巡迴現場)',
+    categoryTag: 'LOVE MONSTERS 巡迴',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    venue: 'LaLa arena TOKYO-BAY / 台北小巨蛋 (Taipei Arena)',
+    date: '2025.11.15 - 2026.01.03',
+    attendance: 'Fan Concert Tour (共 12 場)',
+    themeColor: '#ec4899',
+    tourCategory: 'love_monsters',
+    description: 'BABYMONSTER 首次亞洲 Fan Concert 巡迴《LOVE MONSTERS》：包含東京、神戶、名古屋、曼谷與台北小巨蛋 12 場爆滿演出。收錄 WE GO UP、Really Like You 等現場全開麥特寫與精選視角。',
+    defaultSlots: [
+      {
+        slotId: 0,
+        name: 'CAM 1',
+        title: 'BABYMONSTER - WE GO UP Live at “LOVE MONSTERS”',
+        tag: '現場主舞台',
+        videoId: 'wrJaWP4htHk',
+        offset: 0,
+        description: 'LOVE MONSTERS 巡迴全開麥主舞台現場。'
+      },
+      {
+        slotId: 1,
+        name: 'CAM 2',
+        title: 'BABYMONSTER “LOVE MONSTERS” ASIA TOUR SPOT VIDEO',
+        tag: '官方預告',
+        videoId: 'DOdK91viB7c',
+        offset: 0,
+        description: 'LOVE MONSTERS 亞洲巡演官方影像。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
+        title: 'Solo Stage 舞台特寫 4K Fancam',
+        tag: '舞台特寫',
+        videoId: 'cbYjGuqNrX4',
+        offset: 0,
+        description: '成員高難度舞蹈編排與現場超清律動。'
+      }
+    ],
+    availableAngles: [
+      { id: 'lm_cam1', title: 'BABYMONSTER - WE GO UP Live at “LOVE MONSTERS”', tag: '主舞台', videoId: 'wrJaWP4htHk', author: 'YG', badge: 'CAM 1' },
+      { id: 'lm_cam2', title: 'BABYMONSTER “LOVE MONSTERS” SPOT VIDEO', tag: '官方預告', videoId: 'DOdK91viB7c', author: 'YG', badge: 'CAM 2' },
+      { id: 'lm_cam3', title: 'Solo Stage 舞台特寫 4K Fancam', tag: '舞台特寫', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'CAM 3' }
+    ]
+  },
+  {
     id: 'babymonster_summer_sonic_2026',
     title: 'BABYMONSTER AT SUMMER SONIC 2026',
     subTitle: 'TOKYO MARINE STAGE (ZOZO MARINE STADIUM)',
@@ -134,6 +191,7 @@ export const CONCERT_PRESETS = [
     date: '2026.08.14',
     attendance: '35,000+ Fans (Marine Stage Headline)',
     themeColor: '#0284c7',
+    tourCategory: 'others',
     description: 'BABYMONSTER 震撼日本指標性音樂祭 SUMMER SONIC 2026！在千葉海洋球場（ZOZO Marine Stadium）頂著酷暑盛夏帶來的全開麥狂潮，現場樂團編排炸裂三萬五千名樂迷。',
     
     // Categorized Setlist for Summer Sonic 2026
@@ -483,6 +541,7 @@ export const CONCERT_PRESETS = [
     date: '2025.02 - 2025.05',
     attendance: 'Arena World Tour',
     themeColor: '#8b5cf6',
+    tourCategory: 'hello_monsters',
     description: 'BABYMONSTER 首次全球巡演精彩回顧，體驗巡迴安可大合唱、舞台舞蹈特寫與震撼聲光效果。',
     defaultSlots: [
       {
@@ -529,6 +588,7 @@ export const CONCERT_PRESETS = [
     date: '2026.09.22 - 2026.09.23',
     attendance: '90,000 Fans (2 Days Sold-out)',
     themeColor: '#e11d48',
+    tourCategory: 'choom',
     description: 'BABYMONSTER 首次巨蛋公演！震撼 9 萬名現場觀眾的大阪巨蛋特輯。點選下方完整的 Main Set、Solo Stages 或 Encore 歌單，即可即時載入該首歌曲的 3 角度多視角畫面！',
     
     // Categorized Setlist for Kyocera Dome Osaka
