@@ -11,7 +11,7 @@ import VideoSelectModal from './VideoSelectModal';
 import FanchantPrompter from './FanchantPrompter';
 import { getFanchantForSong, FANCHANT_TYPES } from '../utils/fanchantData';
 import LyricStudyStudio from './LyricStudyStudio';
-import { WE_GO_UP_STUDY_DATA, findStudyDataForSong } from '../data/lyricsStudyData/weGoUpStudy';
+import { findStudyDataForSong, getAvailableStudyPresets, DRIP_STUDY_DATA } from '../data/lyricsStudyData/index';
 import {
   Sparkles,
   Type,
@@ -100,7 +100,7 @@ export default function KpopVideoMode({
   const songHasFanchant = Boolean(currentFanchant);
 
   const currentStudyData = useMemo(() => {
-    return findStudyDataForSong(activeVideoId) || findStudyDataForSong(song.title) || WE_GO_UP_STUDY_DATA;
+    return findStudyDataForSong(activeVideoId) || findStudyDataForSong(song.title) || DRIP_STUDY_DATA;
   }, [activeVideoId, song.title]);
 
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
@@ -1922,37 +1922,67 @@ export default function KpopVideoMode({
       {/* When in Study Mode, render the integrated LyricStudyStudio */}
       {activeViewMode === 'study' && (
         <div className="study-integrated-wrapper">
-          {song.title !== 'WE GO UP' && (
-            <div className="study-wgu-suggest-banner glassmorphism">
-              <div className="wgu-banner-left">
-                <GraduationCap size={24} className="wgu-banner-icon" />
-                <div className="wgu-banner-texts">
-                  <strong>《WE GO UP》韓英雙語歌詞深度研習資料包已就緒！</strong>
-                  <span>目前播放中的歌曲為《{song.title}》，歌詞研習室現已收錄 BABYMONSTER《WE GO UP》完整 16 句韓英雙語深度解析。</span>
+          <div className="study-catalog-banner glassmorphism">
+            <div className="catalog-header-info">
+              <GraduationCap size={22} className="catalog-icon" />
+              <div className="catalog-text-group">
+                <div className="catalog-title-row">
+                  <strong className="catalog-main-title">BABYMONSTER 歌詞研習館</strong>
+                  <span className="catalog-status-badge">
+                    {currentStudyData.sentences.every(s => s.language === 'en') ? '🇺🇸 100% 全美語嘻哈精讀' : '🇰🇷🇺🇸 韓英雙語深度精研'}
+                  </span>
                 </div>
+                <span className="catalog-sub">
+                  現正研習《{currentStudyData.title}》({currentStudyData.sentences.length} 句精選深度句解) · 點擊切換曲目即時聯動播放
+                </span>
               </div>
-              <button
-                type="button"
-                className="wgu-load-btn"
-                onClick={() => {
-                  const wguIdx = KPOP_SONG_PRESETS.findIndex(p => p.title === 'WE GO UP');
-                  if (wguIdx !== -1) {
-                    handleSelectSongPreset(KPOP_SONG_PRESETS[wguIdx], wguIdx);
-                  }
-                }}
-              >
-                載入《WE GO UP》MV
-              </button>
             </div>
-          )}
+
+            <div className="catalog-song-chips" role="group" aria-label="切換研習歌曲">
+              {getAvailableStudyPresets().map(preset => {
+                const isActive = currentStudyData.id === preset.id;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    className={`catalog-song-chip ${isActive ? 'active' : ''}`}
+                    onClick={() => {
+                      const foundIdx = KPOP_SONG_PRESETS.findIndex(p => 
+                        p.id === preset.youtubeId ||
+                        p.title.toLowerCase().trim() === preset.title.toLowerCase().trim() ||
+                        p.title.toLowerCase().includes(preset.title.toLowerCase())
+                      );
+                      if (foundIdx !== -1) {
+                        handleSelectSongPreset(KPOP_SONG_PRESETS[foundIdx], foundIdx);
+                      }
+                    }}
+                    title={`載入《${preset.title}》(${preset.typeLabel})`}
+                  >
+                    <span className="chip-song-icon">
+                      {preset.title === 'DRIP' && '💧'}
+                      {preset.title === 'WE GO UP' && '🚀'}
+                      {preset.title === 'CLIK CLAK' && '👠'}
+                      {preset.title === 'SHEESH' && '⚡'}
+                    </span>
+                    <strong className="chip-song-title">{preset.title}</strong>
+                    <span className="chip-badge-mini">{preset.isPureEnglish ? '純美語' : '韓英'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <LyricStudyStudio
             songData={currentStudyData}
             onPlaySentenceInGame={(timeSec) => {
-              if (song.title !== 'WE GO UP') {
-                const wguIdx = KPOP_SONG_PRESETS.findIndex(p => p.title === 'WE GO UP');
-                if (wguIdx !== -1) {
-                  handleSelectSongPreset(KPOP_SONG_PRESETS[wguIdx], wguIdx);
+              // Ensure video matches current study preset
+              if (activeVideoId !== currentStudyData.youtubeId && !song.title.toLowerCase().includes(currentStudyData.title.toLowerCase())) {
+                const songIdx = KPOP_SONG_PRESETS.findIndex(p => 
+                  p.id === currentStudyData.youtubeId || 
+                  p.title.toLowerCase().includes(currentStudyData.title.toLowerCase())
+                );
+                if (songIdx !== -1) {
+                  handleSelectSongPreset(KPOP_SONG_PRESETS[songIdx], songIdx);
                 }
               }
               if (!showVideoInStudy) setShowVideoInStudy(true);

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Sparkles,
   Volume2,
@@ -18,21 +18,39 @@ import {
   ArrowLeft,
   Tv
 } from 'lucide-react';
-import { WE_GO_UP_STUDY_DATA } from '../data/lyricsStudyData/weGoUpStudy';
+import { DRIP_STUDY_DATA } from '../data/lyricsStudyData/index';
 import './LyricStudyStudio.css';
 
 export default function LyricStudyStudio({
-  songData = WE_GO_UP_STUDY_DATA,
+  songData = DRIP_STUDY_DATA,
   onPlaySentenceInGame,
   onBackToPractice,
   isEmbeddedInPractice = false,
   activeVideoTime = null
 }) {
-  const [langFilter, setLangFilter] = useState('all'); // 'all' | 'ko' | 'en'
-  const [selectedSentenceId, setSelectedSentenceId] = useState(songData.sentences[0].id);
+  const [langFilter, setLangFilter] = useState(() => {
+    if (songData?.sentences && songData.sentences.every(s => s.language === 'en')) {
+      return 'en';
+    }
+    return 'all';
+  });
+  const [selectedSentenceId, setSelectedSentenceId] = useState(() => songData?.sentences?.[0]?.id || null);
   const [selectedPillId, setSelectedPillId] = useState(null);
   const [activeDrawerTab, setActiveDrawerTab] = useState('grammar'); // 'grammar' | 'pronunciation' | 'politeness'
   const [showRomanization, setShowRomanization] = useState(true);
+
+  // Synchronize when songData changes (e.g. user toggles DRIP, CLIK CLAK, WE GO UP)
+  useEffect(() => {
+    if (songData?.sentences && songData.sentences.length > 0) {
+      setSelectedSentenceId(songData.sentences[0].id);
+      setSelectedPillId(null);
+      if (songData.sentences.every(s => s.language === 'en')) {
+        setLangFilter('en');
+      } else {
+        setLangFilter('all');
+      }
+    }
+  }, [songData?.id]);
 
   // Filter sentences by language ('all', 'ko', 'en')
   const filteredSentences = useMemo(() => {
@@ -124,42 +142,56 @@ export default function LyricStudyStudio({
 
         <div className="study-header-actions">
           {/* Language Focus Filter */}
-          <div className="study-lang-filter-group" role="group" aria-label="研習語言切換">
-            <button
-              type="button"
-              className={`filter-btn ${langFilter === 'all' ? 'active' : ''}`}
-              onClick={() => {
-                setLangFilter('all');
-                setSelectedPillId(null);
-              }}
-            >
-              🌟 全部雙語 ({songData.sentences.length})
-            </button>
-            <button
-              type="button"
-              className={`filter-btn ko-tab ${langFilter === 'ko' ? 'active' : ''}`}
-              onClick={() => {
-                setLangFilter('ko');
-                setSelectedPillId(null);
-                const firstKo = songData.sentences.find(s => s.language === 'ko');
-                if (firstKo) setSelectedSentenceId(firstKo.id);
-              }}
-            >
-              🇰🇷 韓語精讀 ({koCount})
-            </button>
-            <button
-              type="button"
-              className={`filter-btn en-tab ${langFilter === 'en' ? 'active' : ''}`}
-              onClick={() => {
-                setLangFilter('en');
-                setSelectedPillId(null);
-                const firstEn = songData.sentences.find(s => s.language === 'en');
-                if (firstEn) setSelectedSentenceId(firstEn.id);
-              }}
-            >
-              🇺🇸 英語精讀 ({enCount})
-            </button>
-          </div>
+          {koCount === 0 ? (
+            <div className="pure-en-badge-chip">
+              <span className="pure-en-sparkle">🇺🇸</span>
+              <strong>100% 全美式嘻哈深度研習</strong>
+              <span className="pure-en-count">({enCount} 句街頭名句)</span>
+            </div>
+          ) : enCount === 0 ? (
+            <div className="pure-ko-badge-chip">
+              <span className="pure-ko-sparkle">🇰🇷</span>
+              <strong>100% 韓語歌詞深度研習</strong>
+              <span className="pure-ko-count">({koCount} 句)</span>
+            </div>
+          ) : (
+            <div className="study-lang-filter-group" role="group" aria-label="研習語言切換">
+              <button
+                type="button"
+                className={`filter-btn ${langFilter === 'all' ? 'active' : ''}`}
+                onClick={() => {
+                  setLangFilter('all');
+                  setSelectedPillId(null);
+                }}
+              >
+                🌟 全部雙語 ({songData.sentences.length})
+              </button>
+              <button
+                type="button"
+                className={`filter-btn ko-tab ${langFilter === 'ko' ? 'active' : ''}`}
+                onClick={() => {
+                  setLangFilter('ko');
+                  setSelectedPillId(null);
+                  const firstKo = songData.sentences.find(s => s.language === 'ko');
+                  if (firstKo) setSelectedSentenceId(firstKo.id);
+                }}
+              >
+                🇰🇷 韓語精讀 ({koCount})
+              </button>
+              <button
+                type="button"
+                className={`filter-btn en-tab ${langFilter === 'en' ? 'active' : ''}`}
+                onClick={() => {
+                  setLangFilter('en');
+                  setSelectedPillId(null);
+                  const firstEn = songData.sentences.find(s => s.language === 'en');
+                  if (firstEn) setSelectedSentenceId(firstEn.id);
+                }}
+              >
+                🇺🇸 英語精讀 ({enCount})
+              </button>
+            </div>
+          )}
 
           <button
             type="button"
