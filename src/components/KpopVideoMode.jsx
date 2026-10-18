@@ -11,7 +11,7 @@ import VideoSelectModal from './VideoSelectModal';
 import FanchantPrompter from './FanchantPrompter';
 import { getFanchantForSong, FANCHANT_TYPES } from '../utils/fanchantData';
 import LyricStudyStudio from './LyricStudyStudio';
-import { findStudyDataForSong, getAvailableStudyPresets, DRIP_STUDY_DATA } from '../data/lyricsStudyData/index';
+import { findStudyDataForSong, DRIP_STUDY_DATA } from '../data/lyricsStudyData/index';
 import {
   Sparkles,
   Type,
@@ -100,8 +100,14 @@ export default function KpopVideoMode({
   const songHasFanchant = Boolean(currentFanchant);
 
   const currentStudyData = useMemo(() => {
-    return findStudyDataForSong(activeVideoId) || findStudyDataForSong(song.title) || DRIP_STUDY_DATA;
-  }, [activeVideoId, song.title]);
+    return (
+      findStudyDataForSong(activeVideoId) ||
+      findStudyDataForSong(song.title) ||
+      findStudyDataForSong(currentPreset?.title) ||
+      findStudyDataForSong(currentPreset?.id) ||
+      DRIP_STUDY_DATA
+    );
+  }, [activeVideoId, song.title, currentPreset?.title, currentPreset?.id]);
 
   const [isLineLoopEnabled, setIsLineLoopEnabled] = useState(false);
   const [loopBufferSec, setLoopBufferSec] = useState(() => {
@@ -1922,74 +1928,6 @@ export default function KpopVideoMode({
       {/* When in Study Mode, render the integrated LyricStudyStudio */}
       {activeViewMode === 'study' && (
         <div className="study-integrated-wrapper">
-          <div className="study-catalog-banner glassmorphism">
-            <div className="catalog-header-info">
-              <GraduationCap size={22} className="catalog-icon" />
-              <div className="catalog-text-group">
-                <div className="catalog-title-row">
-                  <strong className="catalog-main-title">BABYMONSTER 歌詞研習館</strong>
-                  <span className="catalog-status-badge">
-                    {currentStudyData.sentences.every(s => s.language === 'en') ? '🇺🇸 100% 全美語嘻哈精讀' : '🇰🇷🇺🇸 韓英雙語深度精研'}
-                  </span>
-                </div>
-                <span className="catalog-sub">
-                  現正研習《{currentStudyData.title}》({currentStudyData.sentences.length} 句精選深度句解) · 點擊切換曲目即時聯動播放
-                </span>
-              </div>
-            </div>
-
-            <div className="catalog-song-chips" role="group" aria-label="切換研習歌曲">
-              {getAvailableStudyPresets().map(preset => {
-                const isActive = currentStudyData.id === preset.id;
-                return (
-                  <button
-                    key={preset.id}
-                    type="button"
-                    className={`catalog-song-chip ${isActive ? 'active' : ''}`}
-                    onClick={() => {
-                      const foundIdx = KPOP_SONG_PRESETS.findIndex(p => 
-                        p.id === preset.youtubeId ||
-                        p.title.toLowerCase().trim() === preset.title.toLowerCase().trim() ||
-                        p.title.toLowerCase().includes(preset.title.toLowerCase())
-                      );
-                      if (foundIdx !== -1) {
-                        handleSelectSongPreset(KPOP_SONG_PRESETS[foundIdx], foundIdx);
-                      }
-                    }}
-                    title={`載入《${preset.title}》(${preset.typeLabel})`}
-                  >
-                    <span className="chip-song-icon">
-                      {preset.title === 'DRIP' && '💧'}
-                      {preset.title === 'WE GO UP' && '🚀'}
-                      {preset.title === 'CLIK CLAK' && '👠'}
-                      {preset.title === 'SHEESH' && '⚡'}
-                      {preset.title.includes('Stuck') && '🌸'}
-                      {preset.title.includes('LIKE THAT') && '✨'}
-                      {preset.title.includes('BATTER') && '⚾'}
-                      {preset.title === 'BILLIONAIRE' && '💎'}
-                      {preset.title.includes('Tokyo') && '🗼'}
-                      {preset.title === 'FOREVER' && '☀️'}
-                      {preset.title === 'PSYCHO' && '🐆'}
-                      {preset.title === 'DREAM' && '🌙'}
-                      {preset.title.includes('HOT SAUCE') && '🌶️'}
-                      {preset.title.includes('Heart') && '❤️'}
-                      {preset.title.includes('Really Like') && '💌'}
-                      {preset.title.includes('Maybe') && '☕'}
-                      {preset.title.includes('CHOOM') && '💃'}
-                      {preset.title.includes('Supa Dupa') && '💫'}
-                      {preset.title === 'WILD' && '🔥'}
-                      {preset.title === 'Moon' && '🌕'}
-                      {preset.title === 'I Like It' && '💘'}
-                      {preset.title.includes('TEA') && '🧋'}
-                    </span>
-                    <strong className="chip-song-title">{preset.title}</strong>
-                    <span className="chip-badge-mini">{preset.isPureEnglish ? '純美語' : '韓英'}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           <LyricStudyStudio
             songData={currentStudyData}
             onPlaySentenceInGame={(timeSec) => {

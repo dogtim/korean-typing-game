@@ -50,7 +50,7 @@ export default function LyricStudyStudio({
         setLangFilter('all');
       }
     }
-  }, [songData?.id]);
+  }, [songData?.id, songData?.title]);
 
   // Filter sentences by language ('all', 'ko', 'en')
   const filteredSentences = useMemo(() => {

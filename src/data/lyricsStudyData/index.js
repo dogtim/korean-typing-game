@@ -99,7 +99,7 @@ function normalizeQuery(str) {
  * @param {boolean} [fallbackToDefault=true] - Whether to return DRIP as fallback if none matched
  * @returns {object|null} The matching study dataset
  */
-export function findStudyDataForSong(songIdOrTitle, fallbackToDefault = true) {
+export function findStudyDataForSong(songIdOrTitle, fallbackToDefault = false) {
   if (!songIdOrTitle) return fallbackToDefault ? DRIP_STUDY_DATA : null;
   
   const raw = songIdOrTitle.toString().trim();

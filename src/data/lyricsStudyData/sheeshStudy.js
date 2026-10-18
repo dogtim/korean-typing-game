@@ -8,9 +8,8 @@ export const SHEESH_STUDY_DATA = {
   title: 'SHEESH',
   artist: 'BABYMONSTER',
   album: '首張迷你專輯《BABYMONS7ER》',
-  year: '2024',
-  youtubeId: '2wA_b648RqQ', // Official MV
-  altYoutubeIds: ['60Hx2Tdsxzw', 'edheIIVQ6Mg', '9Y-95rgsDDY'],
+  youtubeId: '2wA_b6YHjqQ', // Official MV
+  altYoutubeIds: ['2wA_b648RqQ', '0k5G6F0pWoc', '60Hx2Tdsxzw', 'edheIIVQ6Mg', '9Y-95rgsDDY'],
   sentences: [
     // =========================================================================
     // 🇰🇷 韓語歌詞研習句目 (Korean Study Sentences)
