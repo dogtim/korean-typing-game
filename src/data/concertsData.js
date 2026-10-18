@@ -472,127 +472,7 @@ export const CONCERT_PRESETS = [
       }
     ]
   },
-  {
-    id: 'budaixi_lianhua_zhiji',
-    title: '布袋戲',
-    subTitle: '霹靂武道列傳：蓮華之擊 (佛魔終戰・AI動漫 vs 正劇原典雙視角)',
-    categoryTag: '經典布袋戲',
-    artist: '霹靂布袋戲 (PILI PUPPETRY)',
-    venue: '萬年果・佛魔終極決戰特區',
-    date: '傳世經典武道列傳',
-    attendance: '道友億萬盛讚',
-    themeColor: '#eab308',
-    description: '霹靂布袋戲史詩級名場面「蓮華之擊」！收錄正劇原汁原味經典武道列傳，以及當代超燃 AI 動漫重製版。雙視角同步播放，見證吞佛童子、一步蓮華與襲滅天來的佛魔對決！',
-    
-    // Categorized Setlist for 布袋戲
-    setlist: {
-      mainSet: [
-        {
-          id: 'lian_hua_zhi_ji',
-          title: '蓮華之擊 (佛魔終戰)',
-          koreanTitle: '연화의 일격 (불마종전)',
-          tag: '武道列傳巔峰戰',
-          performer: '吞佛童子 x 一步蓮華 vs 襲滅天來',
-          slots: [
-            {
-              slotId: 0,
-              name: 'CAM 1',
-              title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
-              tag: 'AI動漫版',
-              videoId: 'NEhqMfAGCQA',
-              offset: 0,
-              description: '全新 AI 動漫風格重繪演繹，極致戰鬥打擊感與華麗特效。'
-            },
-            {
-              slotId: 1,
-              name: 'CAM 2',
-              title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜吞佛童子 一步蓮華 共渡襲滅天來業障！',
-              tag: '正劇經典版',
-              videoId: 'aUYcs25AUOk',
-              offset: 0,
-              description: '霹靂布袋戲官方正片武道列傳，一代操偶大師與八音才子黃文擇配音原聲。'
-            },
-            {
-              slotId: 2,
-              name: 'CAM 3',
-              title: '【雙重視角比較】蓮華之擊 分鏡與細節對照',
-              tag: '雙視角對比',
-              videoId: 'NEhqMfAGCQA',
-              offset: 0,
-              description: '同段打鬥的分鏡設計與招式特寫對照。'
-            }
-          ],
-          availableAngles: [
-            {
-              id: 'bdx_cam_1',
-              title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
-              tag: 'AI動漫版',
-              videoId: 'NEhqMfAGCQA',
-              author: '真一隻布袋喵',
-              badge: 'CAM 1'
-            },
-            {
-              id: 'bdx_cam_2',
-              title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜霹靂布袋戲PILI',
-              tag: '正劇經典版',
-              videoId: 'aUYcs25AUOk',
-              author: 'PILI 霹靂布袋戲',
-              badge: 'CAM 2'
-            }
-          ]
-        }
-      ],
-      soloStages: [],
-      encore: []
-    },
-    defaultSlots: [
-      {
-        slotId: 0,
-        name: 'CAM 1',
-        title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
-        tag: 'AI動漫版',
-        videoId: 'NEhqMfAGCQA',
-        offset: 0,
-        description: '全新 AI 動漫風格重繪演繹，極致戰鬥打擊感與華麗特效。'
-      },
-      {
-        slotId: 1,
-        name: 'CAM 2',
-        title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜吞佛童子 一步蓮華 共渡襲滅天來業障！',
-        tag: '正劇經典版',
-        videoId: 'aUYcs25AUOk',
-        offset: 0,
-        description: '霹靂布袋戲官方正片武道列傳，一代操偶大師與八音才子黃文擇配音原聲。'
-      },
-      {
-        slotId: 2,
-        name: 'CAM 3',
-        title: '【雙重視角比較】蓮華之擊 分鏡與細節對照',
-        tag: '雙視角對比',
-        videoId: 'NEhqMfAGCQA',
-        offset: 0,
-        description: '同段打鬥的分鏡設計與招式特寫對照。'
-      }
-    ],
-    availableAngles: [
-      {
-        id: 'bdx_cam_1',
-        title: '【布袋戲AI動漫】佛魔终战 蓮華之擊 - 襲滅天來怒鬥吞佛會蓮華',
-        tag: 'AI動漫版',
-        videoId: 'NEhqMfAGCQA',
-        author: '真一隻布袋喵',
-        badge: 'CAM 1'
-      },
-      {
-        id: 'bdx_cam_2',
-        title: '霹靂武道列傳 : 蓮華之擊! 滅天至邪 如來大悲！｜霹靂布袋戲PILI',
-        tag: '正劇經典版',
-        videoId: 'aUYcs25AUOk',
-        author: 'PILI 霹靂布袋戲',
-        badge: 'CAM 2'
-      }
-    ]
-  },
+
   {
     id: 'babymonster_hello_monsters_world_tour',
     title: '1ST WORLD TOUR [HELLO MONSTERS]',
@@ -636,8 +516,7 @@ export const CONCERT_PRESETS = [
     availableAngles: [
       { id: 'angle_hm_1', title: 'SHEESH 安可狂歡現場 (Encore Live 4K)', tag: '安可主舞台', videoId: 'edheIIVQ6Mg', author: 'Live Fan', badge: 'CAM 1' },
       { id: 'angle_hm_2', title: 'SHEESH 世界巡演主舞台震撼編舞', tag: '巡演主舞台', videoId: 'kzrmNI2Grg8', author: 'World Stage', badge: 'CAM 2' },
-      { id: 'angle_hm_3', title: '馬尼拉巡演場安可直擊 (Manila Encore)', tag: '海外場視角', videoId: 'ZdUw1ornwfk', author: 'Manila Live', badge: 'CAM 3' },
-      { id: 'angle_hm_4', title: 'CLIK CLAK 嘻哈強烈開場 (Hip-Hop Stage)', tag: '嘻哈開場', videoId: '1eQO8h7XU0Y', author: 'BABYMONSTER Official', badge: 'CAM 4' }
+      { id: 'angle_hm_3', title: '馬尼拉巡演場安可直擊 (Manila Encore)', tag: '海外場視角', videoId: 'ZdUw1ornwfk', author: 'Manila Live', badge: 'CAM 3' }
     ]
   },
   {
@@ -674,29 +553,28 @@ export const CONCERT_PRESETS = [
             {
               slotId: 1,
               name: 'CAM 2',
-              title: 'Ahyeon 4K 焦點直拍 (Ahyeon Salute Pose Focus)',
-              tag: 'Ahyeon 直拍',
-              videoId: 'nQa8CKSSIkw',
-              offset: 0,
-              description: '超高清 4K 個人直拍，高音爆發與舞台狂野表情。'
-            },
-            {
-              slotId: 2,
-              name: 'CAM 3',
               title: 'Asa 饒舌快嘴與舞台特寫 (Asa Focus Cam)',
               tag: 'Asa 特寫',
               videoId: 'kRoTXaF470I',
               offset: 0,
               description: '快嘴饒舌連擊與流暢律動近身特寫。'
+            },
+            {
+              slotId: 2,
+              name: 'CAM 3',
+              title: 'Pharita "SHEESH Remix" 現場焦點',
+              tag: 'Pharita 直拍',
+              videoId: 'mPfUS0AVerA',
+              offset: 0,
+              description: '副歌極限高音與個人特寫魅力綻放。'
             }
           ],
           availableAngles: [
             { id: 'sheesh_ang_1', title: 'SHEESH 樂團搖滾現場 (Live Band)', tag: '全景主視角', videoId: '60Hx2Tdsxzw', author: 'YG Entertainment', badge: 'CAM 1' },
-            { id: 'sheesh_ang_2', title: 'Ahyeon 4K 焦點直拍', tag: 'Ahyeon 直拍', videoId: 'nQa8CKSSIkw', author: 'supergaga', badge: 'CAM 2' },
-            { id: 'sheesh_ang_3', title: 'Asa 饒舌快嘴直拍', tag: 'Asa 特寫', videoId: 'kRoTXaF470I', author: 'M2', badge: 'CAM 3' },
-            { id: 'sheesh_ang_4', title: 'Pharita "SHEESH Remix" 現場焦點', tag: 'Pharita 直拍', videoId: 'mPfUS0AVerA', author: 'supergaga', badge: 'CAM 4' },
-            { id: 'sheesh_ang_5', title: 'Rami & Rora 歌聲走位直拍', tag: '雙主唱焦點', videoId: 'fmv6p_YYlAI', author: '1Blink Channel', badge: 'CAM 5' },
-            { id: 'sheesh_ang_6', title: '京瓷巨蛋 9 萬手燈海全景', tag: '燈海全景', videoId: 'jrmuquHtcfM', author: 'EnhaPink', badge: 'CAM 6' }
+            { id: 'sheesh_ang_2', title: 'Asa 饒舌快嘴直拍', tag: 'Asa 特寫', videoId: 'kRoTXaF470I', author: 'M2', badge: 'CAM 2' },
+            { id: 'sheesh_ang_3', title: 'Pharita "SHEESH Remix" 現場焦點', tag: 'Pharita 直拍', videoId: 'mPfUS0AVerA', author: 'supergaga', badge: 'CAM 3' },
+            { id: 'sheesh_ang_4', title: 'Rami & Rora 歌聲走位直拍', tag: '雙主唱焦點', videoId: 'fmv6p_YYlAI', author: '1Blink Channel', badge: 'CAM 4' },
+            { id: 'sheesh_ang_5', title: '京瓷巨蛋 9 萬手燈海全景', tag: '燈海全景', videoId: 'jrmuquHtcfM', author: 'EnhaPink', badge: 'CAM 5' }
           ]
         },
         {
@@ -1345,22 +1223,22 @@ export const CONCERT_PRESETS = [
       {
         slotId: 1,
         name: 'CAM 2',
-        title: 'Ahyeon 4K 焦點直拍 (Ahyeon Salute Pose Focus)',
-        tag: 'Ahyeon 直拍',
-        videoId: 'nQa8CKSSIkw',
-        offset: 0,
-        songCues: { sheesh: 0.0 },
-        description: '超高清 4K 個人直拍，高音爆發與舞台狂野表情。'
-      },
-      {
-        slotId: 2,
-        name: 'CAM 3',
         title: 'Asa 饒舌快嘴與舞台特寫 (Asa Focus Cam)',
         tag: 'Asa 特寫',
         videoId: 'kRoTXaF470I',
         offset: 0,
         songCues: { sheesh: 0.0 },
         description: '快嘴饒舌連擊與流暢律動近身特寫。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
+        title: 'BABYMONSTER LIVE PERFOMANCE KYOCERA DOME OSAKA - THE CROWD',
+        tag: '9萬觀眾燈海氛圍',
+        videoId: 'UOZ7u36aiWY',
+        offset: 0,
+        songCues: { sheesh: 0.0 },
+        description: '京瓷巨蛋 9 萬觀眾紅色手燈海與現場震撼氛圍。'
       }
     ],
     availableAngles: [
@@ -1370,10 +1248,9 @@ export const CONCERT_PRESETS = [
       { id: 'ang_kyd_4', title: 'BABYMONSTER ENCORE in Kyocera Dome Osaka 2026 Day 1 (巨蛋安可視角)', tag: '巨蛋安可全景', videoId: 'S7dRry_GmrE', author: 'kiamonztie', badge: 'CAM 4', songCues: { drip: 45.0 } },
       { id: 'ang_kyd_5', title: 'BABYMONSTER LIVE PERFOMANCE KYOCERA DOME OSAKA - THE CROWD', tag: '9萬觀眾燈海氛圍', videoId: 'UOZ7u36aiWY', author: 'Yoel', badge: 'CAM 5', songCues: { sheesh: 0.0 } },
       { id: 'ang_kyd_6', title: '京瓷巨蛋 SHEESH 樂團搖滾炸場版 (Live Band Version)', tag: '樂團搖滾版', videoId: '60Hx2Tdsxzw', author: 'YG Entertainment', badge: 'CAM 6', songCues: { sheesh: 0.0 } },
-      { id: 'ang_kyd_7', title: 'Ahyeon 4K 焦點直拍 (Ahyeon Salute Pose Focus)', tag: 'Ahyeon 直拍', videoId: 'nQa8CKSSIkw', author: 'supergaga', badge: 'CAM 7', songCues: { sheesh: 0.0 } },
-      { id: 'ang_kyd_8', title: 'Asa 饒舌快嘴與舞台特寫 (Asa Focus Cam)', tag: 'Asa 特寫', videoId: 'kRoTXaF470I', author: 'M2', badge: 'CAM 8', songCues: { sheesh: 0.0 } },
-      { id: 'ang_kyd_9', title: '[4K] 260922-260923 BABYMONSTER ASA \'TEMPLE\' 직캠 | KYOCERA DOME OSAKA', tag: 'Asa 巨蛋直拍', videoId: 'iWoodjQ7p8g', author: 'miracle.', badge: 'CAM 9', songCues: { sheesh: 180.0 } },
-      { id: 'ang_kyd_10', title: '260923 \'SUPER BASS\' BABYMONSTER PHARITA solo 직캠 ㅣ KYOCERA DOME OSAKA', tag: 'Pharita 巨蛋直拍', videoId: 'uILoaUwvAko', author: 'horizon', badge: 'CAM 10', songCues: { sheesh: 210.0 } }
+      { id: 'ang_kyd_7', title: 'Asa 饒舌快嘴與舞台特寫 (Asa Focus Cam)', tag: 'Asa 特寫', videoId: 'kRoTXaF470I', author: 'M2', badge: 'CAM 7', songCues: { sheesh: 0.0 } },
+      { id: 'ang_kyd_8', title: '[4K] 260922-260923 BABYMONSTER ASA \'TEMPLE\' 직캠 | KYOCERA DOME OSAKA', tag: 'Asa 巨蛋直拍', videoId: 'iWoodjQ7p8g', author: 'miracle.', badge: 'CAM 8', songCues: { sheesh: 180.0 } },
+      { id: 'ang_kyd_9', title: '260923 \'SUPER BASS\' BABYMONSTER PHARITA solo 직캠 ㅣ KYOCERA DOME OSAKA', tag: 'Pharita 巨蛋直拍', videoId: 'uILoaUwvAko', author: 'horizon', badge: 'CAM 9', songCues: { sheesh: 210.0 } }
     ]
   }
 ];
