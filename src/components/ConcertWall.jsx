@@ -18,14 +18,13 @@ import {
   Columns2,
   Eye,
   EyeOff,
-  Disc,
   Box,
   ChevronLeft,
   ChevronRight,
-  SkipBack,
-  SkipForward
+  Calendar
 } from 'lucide-react';
 import { CONCERT_PRESETS } from '../data/concertsData';
+import ConcertTourHistoryModal from './ConcertTourHistoryModal';
 import './ConcertWall.css';
 
 function extractYouTubeId(urlOrId) {
@@ -46,9 +45,6 @@ export default function ConcertWall() {
   // Active slots (default 3 cameras for active concert)
   const [slots, setSlots] = useState(() => activeConcert.defaultSlots.map(s => ({ ...s })));
 
-  // Active synchronized song selection (錨點同步歌曲)
-  const [activeSongId, setActiveSongId] = useState(() => activeConcert.songs?.[0]?.id || null);
-
   // Layout mode: 'tri-split' | 'cinema' | 'single'
   const [layoutMode, setLayoutMode] = useState('cinema');
 
@@ -60,6 +56,9 @@ export default function ConcertWall() {
 
   // Master playback state
   const [isMasterPlaying, setIsMasterPlaying] = useState(false);
+
+  // Concert Tour History Floating Modal state
+  const [isTourHistoryModalOpen, setIsTourHistoryModalOpen] = useState(false);
 
   // Custom URL Modal state
   const [customModalSlot, setCustomModalSlot] = useState(null); // slotIndex or null
@@ -143,20 +142,6 @@ export default function ConcertWall() {
     }
   }, []);
 
-  // Look up a video's specific cue seconds for a song
-  const findVideoSongCue = useCallback((videoId, songId) => {
-    if (!songId || !videoId) return null;
-    const angle = activeConcert.availableAngles?.find(a => a.videoId === videoId);
-    if (angle?.songCues && typeof angle.songCues[songId] === 'number') {
-      return angle.songCues[songId];
-    }
-    const defaultSlot = activeConcert.defaultSlots?.find(s => s.videoId === videoId);
-    if (defaultSlot?.songCues && typeof defaultSlot.songCues[songId] === 'number') {
-      return defaultSlot.songCues[songId];
-    }
-    return null;
-  }, [activeConcert]);
-
   // When active concert changes, update slots and reuse existing players via loadVideoById
   useEffect(() => {
     const currentPreset = CONCERT_PRESETS[selectedConcertIndex];
@@ -164,8 +149,6 @@ export default function ConcertWall() {
 
     setActiveFocusIndex(0);
     setActiveAudioIndex(0);
-    const firstSong = currentPreset.songs?.[0]?.id || null;
-    setActiveSongId(firstSong);
 
     const initialSlots = currentPreset.defaultSlots.map(s => ({ ...s }));
     setSlots(initialSlots);
@@ -173,8 +156,7 @@ export default function ConcertWall() {
     initialSlots.forEach((slot, idx) => {
       const p = playersRef.current[idx];
       let loaded = false;
-      const initialCue = firstSong ? findVideoSongCue(slot.videoId, firstSong) : (slot.offset || 0);
-      const startSec = initialCue !== null ? initialCue : (slot.offset || 0);
+      const startSec = slot.offset || 0;
 
       if (p && typeof p.loadVideoById === 'function') {
         try {
@@ -206,7 +188,7 @@ export default function ConcertWall() {
         initPlayer(idx, slot.videoId, startSec);
       }
     });
-  }, [selectedConcertIndex]);
+  }, [selectedConcertIndex, initPlayer]);
 
   // Load YouTube IFrame API script once
   useEffect(() => {
@@ -238,8 +220,8 @@ export default function ConcertWall() {
     };
   }, []);
 
-  // Update slot video with automatic song timeline synchronization
-  const updateSlotVideo = useCallback((slotIndex, newVideoId, newTitle, newTag, angleSongCues) => {
+  // Update slot video
+  const updateSlotVideo = useCallback((slotIndex, newVideoId, newTitle, newTag) => {
     setSlots(prev => {
       const copy = [...prev];
       copy[slotIndex] = {
@@ -252,33 +234,7 @@ export default function ConcertWall() {
       return copy;
     });
 
-    // Calculate synchronized target time if an active song is selected
-    let targetStartSeconds = 0;
-    if (activeSongId) {
-      const newAngleCue = (angleSongCues && typeof angleSongCues[activeSongId] === 'number')
-        ? angleSongCues[activeSongId]
-        : findVideoSongCue(newVideoId, activeSongId);
-
-      if (newAngleCue !== null) {
-        // Find reference player and elapsed time in the song
-        const refPlayer = playersRef.current[activeFocusIndex] || playersRef.current[0];
-        const refSlot = slots[activeFocusIndex] || slots[0];
-        const refCue = refSlot ? findVideoSongCue(refSlot.videoId, activeSongId) : null;
-
-        if (refPlayer && typeof refPlayer.getCurrentTime === 'function' && refCue !== null) {
-          try {
-            const curTime = refPlayer.getCurrentTime() || 0;
-            const elapsed = Math.max(0, curTime - refCue);
-            targetStartSeconds = newAngleCue + elapsed;
-          } catch (_e) {
-            targetStartSeconds = newAngleCue;
-          }
-        } else {
-          targetStartSeconds = newAngleCue;
-        }
-      }
-    }
-
+    const targetStartSeconds = 0;
     const player = playersRef.current[slotIndex];
     let loaded = false;
 
@@ -309,68 +265,10 @@ export default function ConcertWall() {
     if (!loaded) {
       initPlayer(slotIndex, newVideoId, targetStartSeconds);
     }
-  }, [initPlayer, activeAudioIndex, activeSongId, findVideoSongCue, activeFocusIndex, slots]);
-
-  // Jump all cameras to the cue point of the chosen song without reloading
-  const handleJumpToSong = useCallback((songId) => {
-    setActiveSongId(songId);
-
-    slots.forEach((slot, idx) => {
-      const cueTime = findVideoSongCue(slot.videoId, songId);
-      if (cueTime !== null) {
-        setSlots(prev => {
-          const next = [...prev];
-          next[idx] = { ...next[idx], offset: 0 };
-          return next;
-        });
-
-        const p = playersRef.current[idx];
-        if (p) {
-          // Direct seek without recreating or reloading player
-          if (typeof p.seekTo === 'function') {
-            try {
-              p.seekTo(cueTime, true);
-            } catch (_e) {}
-          }
-          // Active camera is audible; left and right cameras are muted in background
-          if (idx === activeFocusIndex) {
-            if (p.unMute) p.unMute();
-            if (p.setVolume) p.setVolume(100);
-          } else {
-            if (p.mute) p.mute();
-          }
-          // CRUCIAL: All 3 cameras must play simultaneously so left and right continue playing!
-          if (typeof p.playVideo === 'function') {
-            try {
-              p.playVideo();
-            } catch (_e) {}
-          }
-        }
-      }
-    });
-
-    setIsMasterPlaying(true);
-  }, [slots, findVideoSongCue, activeFocusIndex]);
-
-  // Next and Previous Song jumps for seamless setlist progression
-  const handleNextSong = useCallback(() => {
-    const songs = activeConcert.songs || [];
-    if (songs.length === 0) return;
-    const currentIdx = songs.findIndex(s => s.id === activeSongId);
-    const nextIdx = (currentIdx + 1) % songs.length;
-    handleJumpToSong(songs[nextIdx].id);
-  }, [activeConcert.songs, activeSongId, handleJumpToSong]);
-
-  const handlePrevSong = useCallback(() => {
-    const songs = activeConcert.songs || [];
-    if (songs.length === 0) return;
-    const currentIdx = songs.findIndex(s => s.id === activeSongId);
-    const prevIdx = (currentIdx - 1 + songs.length) % songs.length;
-    handleJumpToSong(songs[prevIdx].id);
-  }, [activeConcert.songs, activeSongId, handleJumpToSong]);
+  }, [initPlayer, activeAudioIndex]);
 
   // Seamless Focus & Camera Transition without reloading iframe
-  const seamlessSwitchFocus = useCallback((targetIndex, fromIndex) => {
+  const seamlessSwitchFocus = useCallback((targetIndex) => {
     setActiveAudioIndex(targetIndex);
     setActiveFocusIndex(targetIndex);
 
@@ -394,31 +292,7 @@ export default function ConcertWall() {
         }
       }
     });
-
-    // Check drift against current active song and realign seamlessly only if drifted > 0.4s
-    if (activeSongId && typeof fromIndex === 'number' && fromIndex !== targetIndex) {
-      const fromPlayer = playersRef.current[fromIndex];
-      const targetPlayer = playersRef.current[targetIndex];
-      const fromSlot = slots[fromIndex];
-      const targetSlot = slots[targetIndex];
-      if (fromPlayer && targetPlayer && fromSlot && targetSlot) {
-        const fromCue = findVideoSongCue(fromSlot.videoId, activeSongId);
-        const targetCue = findVideoSongCue(targetSlot.videoId, activeSongId);
-        if (typeof fromCue === 'number' && typeof targetCue === 'number') {
-          try {
-            const fromCurTime = fromPlayer.getCurrentTime ? (fromPlayer.getCurrentTime() || 0) : 0;
-            const elapsed = Math.max(0, fromCurTime - fromCue);
-            const idealTarget = targetCue + elapsed;
-            const actualTarget = targetPlayer.getCurrentTime ? (targetPlayer.getCurrentTime() || 0) : idealTarget;
-            // Only seek if drift exceeds 0.4 seconds, so no unnecessary audio stutter
-            if (Math.abs(actualTarget - idealTarget) > 0.4 && typeof targetPlayer.seekTo === 'function') {
-              targetPlayer.seekTo(idealTarget, true);
-            }
-          } catch (_e) {}
-        }
-      }
-    }
-  }, [activeSongId, findVideoSongCue, slots]);
+  }, []);
 
   // Handle Audio Solo Switch
   const handleSelectAudio = useCallback((targetIndex) => {
@@ -580,9 +454,9 @@ export default function ConcertWall() {
     });
   }, []);
 
-  // Quick swap from bottom angle gallery into a camera slot with song cue synchronization
+  // Quick swap from bottom angle gallery into a camera slot
   const handleApplyAngleToSlot = useCallback((angleItem, targetSlotIndex) => {
-    updateSlotVideo(targetSlotIndex, angleItem.videoId, angleItem.title, angleItem.tag, angleItem.songCues);
+    updateSlotVideo(targetSlotIndex, angleItem.videoId, angleItem.title, angleItem.tag);
   }, [updateSlotVideo]);
 
   // Submit custom YouTube URL modal
@@ -798,7 +672,20 @@ export default function ConcertWall() {
             <Radio size={14} color="#f43f5e" />
             <span>選擇演唱會現場 (SELECT LIVE CONCERT)</span>
           </div>
-          <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
+
+          <div className="switcher-right-group">
+            <button
+              type="button"
+              className="tour-history-trigger-btn"
+              onClick={() => setIsTourHistoryModalOpen(true)}
+              title="查看過往所有巡演時程與即將演出場次"
+            >
+              <Calendar size={14} />
+              <span>演唱會清單</span>
+              <span className="tour-badge-chip">43 站 / 70 場</span>
+            </button>
+            <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
+          </div>
         </div>
 
         <div className="concert-switcher-cards-grid">
@@ -856,6 +743,15 @@ export default function ConcertWall() {
               <span className="live-pulse-dot"></span>
               <span>LIVE CONCERT 3-CAM WALL</span>
             </div>
+            <button
+              type="button"
+              className="header-tour-list-btn"
+              onClick={() => setIsTourHistoryModalOpen(true)}
+              title="點擊開啟過往與即將演出演唱會清單"
+            >
+              <Calendar size={13} />
+              <span>巡演歷史全清單 (70 場)</span>
+            </button>
           </div>
 
           <div className="concert-title-area">
@@ -866,56 +762,7 @@ export default function ConcertWall() {
         </div>
       </section>
 
-      {/* Song Sync Anchor Bar (曲目同步錨點切換列) */}
-      {activeConcert.songs && activeConcert.songs.length > 0 && (
-        <section className="song-sync-bar">
-          <div className="song-sync-bar-header">
-            <div className="song-sync-title">
-              <Disc size={15} color="#e11d48" />
-              <span>同步曲目錨點 (SYNC SONG ANCHORS)</span>
-            </div>
-            <div className="song-sync-actions">
-              <button
-                type="button"
-                className="song-step-btn"
-                onClick={handlePrevSong}
-                title="上一首 (左右視角持續無縫同步播放)"
-              >
-                <SkipBack size={13} />
-                <span>上一首</span>
-              </button>
-              <button
-                type="button"
-                className="song-step-btn"
-                onClick={handleNextSong}
-                title="下一首 (左右視角持續無縫同步播放)"
-              >
-                <span>下一首</span>
-                <SkipForward size={13} />
-              </button>
-            </div>
-          </div>
 
-          <div className="song-sync-pills-row">
-            {activeConcert.songs.map((song) => {
-              const isSelected = activeSongId === song.id;
-              return (
-                <button
-                  key={song.id}
-                  type="button"
-                  className={`song-sync-pill ${isSelected ? 'is-active' : ''}`}
-                  onClick={() => handleJumpToSong(song.id)}
-                  title={`跳轉至 ${song.title} 同步播放`}
-                >
-                  <span className="pill-dot"></span>
-                  <span className="pill-name">🎵 {song.title}</span>
-                  {song.tag && <span className="pill-tag">{song.tag}</span>}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* Master Director Console (導播同步控制台) */}
       <section className="director-console-bar">
@@ -1159,15 +1006,6 @@ export default function ConcertWall() {
                     </div>
                     <div className="angle-item-meta-row">
                       <span className="angle-item-author">上傳者: {angle.author}</span>
-                      {activeSongId && angle.songCues && typeof angle.songCues[activeSongId] === 'number' ? (
-                        <span className="angle-song-cue-pill">
-                          🎯 {activeConcert.songs?.find(s => s.id === activeSongId)?.title || activeSongId} @ {Math.floor(angle.songCues[activeSongId] / 60)}:{String(Math.floor(angle.songCues[activeSongId] % 60)).padStart(2, '0')}
-                        </span>
-                      ) : activeSongId ? (
-                        <span className="angle-song-cue-pill cue-missing">
-                          未標註此曲
-                        </span>
-                      ) : null}
                     </div>
                   </div>
 
@@ -1261,6 +1099,11 @@ export default function ConcertWall() {
           </div>
         </div>
       )}
+      {/* Concert Tour History Floating Modal (浮空演唱會巡演全紀錄清單) */}
+      <ConcertTourHistoryModal
+        isOpen={isTourHistoryModalOpen}
+        onClose={() => setIsTourHistoryModalOpen(false)}
+      />
     </div>
   );
 }

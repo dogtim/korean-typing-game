@@ -1,0 +1,763 @@
+/* ==========================================================================
+   BABYMONSTER CONCERT TOUR HISTORY FLOATING MODAL & TIMELINE
+   ========================================================================== */
+
+.tour-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  animation: tourBackdropFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tourBackdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tour-modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  background: #0b0f19;
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.85),
+    0 0 40px -10px rgba(225, 29, 72, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: tourDialogSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tourDialogSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tour-modal-glow {
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f43f5e, #f97316, #10b981, transparent);
+  opacity: 0.85;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL HEADER
+   -------------------------------------------------------------------------- */
+.tour-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.05) 0%, transparent 100%);
+  gap: 16px;
+}
+
+.tour-modal-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tour-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #fb7185;
+  width: fit-content;
+}
+
+.tour-modal-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tour-modal-desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-dim, #94a3b8);
+  line-height: 1.5;
+}
+
+.tour-modal-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tour-modal-close-btn:hover {
+  background: rgba(244, 63, 94, 0.2);
+  border-color: #f43f5e;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* --------------------------------------------------------------------------
+   CONTROLS BAR (SEARCH + CATEGORY PILLS + STATS)
+   -------------------------------------------------------------------------- */
+.tour-controls-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 28px;
+  background: rgba(15, 23, 42, 0.65);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tour-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.tour-search-icon {
+  position: absolute;
+  left: 14px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.tour-search-input {
+  width: 100%;
+  padding: 10px 38px 10px 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.tour-search-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #f43f5e;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2);
+}
+
+.tour-search-input::placeholder {
+  color: #64748b;
+}
+
+.tour-search-clear {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.tour-search-clear:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tour-filter-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tour-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  color: #94a3b8;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tour-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.tour-filter-pill.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--cat-accent, #f43f5e);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.25);
+}
+
+.tour-filter-pill .pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cat-accent, #f43f5e);
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+
+.tour-filter-pill.is-active .pill-dot {
+  opacity: 1;
+  box-shadow: 0 0 8px var(--cat-accent, #f43f5e);
+}
+
+.tour-filter-pill .pill-count {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+.tour-filter-pill.is-active .pill-count {
+  background: rgba(244, 63, 94, 0.25);
+  color: #fecdd3;
+}
+
+.tour-stats-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #94a3b8;
+  padding-top: 4px;
+}
+
+.tour-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tour-stat-item strong {
+  color: #f1f5f9;
+}
+
+.timeline-direction-tag {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #fb7185;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   SCROLLABLE TIMELINE CONTAINER (從上往下滾動介面)
+   -------------------------------------------------------------------------- */
+.tour-timeline-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 28px 30px;
+  scroll-behavior: smooth;
+}
+
+/* Custom Webkit Scrollbar */
+.tour-timeline-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tour-timeline-scrollable::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.tour-timeline-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(244, 63, 94, 0.25);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.tour-timeline-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(244, 63, 94, 0.45);
+}
+
+/* Empty State */
+.tour-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  text-align: center;
+  gap: 12px;
+}
+
+.tour-empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.tour-empty-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  max-width: 380px;
+}
+
+.tour-empty-reset-btn {
+  margin-top: 8px;
+  padding: 8px 18px;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: 9999px;
+  color: #fb7185;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tour-empty-reset-btn:hover {
+  background: rgba(244, 63, 94, 0.3);
+  color: #fff;
+}
+
+/* Timeline Stem & Year Markers */
+.tour-timeline-stem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-left: 20px;
+}
+
+/* Continuous Vertical Timeline Line */
+.tour-timeline-stem::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 20px;
+  left: 31px;
+  width: 2px;
+  background: linear-gradient(180deg, 
+    rgba(16, 185, 129, 0.7) 0%, 
+    rgba(249, 115, 22, 0.6) 30%, 
+    rgba(236, 72, 153, 0.6) 55%, 
+    rgba(225, 29, 72, 0.6) 80%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+/* Year Divider Marker */
+.tour-year-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 6px -12px;
+  z-index: 2;
+}
+
+.year-marker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 12px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.year-marker-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* --------------------------------------------------------------------------
+   TIMELINE STOP CARD
+   -------------------------------------------------------------------------- */
+.tour-stop-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  transition: all 0.25s ease;
+}
+
+/* Node Dot on the Timeline Line */
+.stop-timeline-node {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 14px;
+  z-index: 2;
+}
+
+.timeline-node-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tour-theme, #f43f5e);
+  border: 2px solid #0b0f19;
+  box-shadow: 0 0 10px var(--tour-theme, #f43f5e);
+  transition: all 0.2s ease;
+}
+
+.tour-stop-card:hover .timeline-node-dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 16px var(--tour-theme, #f43f5e);
+}
+
+.upcoming-pulse-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  animation: pulseRing 1.8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Stop Card Content */
+.stop-card-content {
+  flex: 1;
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tour-stop-card:hover .stop-card-content {
+  background: rgba(24, 33, 53, 0.85);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateX(4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.tour-stop-card.is-upcoming-card .stop-card-content {
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.tour-stop-card.is-upcoming-card:hover .stop-card-content {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+}
+
+/* Stop Top Meta Row */
+.stop-top-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stop-tour-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--tour-theme, #f43f5e);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  width: fit-content;
+}
+
+.stop-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.status-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: liveDotPulse 1.2s infinite;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Main Info: City + Date */
+.stop-main-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stop-city-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stop-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.stop-city-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.stop-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #f1f5f9;
+  font-feature-settings: 'tnum';
+}
+
+/* Venue + Shows Row */
+.stop-venue-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stop-venue-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.venue-pin-icon {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.stop-shows-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fca5a5;
+  flex-shrink: 0;
+}
+
+.is-upcoming-card .stop-shows-count-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+
+/* Official Tour Name Footer */
+.stop-official-tour-name {
+  font-size: 11.5px;
+  color: #64748b;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL FOOTER
+   -------------------------------------------------------------------------- */
+.tour-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.8);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-left-info {
+  font-size: 12px;
+  color: #94a3b8;
+  max-width: 480px;
+}
+
+.footer-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tour-scroll-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tour-scroll-top-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.tour-footer-close-btn {
+  padding: 7px 18px;
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+  transition: all 0.2s;
+}
+
+.tour-footer-close-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.5);
+  filter: brightness(1.1);
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .tour-modal-backdrop {
+    padding: 10px 8px;
+  }
+
+  .tour-modal-dialog {
+    max-height: 94vh;
+    border-radius: 16px;
+  }
+
+  .tour-modal-header {
+    padding: 18px 18px 14px;
+  }
+
+  .tour-modal-title {
+    font-size: 18px;
+  }
+
+  .tour-controls-bar {
+    padding: 12px 18px;
+  }
+
+  .tour-timeline-scrollable {
+    padding: 16px 16px 24px;
+  }
+
+  .tour-timeline-stem {
+    padding-left: 12px;
+  }
+
+  .tour-timeline-stem::before {
+    left: 23px;
+  }
+
+  .stop-main-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .tour-modal-footer {
+    padding: 12px 18px;
+  }
+}

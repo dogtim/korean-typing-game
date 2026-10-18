@@ -12,7 +12,7 @@ export const CONCERT_PRESETS = [
     date: '2026.06.26 - 2026.09.05',
     attendance: 'World Tour Full Show',
     themeColor: '#f97316',
-    description: 'CHOOM 世界巡演全場長片：CAM 1 首爾 260628 全場 (1:40:55)、CAM 2 馬尼拉 2026.09.05 全場 (1:53:01)、CAM 3 首爾 260626 Solo 舞台 4K 精選 (12:35，含官方章節時間碼)。三支影片皆可連續播放；Solo 歌曲按鈕目前只會讓 CAM 3 跳轉 (全場長片尚未校時)。',
+    description: 'CHOOM 世界巡演全場長片：CAM 1 首爾 260628 全場 (1:40:55)、CAM 2 馬尼拉 2026.09.05 全場 (1:53:01)、CAM 3 首爾 260626 Solo 舞台 4K 精選 (12:35，含官方章節時間碼)。三支影片皆可多視角同步播放與獨立切換。',
     // NOTE: Only the solo-compilation cues come from the uploader's chapter timestamps.
     // Full-show videos (A3M7Nxt3_-Q / BN61wzbvI7M) have no published timestamps yet — calibrate before adding cues.
     songs: [

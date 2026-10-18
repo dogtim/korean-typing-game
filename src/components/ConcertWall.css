@@ -66,6 +66,69 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.switcher-right-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tour-history-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.18), rgba(249, 115, 22, 0.14));
+  border: 1px solid rgba(244, 63, 94, 0.45);
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tour-history-trigger-btn:hover {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.35), rgba(249, 115, 22, 0.28));
+  border-color: #f43f5e;
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.45);
+  color: #fff;
+}
+
+.tour-badge-chip {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fecdd3;
+}
+
+.header-tour-list-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-tour-list-btn:hover {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: #f43f5e;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.3);
+}
+
 .concert-switcher-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -554,137 +617,7 @@
   color: #fff;
 }
 
-/* --------------------------------------------------------------------------
-   SONG SYNC ANCHORS BAR (曲目同步錨點切換列)
-   -------------------------------------------------------------------------- */
-.song-sync-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px 18px;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(225, 29, 72, 0.25);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-}
 
-.song-sync-bar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.song-sync-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #fff;
-}
-
-.song-sync-hint {
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-.song-sync-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.song-step-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  background: rgba(225, 29, 72, 0.15);
-  border: 1px solid rgba(225, 29, 72, 0.4);
-  color: #fb7185;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.song-step-btn:hover {
-  background: rgba(225, 29, 72, 0.3);
-  border-color: #f43f5e;
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 0 12px rgba(225, 29, 72, 0.4);
-}
-
-.song-sync-pills-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.song-sync-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.song-sync-pill:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-
-.song-sync-pill.is-active {
-  background: linear-gradient(135deg, rgba(225, 29, 72, 0.35), rgba(244, 63, 94, 0.2));
-  border-color: #f43f5e;
-  color: #fff;
-  box-shadow: 0 0 16px rgba(244, 63, 94, 0.35);
-}
-
-.song-sync-pill .pill-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f43f5e;
-  opacity: 0.5;
-  transition: all 0.2s;
-}
-
-.song-sync-pill.is-active .pill-dot {
-  opacity: 1;
-  box-shadow: 0 0 8px #f43f5e;
-  animation: pulseDot 1.5s infinite;
-}
-
-.song-sync-pill .pill-tag {
-  font-size: 10px;
-  padding: 1px 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
-  color: var(--text-dim);
-}
-
-.song-sync-pill.is-active .pill-tag {
-  background: rgba(244, 63, 94, 0.3);
-  color: #fecdd3;
-}
 
 /* --------------------------------------------------------------------------
    MASTER DIRECTOR CONSOLE (導播同步控制台)
@@ -1813,21 +1746,7 @@
   flex-wrap: wrap;
 }
 
-.angle-song-cue-pill {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 9999px;
-  background: rgba(244, 63, 94, 0.18);
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  color: #fb7185;
-}
 
-.angle-song-cue-pill.cue-missing {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: var(--text-dim);
-}
 
 /* Swap Quick Action Buttons (CAM 1 / CAM 2 / CAM 3) */
 .angle-swap-actions {
