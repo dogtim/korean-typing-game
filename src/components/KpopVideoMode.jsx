@@ -1963,6 +1963,24 @@ export default function KpopVideoMode({
                       {preset.title === 'WE GO UP' && '🚀'}
                       {preset.title === 'CLIK CLAK' && '👠'}
                       {preset.title === 'SHEESH' && '⚡'}
+                      {preset.title.includes('Stuck') && '🌸'}
+                      {preset.title.includes('LIKE THAT') && '✨'}
+                      {preset.title.includes('BATTER') && '⚾'}
+                      {preset.title === 'BILLIONAIRE' && '💎'}
+                      {preset.title.includes('Tokyo') && '🗼'}
+                      {preset.title === 'FOREVER' && '☀️'}
+                      {preset.title === 'PSYCHO' && '🐆'}
+                      {preset.title === 'DREAM' && '🌙'}
+                      {preset.title.includes('HOT SAUCE') && '🌶️'}
+                      {preset.title.includes('Heart') && '❤️'}
+                      {preset.title.includes('Really Like') && '💌'}
+                      {preset.title.includes('Maybe') && '☕'}
+                      {preset.title.includes('CHOOM') && '💃'}
+                      {preset.title.includes('Supa Dupa') && '💫'}
+                      {preset.title === 'WILD' && '🔥'}
+                      {preset.title === 'Moon' && '🌕'}
+                      {preset.title === 'I Like It' && '💘'}
+                      {preset.title.includes('TEA') && '🧋'}
                     </span>
                     <strong className="chip-song-title">{preset.title}</strong>
                     <span className="chip-badge-mini">{preset.isPureEnglish ? '純美語' : '韓英'}</span>
