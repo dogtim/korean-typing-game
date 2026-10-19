@@ -265,9 +265,9 @@ export const VIDEO_SRT_MAPPINGS = [
     album: '第三張迷你專輯《춤 (CHOOM)》',
     srtFilename: 'BABYMONSTER-MOON.srt',
     srtPath: '/lyrics/BABYMONSTER-MOON.srt',
-    youtubeIds: ['LYbHsAsj6i8', 'dY4yqM2Z1cQ', 'm7YXyj1RigA'],
+    youtubeIds: ['LYbHsAsj6i8', 'xXZwZ0DolJc', 'dY4yqM2Z1cQ', 'm7YXyj1RigA'],
     primaryUrl: 'https://www.youtube.com/watch?v=LYbHsAsj6i8',
-    alternateUrls: [],
+    alternateUrls: ['https://www.youtube.com/watch?v=xXZwZ0DolJc'],
     description: "BABYMONSTER (베이비몬스터) - Moon synchronized SRT subtitle lyrics"
   },
   {
