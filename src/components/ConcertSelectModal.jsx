@@ -205,9 +205,6 @@ export default function ConcertSelectModal({
         {/* Category Tabs: ALL Concert, Hello Monsters, Love Monsters, Choom, 其他 */}
         <div className="concert-category-tabs-bar">
           {tourCategoryList.map((cat) => {
-            const count = cat.id === 'all_concert'
-              ? CONCERT_PRESETS.length
-              : CONCERT_PRESETS.filter(p => p.tourCategory === cat.id).length;
             const isActive = activeTourCategory === cat.id;
             return (
               <button
@@ -219,7 +216,6 @@ export default function ConcertSelectModal({
               >
                 {cat.icon}
                 <span className="cat-tab-label">{cat.label}</span>
-                <span className="cat-tab-count">{count}</span>
               </button>
             );
           })}
