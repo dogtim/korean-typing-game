@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Play,
   Pause,
@@ -21,11 +21,11 @@ import {
   Box,
   ChevronLeft,
   ChevronRight,
-  Calendar,
-  Crown,
-  Heart
+  ChevronDown,
+  Calendar
 } from 'lucide-react';
-import { CONCERT_PRESETS, CONCERT_CATEGORY_DEFINITIONS } from '../data/concertsData';
+import { CONCERT_PRESETS } from '../data/concertsData';
+import ConcertSelectModal from './ConcertSelectModal';
 import ConcertTourHistoryModal from './ConcertTourHistoryModal';
 import './ConcertWall.css';
 
@@ -62,105 +62,8 @@ export default function ConcertWall() {
   // Concert Tour History Floating Modal state
   const [isTourHistoryModalOpen, setIsTourHistoryModalOpen] = useState(false);
 
-  // Active concert category filter: 'all_concert' | 'hello_monsters' | 'love_monsters' | 'choom' | 'others'
-  const [activeTourCategory, setActiveTourCategory] = useState('all_concert');
-
-  // Categorized tours for the switcher panel
-  const tourCategoryList = useMemo(() => [
-    {
-      id: 'all_concert',
-      label: 'ALL Concert',
-      subTitle: '跨巡迴自由搭配 (CAM 1 / 2 / 3)',
-      color: '#f43f5e',
-      icon: <Sparkles size={14} color="#f43f5e" />
-    },
-    {
-      id: 'hello_monsters',
-      label: 'Hello Monsters',
-      subTitle: '2025 首次世界巡演 (共 32 場)',
-      color: '#a855f7',
-      icon: <Crown size={14} color="#a855f7" />
-    },
-    {
-      id: 'love_monsters',
-      label: 'Love Monsters',
-      subTitle: '2025–2026 Fan Concert 巡迴 (共 12 場)',
-      color: '#ec4899',
-      icon: <Heart size={14} color="#ec4899" />
-    },
-    {
-      id: 'choom',
-      label: 'Choom',
-      subTitle: '2026–2027 第二輪世界巡演',
-      color: '#f97316',
-      icon: <Flame size={14} color="#f97316" />
-    },
-    {
-      id: 'others',
-      label: '其他現場',
-      subTitle: 'Summer Sonic 2026 音樂祭等',
-      color: '#0284c7',
-      icon: <Radio size={14} color="#0284c7" />
-    }
-  ], []);
-
-  // Compute filtered / grouped categories for display
-  const categorizedSections = useMemo(() => {
-    // When in ALL Concert mode: show ALL tours and concerts with mixing ability
-    if (activeTourCategory === 'all_concert') {
-      const allSections = [
-        {
-          id: 'all_featured_mix',
-          label: '🌟 ALL Concert 自由混搭主卡片',
-          subTitle: '預設 CAM 1: Hello Monsters × CAM 2: Love Monsters × CAM 3: Choom',
-          color: '#f43f5e',
-          icon: <Sparkles size={14} color="#f43f5e" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'all_concert')
-        },
-        {
-          id: 'hello_monsters',
-          label: '👑 Hello Monsters 巡演場次',
-          subTitle: '2025 首次世界巡演',
-          color: '#a855f7',
-          icon: <Crown size={14} color="#a855f7" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'hello_monsters')
-        },
-        {
-          id: 'love_monsters',
-          label: '💖 Love Monsters 巡演場次',
-          subTitle: '2025–2026 Fan Concert 巡迴',
-          color: '#ec4899',
-          icon: <Heart size={14} color="#ec4899" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'love_monsters')
-        },
-        {
-          id: 'choom',
-          label: '🔥 Choom 巡演場次',
-          subTitle: '2026–2027 第二輪世界巡演',
-          color: '#f97316',
-          icon: <Flame size={14} color="#f97316" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'choom')
-        },
-        {
-          id: 'others',
-          label: '🎸 其他現場 (Summer Sonic 等)',
-          subTitle: '音樂祭與大型現場',
-          color: '#0284c7',
-          icon: <Radio size={14} color="#0284c7" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'others')
-        }
-      ];
-      return allSections.filter(s => s.presets.length > 0);
-    }
-
-    // Filter to the specific tour category
-    const specificTour = tourCategoryList.find(cat => cat.id === activeTourCategory);
-    if (!specificTour) return [];
-    return [{
-      ...specificTour,
-      presets: CONCERT_PRESETS.filter(p => p.tourCategory === specificTour.id)
-    }];
-  }, [tourCategoryList, activeTourCategory]);
+  // Concert Select Floating Modal state
+  const [isConcertModalOpen, setIsConcertModalOpen] = useState(false);
 
   // Custom URL Modal state
   const [customModalSlot, setCustomModalSlot] = useState(null); // slotIndex or null
@@ -780,165 +683,43 @@ export default function ConcertWall() {
 
   return (
     <div className="concert-wall-container">
-      {/* Prominent Concert Switcher Cards (頂部演唱會場次切換卡片) */}
+      {/* Prominent Concert Switcher Bar (頂部演唱會場次切換列) */}
       <section className="concert-top-switcher-panel">
-        <div className="switcher-title-row">
-          <div className="switcher-title-badge">
-            <Radio size={14} color="#f43f5e" />
-            <span>選擇演唱會現場 (SELECT LIVE CONCERT)</span>
-          </div>
-
-          <div className="switcher-right-group">
-            <button
-              type="button"
-              className="tour-history-trigger-btn"
-              onClick={() => setIsTourHistoryModalOpen(true)}
-              title="查看過往所有巡演時程與即將演出場次"
-            >
-              <Calendar size={14} />
-              <span>演唱會清單</span>
-              <span className="tour-badge-chip">43 站 / 70 場</span>
-            </button>
-            <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
-          </div>
-        </div>
-
-        {/* Category Tabs: ALL Concert, Hello Monsters, Love Monsters, Choom, 其他 */}
-        <div className="concert-category-tabs-bar">
-          {tourCategoryList.map((cat) => {
-            const count = cat.id === 'all_concert'
-              ? CONCERT_PRESETS.length
-              : CONCERT_PRESETS.filter(p => p.tourCategory === cat.id).length;
-            const isActive = activeTourCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                className={`concert-cat-tab-btn ${isActive ? 'is-active' : ''}`}
-                onClick={() => setActiveTourCategory(cat.id)}
-                style={{ '--cat-color': cat.color }}
-              >
-                {cat.icon}
-                <span className="cat-tab-label">{cat.label}</span>
-                <span className="cat-tab-count">{count}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ALL Concert Mix Info Banner */}
-        {activeTourCategory === 'all_concert' && (
-          <div className="all-concert-mix-banner">
-            <div className="mix-banner-left">
-              <Sparkles size={16} color="#f43f5e" className="mix-sparkle-icon" />
-              <span>
-                <strong>ALL Concert 自由搭配模式</strong>：下方收錄所有演唱會，可點擊各場次右下角的 <strong>[CAM 1]</strong>、<strong>[CAM 2]</strong>、<strong>[CAM 3]</strong> 自由混搭（例如 CAM 1 播放 Hello Monsters、CAM 2 播放 Love Monsters、CAM 3 播放 Choom），享受三大巡演同時競演！
+        <div className="song-presets-group concert-presets-group">
+          <button
+            type="button"
+            className="select-video-trigger-btn select-concert-trigger-btn"
+            onClick={() => setIsConcertModalOpen(true)}
+            title="選擇演唱會現場 (Choose Live Concert)"
+          >
+            <div className="trigger-icon-wrap concert-trigger-icon">
+              <Radio size={17} />
+            </div>
+            <div className="trigger-text-wrap">
+              <span className="trigger-label">Select Live Concert</span>
+              <span className="trigger-current-song">
+                {activeConcert.title}{' '}
+                <span className="trigger-artist">
+                  ({activeConcert.venue || activeConcert.subTitle})
+                </span>
               </span>
             </div>
-            <div className="mix-banner-pills">
-              <span className="mix-cam-pill cam1">CAM 1: {slots[0]?.tag || '機位 1'}</span>
-              <span className="mix-cam-pill cam2">CAM 2: {slots[1]?.tag || '機位 2'}</span>
-              <span className="mix-cam-pill cam3">CAM 3: {slots[2]?.tag || '機位 3'}</span>
-            </div>
-          </div>
-        )}
+            <ChevronDown size={16} className="trigger-chevron" />
+          </button>
+        </div>
 
-        {/* Categorized Concert Sections & Cards */}
-        <div className="concert-category-sections-wrapper">
-          {categorizedSections.map((sec) => (
-            <div key={sec.id} className="concert-section-group">
-              <div className="concert-section-header">
-                <div className="concert-section-title-wrap">
-                  {sec.icon}
-                  <span className="concert-section-title">{sec.label}</span>
-                  <span className="concert-section-sub">• {sec.subTitle}</span>
-                </div>
-                <span className="concert-section-count-tag">
-                  {sec.presets.length} 場收錄
-                </span>
-              </div>
-
-              <div className="concert-switcher-cards-grid">
-                {sec.presets.map((concert) => {
-                  const isActive = activeConcert.id === concert.id;
-                  const globalIdx = CONCERT_PRESETS.findIndex(p => p.id === concert.id);
-
-                  return (
-                    <div
-                      key={concert.id}
-                      role="button"
-                      tabIndex={0}
-                      className={`concert-card-btn ${isActive ? 'is-active' : ''}`}
-                      onClick={() => {
-                        if (globalIdx !== -1) setSelectedConcertIndex(globalIdx);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          if (globalIdx !== -1) setSelectedConcertIndex(globalIdx);
-                        }
-                      }}
-                      style={{
-                        '--accent-color': concert.themeColor || '#e11d48'
-                      }}
-                    >
-                      <div className="card-btn-header">
-                        <span
-                          className="card-category-tag"
-                          style={{
-                            borderColor: `${concert.themeColor || '#fb7185'}66`,
-                            color: concert.themeColor || '#fb7185'
-                          }}
-                        >
-                          {concert.categoryTag || sec.label}
-                        </span>
-                        {isActive ? (
-                          <span className="card-playing-badge">
-                            <span className="pulse-dot"></span> 播放中
-                          </span>
-                        ) : (
-                          <span className="card-switch-label">點擊切換全場</span>
-                        )}
-                      </div>
-
-                      <div className="card-btn-title">{concert.title}</div>
-                      <div className="card-btn-subtitle">{concert.subTitle}</div>
-
-                      <div className="card-btn-meta">
-                        <span>{concert.venue}</span>
-                        <span>•</span>
-                        <span>{concert.date}</span>
-                      </div>
-
-                      {/* Quick Assign to CAM 1 / 2 / 3 */}
-                      <div className="card-cam-assign-row" onClick={(e) => e.stopPropagation()}>
-                        <span className="cam-assign-hint">自由指派機位:</span>
-                        <div className="cam-assign-buttons">
-                          {[0, 1, 2].map((slotIdx) => {
-                            const targetVideoId = concert.defaultSlots?.[slotIdx]?.videoId || concert.defaultSlots?.[0]?.videoId;
-                            const isCurrentCam = slots[slotIdx]?.videoId === targetVideoId;
-                            return (
-                              <button
-                                key={`assign-${concert.id}-${slotIdx}`}
-                                type="button"
-                                className={`cam-assign-btn ${isCurrentCam ? 'is-active-cam' : ''}`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAssignConcertToSlot(concert, slotIdx);
-                                }}
-                                title={`將《${concert.title}》指派載入至 CAM ${slotIdx + 1} 播放`}
-                              >
-                                {isCurrentCam ? `✓ CAM ${slotIdx + 1}` : `CAM ${slotIdx + 1}`}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+        <div className="switcher-right-group">
+          <button
+            type="button"
+            className="tour-history-trigger-btn"
+            onClick={() => setIsTourHistoryModalOpen(true)}
+            title="查看過往所有巡演時程與即將演出場次"
+          >
+            <Calendar size={14} />
+            <span>演唱會清單</span>
+            <span className="tour-badge-chip">43 站 / 70 場</span>
+          </button>
+          <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
         </div>
       </section>
 
@@ -1307,6 +1088,17 @@ export default function ConcertWall() {
           </div>
         </div>
       )}
+      {/* Concert Select Modal Popup (彈出式演唱會現場切換清單) */}
+      <ConcertSelectModal
+        isOpen={isConcertModalOpen}
+        onClose={() => setIsConcertModalOpen(false)}
+        selectedConcertIndex={selectedConcertIndex}
+        onSelectConcert={(idx) => setSelectedConcertIndex(idx)}
+        activeConcert={activeConcert}
+        slots={slots}
+        onAssignConcertToSlot={handleAssignConcertToSlot}
+      />
+
       {/* Concert Tour History Floating Modal (浮空演唱會巡演全紀錄清單) */}
       <ConcertTourHistoryModal
         isOpen={isTourHistoryModalOpen}
