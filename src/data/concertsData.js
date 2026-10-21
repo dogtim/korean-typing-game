@@ -540,8 +540,7 @@ export const CONCERT_PRESETS = [
       { id: 'angle_ss_2', title: 'BABYMONSTER PERFORMANCE Full fancam (44:12)', tag: '樂隊搖滾', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' },
       { id: 'angle_ss_3', title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO (43:58)', tag: '球場特寫', videoId: 'WuelifqxMLs', author: 'Tokyo Live', badge: 'CAM 3' },
       { id: 'angle_ss_4', title: 'BABYMONSTER FULL PERFORMANCE [Summer Sonic Tokyo] (44:33)', tag: '完整直擊', videoId: 'wSj_O5v5aMo', author: 'Keep Going', badge: 'CAM 4' },
-      { id: 'angle_ss_5', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN (45:11)', tag: '45分鐘全景', videoId: '_zV0QTAHd5I', author: 'Festival Fan', badge: 'CAM 5' },
-      { id: 'angle_ss_6', title: 'Summer Sonic 2026 & 日本巡演花絮紀實 (14:39)', tag: '官方花絮', videoId: 'tO-4QFfSsCo', author: 'BABYMONSTER Official', badge: '花絮長片' }
+      { id: 'angle_ss_5', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN (45:11)', tag: '45分鐘全景', videoId: '_zV0QTAHd5I', author: 'Festival Fan', badge: 'CAM 5' }
     ]
   }
 ];
