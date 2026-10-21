@@ -6,11 +6,7 @@ import {
   Sparkles,
   Crown,
   Heart,
-  Flame,
-  Check,
-  Calendar,
-  MapPin,
-  Clock
+  Flame
 } from 'lucide-react';
 import { CONCERT_PRESETS } from '../data/concertsData';
 
@@ -124,38 +120,6 @@ export default function ConcertSelectModal({
           color: '#f43f5e',
           icon: <Sparkles size={14} color="#f43f5e" />,
           presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'all_concert' && matchSearch(p))
-        },
-        {
-          id: 'hello_monsters',
-          label: '👑 Hello Monsters 巡演場次',
-          subTitle: '2025 首次世界巡演',
-          color: '#a855f7',
-          icon: <Crown size={14} color="#a855f7" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'hello_monsters' && matchSearch(p))
-        },
-        {
-          id: 'love_monsters',
-          label: '💖 Love Monsters 巡演場次',
-          subTitle: '2025–2026 Fan Concert 巡迴',
-          color: '#ec4899',
-          icon: <Heart size={14} color="#ec4899" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'love_monsters' && matchSearch(p))
-        },
-        {
-          id: 'choom',
-          label: '🔥 Choom 巡演場次',
-          subTitle: '2026–2027 第二輪世界巡演',
-          color: '#f97316',
-          icon: <Flame size={14} color="#f97316" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'choom' && matchSearch(p))
-        },
-        {
-          id: 'others',
-          label: '🎸 其他現場 (Summer Sonic 等)',
-          subTitle: '音樂祭與大型現場',
-          color: '#0284c7',
-          icon: <Radio size={14} color="#0284c7" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'others' && matchSearch(p))
         }
       ];
       return allSections.filter(s => s.presets.length > 0);
