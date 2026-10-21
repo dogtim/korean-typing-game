@@ -24,7 +24,6 @@ import {
   Mic,
   Square,
   Volume2,
-  Bookmark,
   Film,
   ChevronDown,
   Sliders,
@@ -45,8 +44,8 @@ export default function KpopVideoMode({
   onSwitchToGame: _onSwitchToGame,
   loopTarget,
   onClearLoopTarget,
-  onOpenReviewModal,
-  missedCount = 0,
+  onOpenReviewModal: _onOpenReviewModal,
+  missedCount: _missedCount = 0,
   autoPlayVideoId = null,
   onAutoPlayHandled,
   selectedSong = null,
@@ -1153,26 +1152,6 @@ export default function KpopVideoMode({
               <GraduationCap size={15} />
               <span>歌詞研習</span>
               <span className="submode-pill-badge">雙語 NEW</span>
-            </button>
-          </div>
-        )}
-
-        {/* Action Controls: Review Notebook */}
-        {onOpenReviewModal && (
-          <div className="kpop-controls-actions">
-            <button
-              type="button"
-              className={`kpop-review-btn ${missedCount > 0 ? 'has-missed' : ''}`}
-              onClick={onOpenReviewModal}
-              title="Open Incorrect Answers Review Notebook"
-            >
-              <div className="kpop-review-icon-wrap">
-                <Bookmark size={15} />
-              </div>
-              <span className="kpop-review-text">Review Missed</span>
-              <span className="kpop-review-count-badge">
-                {missedCount}
-              </span>
             </button>
           </div>
         )}
