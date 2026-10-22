@@ -330,108 +330,108 @@ export const CONCERT_PRESETS = [
           { videoId: 'WuelifqxMLs', offset: 10 },
           { videoId: 'xJuXrgbx-8I', offset: 10 },
           { videoId: '9Y-95rgsDDY', offset: 4 },
-          { videoId: '_zV0QTAHd5I', offset: 77 },
-          { videoId: 'wSj_O5v5aMo', offset: 39 }
+          { videoId: 'wSj_O5v5aMo', offset: 39 },
+          { videoId: '_zV0QTAHd5I', offset: 77 }
         ]
       },
       choom: {
         title: 'CHOOM',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 180 },
-          { videoId: 'xJuXrgbx-8I', offset: 180 },
-          { videoId: '_zV0QTAHd5I', offset: 253 },
-          { videoId: 'WuelifqxMLs', offset: 253 },
-          { videoId: 'wSj_O5v5aMo', offset: 245 }
+          { videoId: 'WuelifqxMLs', offset: 199 },
+          { videoId: 'xJuXrgbx-8I', offset: 199 },
+          { videoId: '9Y-95rgsDDY', offset: 193 },
+          { videoId: 'wSj_O5v5aMo', offset: 228 },
+          { videoId: '_zV0QTAHd5I', offset: 266 }
         ]
       },
       moon: {
         title: 'MOON',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 360 },
-          { videoId: 'xJuXrgbx-8I', offset: 360 },
-          { videoId: '_zV0QTAHd5I', offset: 515 },
-          { videoId: 'WuelifqxMLs', offset: 515 },
-          { videoId: 'wSj_O5v5aMo', offset: 505 }
+          { videoId: 'WuelifqxMLs', offset: 510 },
+          { videoId: 'xJuXrgbx-8I', offset: 510 },
+          { videoId: '9Y-95rgsDDY', offset: 355 },
+          { videoId: 'wSj_O5v5aMo', offset: 539 },
+          { videoId: '_zV0QTAHd5I', offset: 577 }
         ]
       },
       drip: {
         title: 'DRIP',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 524 },
-          { videoId: 'xJuXrgbx-8I', offset: 679 },
           { videoId: 'WuelifqxMLs', offset: 679 },
-          { videoId: 'wSj_O5v5aMo', offset: 663 },
-          { videoId: '_zV0QTAHd5I', offset: 674 }
+          { videoId: 'xJuXrgbx-8I', offset: 679 },
+          { videoId: '9Y-95rgsDDY', offset: 524 },
+          { videoId: 'wSj_O5v5aMo', offset: 708 },
+          { videoId: '_zV0QTAHd5I', offset: 746 }
         ]
       },
       forever: {
         title: 'FOREVER',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 700 },
-          { videoId: 'xJuXrgbx-8I', offset: 700 },
-          { videoId: '_zV0QTAHd5I', offset: 773 },
-          { videoId: 'WuelifqxMLs', offset: 773 },
-          { videoId: 'wSj_O5v5aMo', offset: 760 }
+          { videoId: 'WuelifqxMLs', offset: 1042 },
+          { videoId: 'xJuXrgbx-8I', offset: 1042 },
+          { videoId: '9Y-95rgsDDY', offset: 887 },
+          { videoId: 'wSj_O5v5aMo', offset: 1071 },
+          { videoId: '_zV0QTAHd5I', offset: 1109 }
         ]
       },
       really_like_you: {
         title: 'Really Like You',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 900 },
-          { videoId: 'xJuXrgbx-8I', offset: 900 },
-          { videoId: '_zV0QTAHd5I', offset: 500 },
-          { videoId: 'WuelifqxMLs', offset: 960 },
-          { videoId: 'wSj_O5v5aMo', offset: 950 }
+          { videoId: 'WuelifqxMLs', offset: 1255 },
+          { videoId: 'xJuXrgbx-8I', offset: 1255 },
+          { videoId: '9Y-95rgsDDY', offset: 1100 },
+          { videoId: 'wSj_O5v5aMo', offset: 1284 },
+          { videoId: '_zV0QTAHd5I', offset: 1322 }
         ]
       },
       i_like_it: {
         title: 'I LIKE IT',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 1100 },
-          { videoId: 'xJuXrgbx-8I', offset: 1100 },
-          { videoId: 'WuelifqxMLs', offset: 400 },
-          { videoId: '_zV0QTAHd5I', offset: 1160 },
-          { videoId: 'wSj_O5v5aMo', offset: 1150 }
+          { videoId: 'WuelifqxMLs', offset: 1450 },
+          { videoId: 'xJuXrgbx-8I', offset: 1450 },
+          { videoId: '9Y-95rgsDDY', offset: 1295 },
+          { videoId: 'wSj_O5v5aMo', offset: 1479 },
+          { videoId: '_zV0QTAHd5I', offset: 1517 }
         ]
       },
       hot_sauce: {
         title: 'HOT SAUCE',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 1300 },
-          { videoId: 'xJuXrgbx-8I', offset: 1300 },
-          { videoId: '_zV0QTAHd5I', offset: 700 },
-          { videoId: 'WuelifqxMLs', offset: 1360 },
-          { videoId: 'wSj_O5v5aMo', offset: 1350 }
+          { videoId: 'WuelifqxMLs', offset: 1832 },
+          { videoId: 'xJuXrgbx-8I', offset: 1832 },
+          { videoId: '9Y-95rgsDDY', offset: 1500 },
+          { videoId: 'wSj_O5v5aMo', offset: 1861 },
+          { videoId: '_zV0QTAHd5I', offset: 1899 }
         ]
       },
       sugar_honey_ice_tea: {
         title: 'SUGAR HONEY ICE TEA',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 1450 },
-          { videoId: 'xJuXrgbx-8I', offset: 1450 },
-          { videoId: 'WuelifqxMLs', offset: 900 },
-          { videoId: '_zV0QTAHd5I', offset: 1510 },
-          { videoId: 'wSj_O5v5aMo', offset: 1500 }
+          { videoId: 'WuelifqxMLs', offset: 1980 },
+          { videoId: 'xJuXrgbx-8I', offset: 1980 },
+          { videoId: '9Y-95rgsDDY', offset: 1648 },
+          { videoId: 'wSj_O5v5aMo', offset: 2009 },
+          { videoId: '_zV0QTAHd5I', offset: 2047 }
         ]
       },
       batter_up_remix: {
         title: 'BATTER UP',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 1650 },
-          { videoId: 'xJuXrgbx-8I', offset: 1650 },
-          { videoId: '_zV0QTAHd5I', offset: 1200 },
-          { videoId: 'WuelifqxMLs', offset: 1710 },
-          { videoId: 'wSj_O5v5aMo', offset: 1700 }
+          { videoId: 'WuelifqxMLs', offset: 2191 },
+          { videoId: 'xJuXrgbx-8I', offset: 2191 },
+          { videoId: '9Y-95rgsDDY', offset: 1859 },
+          { videoId: 'wSj_O5v5aMo', offset: 2220 },
+          { videoId: '_zV0QTAHd5I', offset: 2258 }
         ]
       },
       sheesh_remix: {
         title: 'SHEESH',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 1850 },
-          { videoId: 'xJuXrgbx-8I', offset: 1850 },
-          { videoId: 'wSj_O5v5aMo', offset: 1850 },
-          { videoId: '_zV0QTAHd5I', offset: 1900 },
-          { videoId: 'WuelifqxMLs', offset: 1900 }
+          { videoId: 'WuelifqxMLs', offset: 2383 },
+          { videoId: 'xJuXrgbx-8I', offset: 2383 },
+          { videoId: '9Y-95rgsDDY', offset: 2051 },
+          { videoId: 'wSj_O5v5aMo', offset: 2412 },
+          { videoId: '_zV0QTAHd5I', offset: 2450 }
         ]
       }
     },
