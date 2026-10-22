@@ -381,15 +381,16 @@ export const CONCERT_PRESETS = [
           tag: '全場最炸焦點',
           performer: 'BABYMONSTER',
           slots: [
-            { slotId: 0, name: 'CAM 1', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026 (32:53)', tag: '全景主舞台', videoId: '9Y-95rgsDDY', offset: 520, description: 'Summer Sonic 2026 東京海洋球場完整主舞台視角。' },
-            { slotId: 1, name: 'CAM 2', title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026] (44:12)', tag: '樂隊全景', videoId: 'xJuXrgbx-8I', offset: 520, description: '超高清現場搖滾區直拍，全開麥高音炸裂。' },
-            { slotId: 2, name: 'CAM 3', title: 'BABYMONSTER FULL PERFORMANCE [Summer Sonic Tokyo 2026] (44:33)', tag: '完整直擊', videoId: 'wSj_O5v5aMo', offset: 520, description: '三萬五千人全場大合跳，震耳欲聾的尖叫浪潮。' }
+            { slotId: 0, name: 'CAM 1', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026 (32:53)', tag: '全景主舞台', videoId: '9Y-95rgsDDY', offset: 524, songStartTime: 524, description: 'Summer Sonic 2026 東京海洋球場完整主舞台視角 (08:44 開始播放)。' },
+            { slotId: 1, name: 'CAM 2', title: 'BABYMONSTER PERFORMANCE Full fancam [Summer Sonic Tokyo 2026] (44:12)', tag: '樂隊全景', videoId: 'xJuXrgbx-8I', offset: 679, songStartTime: 679, description: '超高清現場搖滾區直拍，全開麥高音炸裂 (11:19 開始播放)。' },
+            { slotId: 2, name: 'CAM 3', title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO (43:58)', tag: '超清全景', videoId: 'WuelifqxMLs', offset: 679, songStartTime: 679, description: '官方歌單認證標記點，三萬五千人全場大合跳 (11:19 開始播放)。' }
           ],
           availableAngles: [
-            { id: 'ss26_drip_1', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026 (32:53)', tag: '全景主舞台', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 1' },
-            { id: 'ss26_drip_2', title: 'BABYMONSTER PERFORMANCE Full fancam (44:12)', tag: '樂隊全景', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'CAM 2' },
-            { id: 'ss26_drip_3', title: 'BABYMONSTER FULL PERFORMANCE [Summer Sonic Tokyo 2026] (44:33)', tag: '完整直擊', videoId: 'wSj_O5v5aMo', author: 'Keep Going', badge: 'CAM 3' },
-            { id: 'ss26_drip_4', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN (45:11)', tag: '球場全景', videoId: '_zV0QTAHd5I', author: 'Festival Fan', badge: 'CAM 4' }
+            { id: 'ss26_drip_1', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026 (32:53)', tag: '全景主舞台', videoId: '9Y-95rgsDDY', offset: 524, songStartTime: 524, author: 'Summer Live', badge: 'CAM 1' },
+            { id: 'ss26_drip_2', title: 'BABYMONSTER PERFORMANCE Full fancam (44:12)', tag: '樂隊全景', videoId: 'xJuXrgbx-8I', offset: 679, songStartTime: 679, author: 'Festival Cam', badge: 'CAM 2' },
+            { id: 'ss26_drip_3', title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO (43:58)', tag: '超清全景', videoId: 'WuelifqxMLs', offset: 679, songStartTime: 679, author: 'Tokyo Live', badge: 'CAM 3' },
+            { id: 'ss26_drip_4', title: 'BABYMONSTER FULL PERFORMANCE [Summer Sonic Tokyo 2026] (44:33)', tag: '完整直擊', videoId: 'wSj_O5v5aMo', offset: 663, songStartTime: 663, author: 'Keep Going', badge: 'CAM 4' },
+            { id: 'ss26_drip_5', title: 'BABYMONSTER SUMMER SONIC 2026 TOKYO, JAPAN (45:11)', tag: '球場全景', videoId: '_zV0QTAHd5I', offset: 674, songStartTime: 674, author: 'Festival Fan', badge: 'CAM 5' }
           ]
         },
         {

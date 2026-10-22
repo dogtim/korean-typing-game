@@ -65,6 +65,9 @@ export default function ConcertWall() {
   // Concert Select Floating Modal state
   const [isConcertModalOpen, setIsConcertModalOpen] = useState(false);
 
+  // Floating Sync Toast state
+  const [syncToastMessage, setSyncToastMessage] = useState('');
+
   // Custom URL Modal state
   const [customModalSlot, setCustomModalSlot] = useState(null); // slotIndex or null
   const [customInputUrl, setCustomInputUrl] = useState('');
@@ -429,6 +432,99 @@ export default function ConcertWall() {
     }
   }, [activeFocusIndex, slots]);
 
+  // Quick Seek to Specific Song (e.g. DRIP across all active slots)
+  const handleSeekToSong = useCallback((songKey = 'drip') => {
+    // Summer Sonic specific calibrated timestamp map for all 5 videos
+    const KNOWN_SONG_MAP = {
+      drip: {
+        '9Y-95rgsDDY': 524, // CAM 1 (08:44)
+        'xJuXrgbx-8I': 679, // CAM 2 (11:19)
+        'WuelifqxMLs': 679, // CAM 3 (11:19)
+        'wSj_O5v5aMo': 663, // CAM 4 (11:03)
+        '_zV0QTAHd5I': 674  // CAM 5 (11:14)
+      }
+    };
+
+    const setlistItems = Array.isArray(activeConcert?.setlist)
+      ? activeConcert.setlist
+      : (activeConcert?.setlist?.mainSet || []);
+
+    const songInSetlist = setlistItems.find(
+      s => s.id === songKey || s.title?.toLowerCase().includes(songKey.toLowerCase())
+    );
+
+    let syncedCount = 0;
+    const syncedSummary = [];
+
+    const updatedSlots = slots.map((currentSlot, idx) => {
+      const vId = currentSlot?.videoId;
+      const player = playersRef.current[idx];
+      let songStartSec = null;
+
+      // 1. Check direct videoId map
+      if (vId && KNOWN_SONG_MAP[songKey]?.[vId] !== undefined) {
+        songStartSec = KNOWN_SONG_MAP[songKey][vId];
+      }
+
+      // 2. Check active concert's setlist entry for this song
+      if (songStartSec === null && songInSetlist) {
+        const matchSlot = songInSetlist.slots?.find(s => s.videoId === vId);
+        if (matchSlot && typeof matchSlot.offset === 'number') {
+          songStartSec = matchSlot.offset;
+        }
+        if (songStartSec === null) {
+          const matchAngle = songInSetlist.availableAngles?.find(a => a.videoId === vId);
+          if (matchAngle && typeof (matchAngle.songStartTime || matchAngle.offset) === 'number') {
+            songStartSec = matchAngle.songStartTime || matchAngle.offset;
+          }
+        }
+        if (songStartSec === null && typeof songInSetlist.slots?.[idx]?.offset === 'number') {
+          songStartSec = songInSetlist.slots[idx].offset;
+        }
+      }
+
+      // 3. Fallback: check slot's own songStartTime or offset
+      if (songStartSec === null && typeof (currentSlot?.songStartTime || currentSlot?.offset) === 'number' && (currentSlot.songStartTime > 0 || currentSlot.offset > 0)) {
+        songStartSec = currentSlot.songStartTime || currentSlot.offset;
+      }
+
+      // If this slot has a start point, seek and play!
+      if (songStartSec !== null) {
+        if (player && typeof player.seekTo === 'function') {
+          try {
+            player.seekTo(songStartSec, true);
+            if (typeof player.playVideo === 'function') {
+              player.playVideo();
+            }
+          } catch (err) {
+            console.warn(`Error seeking CAM ${idx + 1}:`, err);
+          }
+        }
+        syncedCount++;
+        const m = Math.floor(songStartSec / 60);
+        const s = Math.floor(songStartSec % 60);
+        syncedSummary.push(`CAM ${idx + 1} (${m}:${s < 10 ? '0' : ''}${s})`);
+        return {
+          ...currentSlot,
+          offset: songStartSec,
+          songStartTime: songStartSec
+        };
+      }
+      return currentSlot;
+    });
+
+    setSlots(updatedSlots);
+    setIsMasterPlaying(true);
+
+    if (syncedCount > 0) {
+      setSyncToastMessage(`⚡ 全機位已共同 Seek 至《DRIP》：${syncedSummary.join(' · ')} 同步播放中！`);
+      setTimeout(() => setSyncToastMessage(''), 4500);
+    } else {
+      setSyncToastMessage(`⚠️ 目前播放中的機位未找到《DRIP》對應時間點`);
+      setTimeout(() => setSyncToastMessage(''), 3000);
+    }
+  }, [activeConcert, slots]);
+
   // Individual Slot Micro-Offset Nudge
   const handleNudgeOffset = useCallback((slotIndex, deltaSeconds) => {
     setSlots(prev => {
@@ -748,6 +844,30 @@ export default function ConcertWall() {
             <div className="concert-subtitle">{activeConcert.subTitle}</div>
             <p className="concert-desc-text">{activeConcert.description}</p>
           </div>
+
+          {/* Quick Song Jumps (曲目快速同步 Seek 測試 - DRIP) */}
+          {(activeConcert?.id === 'babymonster_summer_sonic_2026' || (Array.isArray(activeConcert?.setlist) ? activeConcert.setlist : (activeConcert?.setlist?.mainSet || [])).some(s => s.id === 'drip' || s.title?.toLowerCase().includes('drip'))) && (
+            <div className="concert-song-jumps-bar">
+              <div className="song-jumps-label">
+                <Sparkles size={13} color="#f43f5e" />
+                <span>曲目快速同步 (QUICK SEEK):</span>
+              </div>
+              <div className="song-jumps-list">
+                <button
+                  type="button"
+                  className="song-jump-chip is-drip"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSeekToSong('drip');
+                  }}
+                  title="點擊將正在播放的 CAM 1、CAM 2、CAM 3 共同 Seek 至《DRIP》起點並同步播放"
+                >
+                  <Play size={12} fill="currentColor" />
+                  <span className="jump-chip-name">DRIP</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -1104,6 +1224,14 @@ export default function ConcertWall() {
         isOpen={isTourHistoryModalOpen}
         onClose={() => setIsTourHistoryModalOpen(false)}
       />
+
+      {/* Floating Sync Toast Alert */}
+      {syncToastMessage && (
+        <div className="concert-sync-toast glassmorphism">
+          <Sparkles size={16} color="#f43f5e" />
+          <span>{syncToastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }
