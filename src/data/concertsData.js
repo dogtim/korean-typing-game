@@ -320,18 +320,18 @@ export const CONCERT_PRESETS = [
     themeColor: '#0284c7',
     tourCategory: 'others',
     description: 'BABYMONSTER 震撼日本指標性音樂祭 SUMMER SONIC 2026！在千葉海洋球場（ZOZO Marine Stadium）頂著酷暑盛夏帶來的全開麥狂潮，現場樂團編排炸裂三萬五千名樂迷。所有收錄影片皆為 30 至 45 分鐘的完整演出長片，無短片。',
-    
+
     // Song-Centric Setlist for Quick Multi-Cam Seek
     // Each song maps available video IDs to their calibrated start offsets
     songs: {
       intro_we_go_up: {
         title: 'WE GO UP',
         availableVideos: [
-          { videoId: '9Y-95rgsDDY', offset: 0 },
-          { videoId: 'xJuXrgbx-8I', offset: 0 },
-          { videoId: '_zV0QTAHd5I', offset: 0 },
-          { videoId: 'WuelifqxMLs', offset: 0 },
-          { videoId: 'wSj_O5v5aMo', offset: 0 }
+          { videoId: 'WuelifqxMLs', offset: 10 },
+          { videoId: 'xJuXrgbx-8I', offset: 10 },
+          { videoId: '9Y-95rgsDDY', offset: 4 },
+          { videoId: '_zV0QTAHd5I', offset: 77 },
+          { videoId: 'wSj_O5v5aMo', offset: 39 }
         ]
       },
       choom: {
