@@ -715,8 +715,12 @@
   color: #ffffff;
 }
 
-.song-jump-chip:active {
-  transform: translateY(0) scale(0.99);
+.song-jump-chip:active,
+.song-jump-chip.is-active {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  border-color: #fda4af;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.6), 0 4px 12px rgba(244, 63, 94, 0.4);
+  transform: translateY(-1px);
 }
 
 .jump-chip-name {
@@ -754,6 +758,12 @@
   backdrop-filter: blur(16px);
   animation: toastBounceIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
+}
+
+.concert-sync-toast.is-warning {
+  border-color: rgba(245, 158, 11, 0.7);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 158, 11, 0.35);
+  color: #fef3c7;
 }
 
 @keyframes toastBounceIn {
