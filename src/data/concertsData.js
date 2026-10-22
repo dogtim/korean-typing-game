@@ -52,42 +52,48 @@ export const CONCERT_PRESETS = [
         description: '2026–2027 第二輪世界巡演首爾站 1:40:55 全場長片。'
       }
     ],
-    availableAngles: [
-      // Hello Monsters (>= 10 mins)
-      { id: 'all_hm_1', title: '[Hello Monsters] 橫濱 K-Arena 4K 全場 (2:13:49)', tag: 'Hello Monsters', videoId: 'v0QTRX_fyPk', author: 'Mokrij Vinograd', badge: 'HM 橫濱' },
-      { id: 'all_hm_2', title: '[Hello Monsters] 神奈川 Day 2 全場 (1:53:53)', tag: 'Hello Monsters', videoId: '81u-SQQyS4o', author: 'Bình Nguyễn', badge: 'HM 神奈川' },
-      { id: 'all_hm_taipei', title: '[Hello Monsters] 台北小巨蛋站 4K 全場 (1:46:41)', tag: 'Hello Monsters', videoId: '_7md4Zp8c4E', author: '黛比的追星日記', badge: 'HM 台北' },
-      { id: 'all_hm_3', title: '[Hello Monsters] 神奈川完整安可 (27:35)', tag: 'Hello Monsters', videoId: 't6Zeru_VdSg', author: 'Yakisoba Studio', badge: 'HM 安可' },
+    // Dynamically aggregates all available angles across all other concerts (Single Source of Truth)
+    get availableAngles() {
+      const angles = [];
+      const seen = new Set();
+      for (const preset of CONCERT_PRESETS) {
+        if (!preset || preset.id === 'all_concerts_mix') continue;
+        for (const angle of (preset.availableAngles || [])) {
+          if (!seen.has(angle.videoId)) {
+            seen.add(angle.videoId);
+            angles.push(angle);
+          }
+        }
+      }
+      return angles;
+    },
 
-      // Love Monsters (>= 10 mins)
-      { id: 'all_lm_taipei', title: '[Love Monsters] 台北小巨蛋站全場 (1:45:17)', tag: 'Love Monsters', videoId: 'f9PBmq77faA', author: 'Alung12345', badge: 'LM 台北' },
-      { id: 'all_lm_japan', title: '[Love Monsters] 日本 Fan Concert 全場 (2:04:47)', tag: 'Love Monsters', videoId: 'XSFajbcHCZA', author: 'Multiverso kpop', badge: 'LM 日本' },
-      { id: 'all_lm_bkk', title: '[Love Monsters] 曼谷 Fan Concert 全場 (1:29:30)', tag: 'Love Monsters', videoId: 'ddnxQR2hWF8', author: 'ม๊ะ!!ดูกัน', badge: 'LM 曼谷' },
-      { id: 'all_lm_taipei_p', title: '[Love Monsters] 台北場現場實錄 (42:23)', tag: 'Love Monsters', videoId: '7HobWcbWKjI', author: 'BABYMONSTER fan', badge: 'LM 台北精選' },
-      { id: 'all_lm_solo', title: '[Love Monsters] Solo Stage 舞台特寫 4K Fancam (12:35)', tag: 'Love Monsters', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'LM 特寫' },
-
-      // Choom (>= 10 mins)
-      { id: 'all_ch_jakarta_full', title: '[Choom] 雅加達站全場含彩排 (1:55:04)', tag: 'Choom 世巡', videoId: 'V5LWC7w2YO4', author: 'Monstiez Indo', badge: 'Choom 雅加達' },
-      { id: 'all_ch_jakarta_2', title: '[Choom] 雅加達站主舞台全景直擊 (1:13:02)', tag: 'Choom 世巡', videoId: 'Y0jAWFM8IO8', author: 'K-Fancam', badge: 'Choom 雅加達2' },
-      { id: 'all_ch_seoul_vod', title: '[Choom] 首爾 KSPO Dome 全場公演 (1:57:23)', tag: 'Choom 世巡', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: 'Choom 首爾公演' },
-      { id: 'all_ch_manila_1', title: '[Choom] 馬尼拉站全場 (1:53:01)', tag: 'Choom 世巡', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: 'Choom 馬尼拉' },
-      { id: 'all_ch_seoul_1', title: '[Choom] 260628 首爾 KSPO Dome 全場 (1:40:55)', tag: 'Choom 世巡', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: 'Choom 首爾' },
-      { id: 'all_ch_manila_2', title: '[Choom] 馬尼拉站全場第二視角 (1:39:01)', tag: 'Choom 世巡', videoId: 'nQCoyE-fK2s', author: 'Cha', badge: 'Choom 馬尼拉2' },
-      { id: 'all_ch_seoul_vlog', title: '[Choom] 首爾站沉浸式全場直擊 (1:26:29)', tag: 'Choom 世巡', videoId: 'Dr-8WJLQquU', author: '이번 역은 아현', badge: 'Choom 首爾直擊' },
-      { id: 'all_ch_manila_talk', title: '[Choom] 馬尼拉全場 Talk+安可 (1:09:31)', tag: 'Choom 世巡', videoId: 'TG3t--k_7kw', author: 'Sheanne Palma', badge: 'Choom Talk安可' },
-      { id: 'all_ch_osaka_full', title: '[Choom] 大阪京瓷巨蛋全場 (51:18)', tag: 'Choom 巨蛋', videoId: 'nzPPN62FHnQ', author: 'AdarrCP4', badge: 'Choom 京瓷巨蛋' },
-      { id: 'all_ch_seoul_yg', title: '[Choom] ★YG 官方首爾巡演紀實 (27:08)', tag: 'Choom 官方', videoId: 'U_jAcFKeY_c', author: 'BABYMONSTER Official', badge: 'YG 首爾幕後' },
-      { id: 'all_ch_japan_yg', title: '[Choom] ★YG 官方日本巡演實錄 (20:01)', tag: 'Choom 官方', videoId: 'UJjvmfRc51c', author: 'BABYMONSTER Official', badge: 'YG 日本幕後' },
-      { id: 'all_ch_osaka_d1_vip', title: '[Choom] 京瓷巨蛋搖滾區現場 (15:07)', tag: 'Choom 巨蛋', videoId: '39J8a2OgRGQ', author: 'babymonster Haram', badge: 'Choom 巨蛋搖滾' },
-      { id: 'all_ch_osaka_d2', title: '[Choom] 京瓷巨蛋 Day 2 現場 (14:28)', tag: 'Choom 巨蛋', videoId: '6QnZyKUFAoU', author: 'MONSTIEZ2203', badge: 'Choom 巨蛋D2' },
-      { id: 'all_ch_osaka_d1', title: '[Choom] 京瓷巨蛋 Day 1 現場 4K (13:53)', tag: 'Choom 巨蛋', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: 'Choom 巨蛋D1' },
-
-      // Summer Sonic (>= 10 mins)
-      { id: 'all_ss_1', title: '[Summer Sonic] 東京海洋球場全景 (32:53)', tag: '音樂祭', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'SS 全景' },
-      { id: 'all_ss_2', title: '[Summer Sonic] WE GO UP 現場樂隊舞台全場 (44:12)', tag: '音樂祭', videoId: 'xJuXrgbx-8I', author: 'Festival Cam', badge: 'SS 樂團' },
-      { id: 'all_ss_3', title: '[Summer Sonic] 東京海洋球場 45分鐘超清全景 (45:11)', tag: '音樂祭', videoId: '_zV0QTAHd5I', author: 'Festival Fan', badge: 'SS 45m全景' },
-      { id: 'all_ss_4', title: '[Summer Sonic] 東京站 44分鐘完整演出 (44:33)', tag: '音樂祭', videoId: 'wSj_O5v5aMo', author: 'Keep Going', badge: 'SS 完整演出' }
-    ]
+    // Dynamically merges songs across all concerts for universal cross-tour seek
+    get songs() {
+      const merged = {};
+      for (const preset of CONCERT_PRESETS) {
+        if (!preset || preset.id === 'all_concerts_mix' || !preset.songs) continue;
+        if (typeof preset.songs !== 'object' || Array.isArray(preset.songs)) continue;
+        for (const [key, songData] of Object.entries(preset.songs)) {
+          if (!merged[key]) {
+            merged[key] = {
+              title: songData.title || key.toUpperCase(),
+              availableVideos: []
+            };
+          }
+          if (Array.isArray(songData.availableVideos)) {
+            const existingVIds = new Set(merged[key].availableVideos.map(v => v.videoId));
+            for (const v of songData.availableVideos) {
+              if (!existingVIds.has(v.videoId)) {
+                existingVIds.add(v.videoId);
+                merged[key].availableVideos.push(v);
+              }
+            }
+          }
+        }
+      }
+      return merged;
+    }
   },
   {
     id: 'babymonster_choom_2026',
@@ -100,7 +106,7 @@ export const CONCERT_PRESETS = [
     attendance: 'World Tour Full Show',
     themeColor: '#f97316',
     tourCategory: 'choom',
-    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 雅加達站全場含彩排 (1:55:04)、CAM 2 雅加達站主舞台 4K (1:13:02)、CAM 3 首爾 KSPO Dome 全場 (1:40:55)。支援多機位即時同步 Seek 與獨立切換。',
+    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 雅加達全場含彩排 (1:55:04)、CAM 2 雅加達 4K 全場 (1:45:00)、CAM 3 雅加達主舞台 (1:13:02)。三機位均為雅加達現場，支援全曲目多角度即時同步 Seek 與播放。',
 
     // Song-Centric Setlist for Quick Multi-Cam Seek
     songs: {
@@ -133,6 +139,7 @@ export const CONCERT_PRESETS = [
         title: 'WE GO UP',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 1135 },
+          { videoId: '0W2kNvTJE_I', offset: 63 },
           { videoId: 'Y0jAWFM8IO8', offset: 137 }
         ]
       },
@@ -140,6 +147,7 @@ export const CONCERT_PRESETS = [
         title: 'CHOOM',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 1326 },
+          { videoId: '0W2kNvTJE_I', offset: 252 },
           { videoId: 'Y0jAWFM8IO8', offset: 336 }
         ]
       },
@@ -147,6 +155,7 @@ export const CONCERT_PRESETS = [
         title: 'BATTER UP',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 1503 },
+          { videoId: '0W2kNvTJE_I', offset: 433 },
           { videoId: 'Y0jAWFM8IO8', offset: 471 }
         ]
       },
@@ -154,6 +163,7 @@ export const CONCERT_PRESETS = [
         title: 'DRIP',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 1724 },
+          { videoId: '0W2kNvTJE_I', offset: 662 },
           { videoId: 'Y0jAWFM8IO8', offset: 661 }
         ]
       },
@@ -167,6 +177,7 @@ export const CONCERT_PRESETS = [
         title: 'MOON',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 2059 },
+          { videoId: '0W2kNvTJE_I', offset: 1020 },
           { videoId: 'Y0jAWFM8IO8', offset: 877 }
         ]
       },
@@ -174,19 +185,22 @@ export const CONCERT_PRESETS = [
         title: 'CLIK CLAK',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 2226 },
+          { videoId: '0W2kNvTJE_I', offset: 1194 },
           { videoId: 'Y0jAWFM8IO8', offset: 1038 }
         ]
       },
       sheesh: {
         title: 'SHEESH',
         availableVideos: [
-          { videoId: 'V5LWC7w2YO4', offset: 2389 }
+          { videoId: 'V5LWC7w2YO4', offset: 2389 },
+          { videoId: '0W2kNvTJE_I', offset: 1364 }
         ]
       },
       psycho: {
         title: 'PSYCHO',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 2547 },
+          { videoId: '0W2kNvTJE_I', offset: 1536 },
           { videoId: 'Y0jAWFM8IO8', offset: 1080 }
         ]
       },
@@ -194,6 +208,7 @@ export const CONCERT_PRESETS = [
         title: 'Rora – Havana',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 2735 },
+          { videoId: '0W2kNvTJE_I', offset: 1784 },
           { videoId: 'Y0jAWFM8IO8', offset: 1182 },
           { videoId: 'cbYjGuqNrX4', offset: 0 }
         ]
@@ -202,6 +217,7 @@ export const CONCERT_PRESETS = [
         title: 'Asa – Temple',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 2872 },
+          { videoId: '0W2kNvTJE_I', offset: 1926 },
           { videoId: 'Y0jAWFM8IO8', offset: 1314 },
           { videoId: 'cbYjGuqNrX4', offset: 138 }
         ]
@@ -210,6 +226,7 @@ export const CONCERT_PRESETS = [
         title: 'Pharita – Super Bass',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 2985 },
+          { videoId: '0W2kNvTJE_I', offset: 2065 },
           { videoId: 'Y0jAWFM8IO8', offset: 1369 },
           { videoId: 'cbYjGuqNrX4', offset: 247 }
         ]
@@ -218,6 +235,7 @@ export const CONCERT_PRESETS = [
         title: 'Chiquita – Worth It',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 3104 },
+          { videoId: '0W2kNvTJE_I', offset: 2196 },
           { videoId: 'Y0jAWFM8IO8', offset: 1459 },
           { videoId: 'cbYjGuqNrX4', offset: 376 }
         ]
@@ -226,6 +244,7 @@ export const CONCERT_PRESETS = [
         title: 'Ruka – Ratata',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 3218 },
+          { videoId: '0W2kNvTJE_I', offset: 2328 },
           { videoId: 'Y0jAWFM8IO8', offset: 1570 },
           { videoId: 'cbYjGuqNrX4', offset: 495 }
         ]
@@ -234,6 +253,7 @@ export const CONCERT_PRESETS = [
         title: 'Ahyeon – Problem',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 3307 },
+          { videoId: '0W2kNvTJE_I', offset: 2454 },
           { videoId: 'Y0jAWFM8IO8', offset: 1651 },
           { videoId: 'cbYjGuqNrX4', offset: 606 }
         ]
@@ -247,19 +267,22 @@ export const CONCERT_PRESETS = [
       stuck_in_the_middle: {
         title: 'STUCK IN THE MIDDLE',
         availableVideos: [
-          { videoId: 'V5LWC7w2YO4', offset: 3510 }
+          { videoId: 'V5LWC7w2YO4', offset: 3510 },
+          { videoId: '0W2kNvTJE_I', offset: 2647 }
         ]
       },
       love_maybe: {
         title: 'LOVE, MAYBE',
         availableVideos: [
-          { videoId: 'V5LWC7w2YO4', offset: 3604 }
+          { videoId: 'V5LWC7w2YO4', offset: 3604 },
+          { videoId: '0W2kNvTJE_I', offset: 2647 }
         ]
       },
       dream: {
         title: 'DREAM',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 3690 },
+          { videoId: '0W2kNvTJE_I', offset: 2647 },
           { videoId: 'Y0jAWFM8IO8', offset: 1835 }
         ]
       },
@@ -267,6 +290,7 @@ export const CONCERT_PRESETS = [
         title: 'LOCKED IN',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 3799 },
+          { videoId: '0W2kNvTJE_I', offset: 2966 },
           { videoId: 'Y0jAWFM8IO8', offset: 1935 }
         ]
       },
@@ -280,6 +304,7 @@ export const CONCERT_PRESETS = [
         title: 'REALLY LIKE YOU',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 4066 },
+          { videoId: '0W2kNvTJE_I', offset: 3249 },
           { videoId: 'Y0jAWFM8IO8', offset: 2026 }
         ]
       },
@@ -287,6 +312,7 @@ export const CONCERT_PRESETS = [
         title: 'BILLIONAIRE',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 4280 },
+          { videoId: '0W2kNvTJE_I', offset: 3481 },
           { videoId: 'Y0jAWFM8IO8', offset: 2218 }
         ]
       },
@@ -301,6 +327,7 @@ export const CONCERT_PRESETS = [
         title: 'FOREVER',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 4604 },
+          { videoId: '0W2kNvTJE_I', offset: 3833 },
           { videoId: 'Y0jAWFM8IO8', offset: 2389 }
         ]
       },
@@ -308,6 +335,7 @@ export const CONCERT_PRESETS = [
         title: 'WILD',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 4813 },
+          { videoId: '0W2kNvTJE_I', offset: 4048 },
           { videoId: 'Y0jAWFM8IO8', offset: 2599 }
         ]
       },
@@ -315,6 +343,7 @@ export const CONCERT_PRESETS = [
         title: 'I LIKE IT',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 4977 },
+          { videoId: '0W2kNvTJE_I', offset: 4223 },
           { videoId: 'Y0jAWFM8IO8', offset: 2743 }
         ]
       },
@@ -322,6 +351,7 @@ export const CONCERT_PRESETS = [
         title: 'HOT SAUCE',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 5168 },
+          { videoId: '0W2kNvTJE_I', offset: 4464 },
           { videoId: 'Y0jAWFM8IO8', offset: 2937 }
         ]
       },
@@ -329,6 +359,7 @@ export const CONCERT_PRESETS = [
         title: 'SUGAR HONEY ICE TEA',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 5311 },
+          { videoId: '0W2kNvTJE_I', offset: 4625 },
           { videoId: 'Y0jAWFM8IO8', offset: 3079 }
         ]
       },
@@ -336,6 +367,7 @@ export const CONCERT_PRESETS = [
         title: 'SUPA DUPA LUV (Encore)',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 5480 },
+          { videoId: '0W2kNvTJE_I', offset: 4894 },
           { videoId: 'Y0jAWFM8IO8', offset: 3251 }
         ]
       },
@@ -343,6 +375,7 @@ export const CONCERT_PRESETS = [
         title: 'LOVE IN MY HEART (Encore)',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 5640 },
+          { videoId: '0W2kNvTJE_I', offset: 5062 },
           { videoId: 'Y0jAWFM8IO8', offset: 3401 }
         ]
       },
@@ -369,6 +402,7 @@ export const CONCERT_PRESETS = [
         title: 'BATTER UP REMIX (Encore)',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 6317 },
+          { videoId: '0W2kNvTJE_I', offset: 5745 },
           { videoId: 'Y0jAWFM8IO8', offset: 3900 }
         ]
       },
@@ -376,6 +410,7 @@ export const CONCERT_PRESETS = [
         title: 'SHEESH REMIX (Encore)',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 6510 },
+          { videoId: '0W2kNvTJE_I', offset: 5940 },
           { videoId: 'Y0jAWFM8IO8', offset: 4067 }
         ]
       },
@@ -383,6 +418,7 @@ export const CONCERT_PRESETS = [
         title: 'SUGAR HONEY ICE TEA (Encore)',
         availableVideos: [
           { videoId: 'V5LWC7w2YO4', offset: 6718 },
+          { videoId: '0W2kNvTJE_I', offset: 6197 },
           { videoId: 'Y0jAWFM8IO8', offset: 4210 }
         ]
       },
@@ -407,26 +443,27 @@ export const CONCERT_PRESETS = [
       {
         slotId: 1,
         name: 'CAM 2',
+        title: 'BABYMONSTER CHOOM CONCERT in JAKARTA (FULL FANCAM 4K)',
+        tag: '雅加達 4K 全場',
+        videoId: '0W2kNvTJE_I',
+        offset: 63,
+        description: '雅加達站 4K 高畫質現場舞台全場直擊。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
         title: '[Full Concert] BABYMONSTER World Tour CHOOM In Jakarta (1:13:02)',
         tag: '雅加達主舞台 1:13:02',
         videoId: 'Y0jAWFM8IO8',
         offset: 137,
         description: '雅加達站 73 分鐘主舞台超清現場直擊。'
-      },
-      {
-        slotId: 2,
-        name: 'CAM 3',
-        title: '260628 BABYMONSTER CHOOM 2026-27 WORLD TOUR IN SEOUL (Full 1:40:55)',
-        tag: '首爾全場 1:40:55',
-        videoId: 'A3M7Nxt3_-Q',
-        offset: 0,
-        description: '首爾 KSPO Dome 巡演啟航站全場錄影。'
       }
     ],
     availableAngles: [
       { id: 'choom_jakarta_full', title: 'BABYMONSTER WORLD TOUR [CHOOM] IN JAKARTA (Full 1:55:04)', tag: '雅加達全場', videoId: 'V5LWC7w2YO4', author: 'Monstiez Indo', badge: 'CAM 1' },
-      { id: 'choom_jakarta_2', title: 'BABYMONSTER World Tour CHOOM In Jakarta - Fancam 2 (1:13:02)', tag: '雅加達主舞台', videoId: 'Y0jAWFM8IO8', author: 'K-Fancam', badge: 'CAM 2' },
-      { id: 'choom_full_seoul', title: '260628 BABYMONSTER CHOOM WORLD TOUR IN SEOUL (Full 1:40:55)', tag: '首爾全場', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: 'CAM 3' },
+      { id: 'choom_jakarta_4k', title: 'BABYMONSTER CHOOM CONCERT in JAKARTA (FULL FANCAM 4K)', tag: '雅加達 4K 全場', videoId: '0W2kNvTJE_I', author: 'Live Stage', badge: 'CAM 2' },
+      { id: 'choom_jakarta_2', title: 'BABYMONSTER World Tour CHOOM In Jakarta - Fancam 2 (1:13:02)', tag: '雅加達主舞台', videoId: 'Y0jAWFM8IO8', author: 'K-Fancam', badge: 'CAM 3' },
+      { id: 'choom_full_seoul', title: '260628 BABYMONSTER CHOOM WORLD TOUR IN SEOUL (Full 1:40:55)', tag: '首爾全場', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: '首爾全場' },
       { id: 'choom_seoul_vod', title: '[SE] BABYMONSTER: WORLD TOUR [춤 (CHOOM)] in Seoul (Full 1:57:23)', tag: '首爾公演', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: '首爾公演' },
       { id: 'choom_full_manila', title: 'BABYMONSTER CHOOM 2026 WORLD TOUR IN MANILA (Full 1:53:01)', tag: '馬尼拉全場', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: '馬尼拉全場' },
       { id: 'choom_manila_2', title: 'BABYMONSTER WORLD TOUR - CHOOM - MANILA 2026 (Full 1:39:01)', tag: '馬尼拉全場2', videoId: 'nQCoyE-fK2s', author: 'Cha', badge: '馬尼拉2' },
