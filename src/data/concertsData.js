@@ -67,6 +67,7 @@ export const CONCERT_PRESETS = [
       { id: 'all_lm_solo', title: '[Love Monsters] Solo Stage 舞台特寫 4K Fancam (12:35)', tag: 'Love Monsters', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'LM 特寫' },
 
       // Choom (>= 10 mins)
+      { id: 'all_ch_jakarta_full', title: '[Choom] 雅加達站全場含彩排 (1:55:04)', tag: 'Choom 世巡', videoId: 'V5LWC7w2YO4', author: 'Monstiez Indo', badge: 'Choom 雅加達' },
       { id: 'all_ch_seoul_vod', title: '[Choom] 首爾 KSPO Dome 全場公演 (1:57:23)', tag: 'Choom 世巡', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: 'Choom 首爾公演' },
       { id: 'all_ch_manila_1', title: '[Choom] 馬尼拉站全場 (1:53:01)', tag: 'Choom 世巡', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: 'Choom 馬尼拉' },
       { id: 'all_ch_seoul_1', title: '[Choom] 260628 首爾 KSPO Dome 全場 (1:40:55)', tag: 'Choom 世巡', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: 'Choom 首爾' },
@@ -88,26 +89,279 @@ export const CONCERT_PRESETS = [
     ]
   },
   {
-    id: 'babymonster_choom_seoul_manila_2026',
+    id: 'babymonster_choom_2026',
     title: '2026-27 BABYMONSTER WORLD TOUR [춤 (CHOOM)]',
-    subTitle: 'SEOUL KSPO DOME & MANILA (首爾 / 馬尼拉 全場長片)',
+    subTitle: 'SEOUL KSPO DOME, MANILA & JAKARTA (首爾 / 馬尼拉 / 雅加達 全場長片)',
     categoryTag: 'CHOOM 巡演 2026',
     artist: 'BABYMONSTER (베이비몬스터)',
-    venue: 'KSPO Dome, Seoul / Manila, Philippines',
+    venue: 'KSPO Dome, Seoul / Manila / Jakarta, Indonesia',
     date: '2026.06.26 - 2026.09.05',
     attendance: 'World Tour Full Show',
     themeColor: '#f97316',
     tourCategory: 'choom',
-    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 首爾 260628 全場 (1:40:55)、CAM 2 馬尼拉 2026.09.05 全場 (1:53:01)、CAM 3 首爾公演 1 小時 57 分長片 (1:57:23)。所有影片均可多視角同步播放與獨立切換。',
-    songs: [
-      { id: 'choom_opening', title: '開場 / 全場播放', tag: '從頭開始' },
-      { id: 'rora_havana', title: 'Rora – Havana', tag: 'Solo' },
-      { id: 'asa_temple', title: 'Asa – Temple', tag: 'Solo' },
-      { id: 'pharita_super_bass', title: 'Pharita – Super Bass', tag: 'Solo' },
-      { id: 'chiquita_worth_it', title: 'Chiquita – Worth It', tag: 'Solo' },
-      { id: 'ratatata', title: 'RATATATA', tag: 'Solo' },
-      { id: 'ahyeon_problem', title: 'Ahyeon – Problem', tag: 'Solo' }
-    ],
+    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 首爾 260628 全場 (1:40:55)、CAM 2 馬尼拉 2026.09.05 全場 (1:53:01)、CAM 3 雅加達站全場含彩排 (1:55:04)。支援 40+ 首曲目即時對位 Seek 與全機位同步。',
+
+    // Song-Centric Setlist for Quick Multi-Cam Seek
+    songs: {
+      sc_like_that: {
+        title: 'LIKE THAT (Soundcheck)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 400 }
+        ]
+      },
+      sc_supa_dupa_luv: {
+        title: 'SUPA DUPA LUV (Soundcheck)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 683 }
+        ]
+      },
+      sc_hot_sauce: {
+        title: 'HOT SAUCE (Soundcheck)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 845 }
+        ]
+      },
+      intro: {
+        title: 'INTRO',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 1018 }
+        ]
+      },
+      we_go_up: {
+        title: 'WE GO UP',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 1135 }
+        ]
+      },
+      choom: {
+        title: 'CHOOM',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 1326 }
+        ]
+      },
+      batter_up: {
+        title: 'BATTER UP',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 1503 }
+        ]
+      },
+      drip: {
+        title: 'DRIP',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 1724 }
+        ]
+      },
+      opening_talk: {
+        title: 'Member Greeting & Opening',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 1899 }
+        ]
+      },
+      moon: {
+        title: 'MOON',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2059 }
+        ]
+      },
+      clik_clak: {
+        title: 'CLIK CLAK',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2226 }
+        ]
+      },
+      sheesh: {
+        title: 'SHEESH',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2389 }
+        ]
+      },
+      psycho: {
+        title: 'PSYCHO',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2547 }
+        ]
+      },
+      solo_rora_havana: {
+        title: 'Rora – Havana',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2735 },
+          { videoId: 'cbYjGuqNrX4', offset: 0 }
+        ]
+      },
+      solo_asa_temple: {
+        title: 'Asa – Temple',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2872 },
+          { videoId: 'cbYjGuqNrX4', offset: 138 }
+        ]
+      },
+      solo_pharita_super_bass: {
+        title: 'Pharita – Super Bass',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 2985 },
+          { videoId: 'cbYjGuqNrX4', offset: 247 }
+        ]
+      },
+      solo_chiquita_worth_it: {
+        title: 'Chiquita – Worth It',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3104 },
+          { videoId: 'cbYjGuqNrX4', offset: 376 }
+        ]
+      },
+      solo_ruka_ratata: {
+        title: 'Ruka – Ratata',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3218 },
+          { videoId: 'cbYjGuqNrX4', offset: 495 }
+        ]
+      },
+      solo_ahyeon_problem: {
+        title: 'Ahyeon – Problem',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3307 },
+          { videoId: 'cbYjGuqNrX4', offset: 606 }
+        ]
+      },
+      dance_challenge: {
+        title: 'DANCE CHALLENGE with MONSTIEZ',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3485 }
+        ]
+      },
+      stuck_in_the_middle: {
+        title: 'STUCK IN THE MIDDLE',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3510 }
+        ]
+      },
+      love_maybe: {
+        title: 'LOVE, MAYBE',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3604 }
+        ]
+      },
+      dream: {
+        title: 'DREAM',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3690 }
+        ]
+      },
+      locked_in: {
+        title: 'LOCKED IN',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3799 }
+        ]
+      },
+      talk_audience_1: {
+        title: 'INTERACTION WITH AUDIENCE',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 3969 }
+        ]
+      },
+      really_like_you: {
+        title: 'REALLY LIKE YOU',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 4066 }
+        ]
+      },
+      billionaire: {
+        title: 'BILLIONAIRE',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 4280 }
+        ]
+      },
+      talk_audience_2: {
+        title: 'INTERACTION WITH AUDIENCE 2',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 4419 }
+        ]
+      },
+      forever: {
+        title: 'FOREVER',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 4604 }
+        ]
+      },
+      wild: {
+        title: 'WILD',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 4813 }
+        ]
+      },
+      i_like_it: {
+        title: 'I LIKE IT',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 4977 }
+        ]
+      },
+      hot_sauce: {
+        title: 'HOT SAUCE',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 5168 }
+        ]
+      },
+      sugar_honey_ice_tea: {
+        title: 'SUGAR HONEY ICE TEA',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 5311 }
+        ]
+      },
+      encore_supa_dupa_luv: {
+        title: 'SUPA DUPA LUV (Encore)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 5480 }
+        ]
+      },
+      encore_love_in_my_heart: {
+        title: 'LOVE IN MY HEART (Encore)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 5640 }
+        ]
+      },
+      encore_talk_3: {
+        title: 'INTERACTION WITH AUDIENCE 3',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 5833 }
+        ]
+      },
+      moment_digoyang: {
+        title: 'GAMAU PULANG MOMENT',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 6216 }
+        ]
+      },
+      photo_session: {
+        title: 'PHOTO SESSION',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 6240 }
+        ]
+      },
+      encore_batter_up_remix: {
+        title: 'BATTER UP REMIX (Encore)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 6317 }
+        ]
+      },
+      encore_sheesh_remix: {
+        title: 'SHEESH REMIX (Encore)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 6510 }
+        ]
+      },
+      encore_sugar_honey_ice_tea: {
+        title: 'SUGAR HONEY ICE TEA (Encore)',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 6718 }
+        ]
+      },
+      say_thank_you: {
+        title: 'SAY THANK YOU',
+        availableVideos: [
+          { videoId: 'V5LWC7w2YO4', offset: 6904 }
+        ]
+      }
+    },
     defaultSlots: [
       {
         slotId: 0,
@@ -116,7 +370,6 @@ export const CONCERT_PRESETS = [
         tag: '首爾全場 1:40:55',
         videoId: 'A3M7Nxt3_-Q',
         offset: 0,
-        songCues: { choom_opening: 0 },
         description: '首爾 KSPO Dome 巡演啟航站全場錄影。'
       },
       {
@@ -126,31 +379,30 @@ export const CONCERT_PRESETS = [
         tag: '馬尼拉全場 1:53:01',
         videoId: 'BN61wzbvI7M',
         offset: 0,
-        songCues: { choom_opening: 0 },
         description: '馬尼拉站全場錄影。'
       },
       {
         slotId: 2,
         name: 'CAM 3',
-        title: '[SE] BABYMONSTER: WORLD TOUR [춤 (CHOOM)] in Seoul (Full 1:57:23)',
-        tag: '首爾公演 1:57:23',
-        videoId: 'sODCh7HvDAs',
-        offset: 0,
-        songCues: { choom_opening: 0 },
-        description: '首爾 KSPO Dome 公演 1 小時 57 分鐘超長篇現場舞台錄影。'
+        title: 'BABYMONSTER WORLD TOUR [CHOOM] IN JAKARTA (Full 1:55:04)',
+        tag: '雅加達全場 1:55:04',
+        videoId: 'V5LWC7w2YO4',
+        offset: 1018,
+        description: '雅加達站 1 小時 55 分鐘完整巡演舞台，包含彩排 Soundcheck、開場 INTRO、Solo 舞台與安可。'
       }
     ],
     availableAngles: [
-      { id: 'choom_seoul_vod', title: '[SE] BABYMONSTER: WORLD TOUR [춤 (CHOOM)] in Seoul (Full 1:57:23)', tag: '首爾全場', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: 'CAM 3', songCues: { choom_opening: 0 } },
-      { id: 'choom_full_manila', title: 'BABYMONSTER CHOOM 2026 WORLD TOUR IN MANILA (Full 1:53:01)', tag: '馬尼拉全場', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: 'CAM 2', songCues: { choom_opening: 0 } },
-      { id: 'choom_full_seoul', title: '260628 BABYMONSTER CHOOM WORLD TOUR IN SEOUL (Full 1:40:55)', tag: '首爾全場', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: 'CAM 1', songCues: { choom_opening: 0 } },
-      { id: 'choom_manila_2', title: 'BABYMONSTER WORLD TOUR - CHOOM - MANILA 2026 (Full 1:39:01)', tag: '馬尼拉全場2', videoId: 'nQCoyE-fK2s', author: 'Cha', badge: '馬尼拉2', songCues: { choom_opening: 0 } },
-      { id: 'choom_seoul_vlog', title: '[몬스티즈 브이로그] 2026-27 WORLD TOUR CHOOM IN SEOUL (1:26:29)', tag: '首爾沉浸直擊', videoId: 'Dr-8WJLQquU', author: '이번 역은 아현', badge: '首爾直擊', songCues: { choom_opening: 0 } },
-      { id: 'choom_manila_talk', title: 'BABYMONSTER CHOOM IN MANILA | Raw Concert + Talk & Encore (1:09:31)', tag: '馬尼拉全場+Talk', videoId: 'TG3t--k_7kw', author: 'Sheanne Palma', badge: 'Talk+安可', songCues: { choom_opening: 0 } },
-      { id: 'choom_osaka_full', title: '2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME in OSAKA (51:18)', tag: '大阪巨蛋全場', videoId: 'nzPPN62FHnQ', author: 'AdarrCP4', badge: '京瓷巨蛋', songCues: { choom_opening: 0 } },
-      { id: 'choom_seoul_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in SEOUL (27:08)', tag: 'YG 官方首爾', videoId: 'U_jAcFKeY_c', author: 'BABYMONSTER', badge: '官方首爾', songCues: { choom_opening: 0 } },
-      { id: 'choom_japan_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in JAPAN #1 (20:01)', tag: 'YG 官方日本', videoId: 'UJjvmfRc51c', author: 'BABYMONSTER', badge: '官方日本', songCues: { choom_opening: 0 } },
-      { id: 'choom_solo_comp', title: 'Solo Stage 솔로무대 모음 4K Fancam (CHOOM 260626, 12:35)', tag: 'Solo 舞台 4K', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'Solo精選', songCues: { choom_opening: 0, rora_havana: 0, asa_temple: 138, pharita_super_bass: 247, chiquita_worth_it: 376, ratatata: 495, ahyeon_problem: 606 } }
+      { id: 'choom_jakarta_full', title: 'BABYMONSTER WORLD TOUR [CHOOM] IN JAKARTA (Full 1:55:04)', tag: '雅加達全場', videoId: 'V5LWC7w2YO4', author: 'Monstiez Indo', badge: 'CAM 3' },
+      { id: 'choom_seoul_vod', title: '[SE] BABYMONSTER: WORLD TOUR [춤 (CHOOM)] in Seoul (Full 1:57:23)', tag: '首爾全場', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: '首爾公演' },
+      { id: 'choom_full_manila', title: 'BABYMONSTER CHOOM 2026 WORLD TOUR IN MANILA (Full 1:53:01)', tag: '馬尼拉全場', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: 'CAM 2' },
+      { id: 'choom_full_seoul', title: '260628 BABYMONSTER CHOOM WORLD TOUR IN SEOUL (Full 1:40:55)', tag: '首爾全場', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: 'CAM 1' },
+      { id: 'choom_manila_2', title: 'BABYMONSTER WORLD TOUR - CHOOM - MANILA 2026 (Full 1:39:01)', tag: '馬尼拉全場2', videoId: 'nQCoyE-fK2s', author: 'Cha', badge: '馬尼拉2' },
+      { id: 'choom_seoul_vlog', title: '[몬스티즈 브이로그] 2026-27 WORLD TOUR CHOOM IN SEOUL (1:26:29)', tag: '首爾沉浸直擊', videoId: 'Dr-8WJLQquU', author: '이번 역은 아현', badge: '首爾直擊' },
+      { id: 'choom_manila_talk', title: 'BABYMONSTER CHOOM IN MANILA | Raw Concert + Talk & Encore (1:09:31)', tag: '馬尼拉全場+Talk', videoId: 'TG3t--k_7kw', author: 'Sheanne Palma', badge: 'Talk+安可' },
+      { id: 'choom_osaka_full', title: '2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME in OSAKA (51:18)', tag: '大阪巨蛋全場', videoId: 'nzPPN62FHnQ', author: 'AdarrCP4', badge: '京瓷巨蛋' },
+      { id: 'choom_seoul_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in SEOUL (27:08)', tag: 'YG 官方首爾', videoId: 'U_jAcFKeY_c', author: 'BABYMONSTER', badge: '官方首爾' },
+      { id: 'choom_japan_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in JAPAN #1 (20:01)', tag: 'YG 官方日本', videoId: 'UJjvmfRc51c', author: 'BABYMONSTER', badge: '官方日本' },
+      { id: 'choom_solo_comp', title: 'Solo Stage 솔로무대 모음 4K Fancam (CHOOM 260626, 12:35)', tag: 'Solo 舞台 4K', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'Solo精選' }
     ]
   },
   {
