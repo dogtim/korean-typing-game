@@ -874,7 +874,14 @@ export default function ConcertWall() {
                 <Sparkles size={13} color="#f43f5e" />
                 <span>曲目快速同步 (QUICK SEEK):</span>
               </div>
-              <div className="song-jumps-list">
+              <div
+                className="song-jumps-list"
+                onWheel={(e) => {
+                  if (e.deltaY !== 0 && !e.deltaX) {
+                    e.currentTarget.scrollLeft += e.deltaY;
+                  }
+                }}
+              >
                 {concertSongs.map((song) => {
                   const isActive = activeSongKey === song.id;
                   return (

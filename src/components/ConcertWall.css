@@ -667,9 +667,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  min-width: 0;
 }
 
 .song-jumps-label {
@@ -681,16 +683,49 @@
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: #fb7185;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .song-jumps-list {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  flex: 1;
+  min-width: 0;
+  padding: 4px 2px 6px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 63, 94, 0.4) rgba(255, 255, 255, 0.05);
+}
+
+.song-jumps-list::-webkit-scrollbar {
+  height: 5px;
+}
+
+.song-jumps-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+}
+
+.song-jumps-list::-webkit-scrollbar-thumb {
+  background: rgba(244, 63, 94, 0.35);
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+
+.song-jumps-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(244, 63, 94, 0.7);
 }
 
 .song-jump-chip {
+  flex-shrink: 0;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -2328,6 +2363,14 @@
 @media (max-width: 640px) {
   .cinema-side-stack {
     grid-template-columns: 1fr;
+  }
+  .concert-song-jumps-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .song-jumps-list {
+    width: 100%;
   }
   .director-console-bar {
     flex-direction: column;
