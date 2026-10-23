@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FANCHANT_TYPES, DEFAULT_LEAD_TIME_SEC, getFanchantStatusAtTime } from '../utils/fanchantData';
 import { Info } from 'lucide-react';
 import { sound } from '../utils/audio';
@@ -10,31 +10,6 @@ export default function FanchantPrompter({
   onSeek,
   activeLine
 }) {
-  const showRoman = true;
-  const soundEnabled = true;
-  // 暫時隱藏應援手燈 (Disabled per user request)
-  const lightstickActive = false;
-
-  // Lightstick appearance style: 'official' (default) or 'classic' (SVG vector)
-  const [lightstickStyle, setLightstickStyle] = useState(() => {
-    return localStorage.getItem('fanchant_lightstick_style') || 'official';
-  });
-
-  const handleSelectLightstick = (style, e) => {
-    if (e) e.stopPropagation();
-    setLightstickStyle(style);
-    localStorage.setItem('fanchant_lightstick_style', style);
-    if (sound && typeof sound.playClick === 'function') {
-      sound.playClick();
-    }
-  };
-
-  const toggleLightstick = (e) => {
-    if (e) e.stopPropagation();
-    const next = lightstickStyle === 'official' ? 'classic' : 'official';
-    handleSelectLightstick(next);
-  };
-
   const cues = fanchant?.cues || [];
   const status = getFanchantStatusAtTime(cues, currentTime);
   const { activeCue, upcomingCue, countdownSec, countdownPercent } = status;
@@ -44,7 +19,7 @@ export default function FanchantPrompter({
   useEffect(() => {
     if (activeCue && activeCue.id !== lastActiveCueIdRef.current) {
       lastActiveCueIdRef.current = activeCue.id;
-      if (soundEnabled && isPlaying && sound) {
+      if (isPlaying && sound) {
         if (typeof sound.playCorrect === 'function') {
           sound.playCorrect();
         } else if (typeof sound.playSuccess === 'function') {
@@ -54,7 +29,7 @@ export default function FanchantPrompter({
     } else if (!activeCue) {
       lastActiveCueIdRef.current = null;
     }
-  }, [activeCue, soundEnabled, isPlaying]);
+  }, [activeCue, isPlaying]);
 
   if (!fanchant) return null;
 
@@ -89,12 +64,10 @@ export default function FanchantPrompter({
               {activeCue.chant}
             </div>
 
-            {showRoman && (
-              <div className="chant-sub-info">
-                {activeCue.roman && <div className="chant-roman">{activeCue.roman}</div>}
-                {activeCue.meaning && <div className="chant-meaning">💡 {activeCue.meaning}</div>}
-              </div>
-            )}
+            <div className="chant-sub-info">
+              {activeCue.roman && <div className="chant-roman">{activeCue.roman}</div>}
+              {activeCue.meaning && <div className="chant-meaning">💡 {activeCue.meaning}</div>}
+            </div>
 
             {activeCue.tip && (
               <div className="chant-tip-bubble">
@@ -137,7 +110,7 @@ export default function FanchantPrompter({
               <div className="upcoming-chant-text">
                 {upcomingCue.chant}
               </div>
-              {showRoman && upcomingCue.roman && (
+              {upcomingCue.roman && (
                 <div className="upcoming-roman-text">
                   {upcomingCue.roman}
                 </div>
@@ -166,74 +139,6 @@ export default function FanchantPrompter({
                 </button>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Animated Virtual Lightstick in Corner with Style Switcher */}
-        {lightstickActive && (
-          <div className="virtual-lightstick-widget">
-            <div
-              className={`lightstick-visual-body ${isPlaying ? 'is-swinging' : ''} ${activeCue ? 'is-blasting' : ''}`}
-              onClick={toggleLightstick}
-              title={lightstickStyle === 'official' ? '點擊切換為經典向量手燈' : '點擊切換為官方實體手燈'}
-              role="button"
-              tabIndex={0}
-            >
-              <div className="lightstick-glow-orb" />
-
-              {lightstickStyle === 'official' ? (
-                <div className="lightstick-img-wrapper">
-                  <img
-                    src="/lightstick-official.png"
-                    alt="BABYMONSTER Official Lightstick"
-                    className="lightstick-img"
-                    draggable="false"
-                  />
-                </div>
-              ) : (
-                <svg className="lightstick-svg" viewBox="0 0 60 120" fill="none">
-                  {/* Stick Handle */}
-                  <rect x="25" y="55" width="10" height="60" rx="5" fill="#1e1e28" stroke="#4a4a5a" strokeWidth="2" />
-                  <rect x="27" y="65" width="6" height="20" rx="3" fill="#ff3366" opacity="0.8" />
-                  {/* Lightstick Head / Horns / Orb */}
-                  <circle cx="30" cy="35" r="22" fill="url(#lightstick-gradient)" stroke="#ff6699" strokeWidth="3" />
-                  {/* Horns for BABYMONSTER Devil motif */}
-                  <path d="M 16 26 Q 10 10 20 18" stroke="#ff3366" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M 44 26 Q 50 10 40 18" stroke="#ff3366" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  {/* Inner Logo */}
-                  <text x="30" y="41" textAnchor="middle" fill="#ffffff" fontSize="14" fontWeight="bold" fontFamily="sans-serif">😈</text>
-                  <defs>
-                    <radialGradient id="lightstick-gradient" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#ff77aa" />
-                      <stop offset="80%" stopColor="#ff0055" />
-                      <stop offset="100%" stopColor="#990033" />
-                    </radialGradient>
-                  </defs>
-                </svg>
-              )}
-            </div>
-
-            <div className="lightstick-label">MONSTIEZ</div>
-
-            {/* Lightstick Style Switcher Pills */}
-            <div className="lightstick-style-selector" onClick={(e) => e.stopPropagation()}>
-              <button
-                type="button"
-                className={`lightstick-style-pill ${lightstickStyle === 'official' ? 'is-active' : ''}`}
-                onClick={(e) => handleSelectLightstick('official', e)}
-                title="切換為官方實體手燈"
-              >
-                😈 實體
-              </button>
-              <button
-                type="button"
-                className={`lightstick-style-pill ${lightstickStyle === 'classic' ? 'is-active' : ''}`}
-                onClick={(e) => handleSelectLightstick('classic', e)}
-                title="切換為經典向量手燈"
-              >
-                🎨 向量
-              </button>
-            </div>
           </div>
         )}
       </div>
