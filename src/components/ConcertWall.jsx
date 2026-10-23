@@ -837,7 +837,6 @@ export default function ConcertWall() {
             <span>演唱會清單</span>
             <span className="tour-badge-chip">43 站 / 70 場</span>
           </button>
-          <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
         </div>
       </section>
 

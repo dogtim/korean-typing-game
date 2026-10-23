@@ -66,6 +66,7 @@ Commands:
                --title <title>       (Optional) Song title override
                --register            (Optional) Automatically register into game registries
                --video <id>          (Optional) Specific YouTube Video ID to use
+               --allow-auto          (Optional) Accept YouTube auto-generated captions (otherwise skipped)
 
   shift      Shift all timestamps in an SRT file by +/- seconds
              Options:
@@ -181,13 +182,14 @@ async function main() {
           title: options.title || options.t,
           register: shouldRegister,
           customVideoId: customVideo,
-          customOffset: offset
+          customOffset: offset,
+          allowAuto: Boolean(options['allow-auto'])
         });
 
         console.log('\n✨ Fetch Summary:');
         console.log(`   • Song: ${result.title} (${result.artist})`);
         console.log(`   • YouTube URL: ${result.videoUrl}`);
-        console.log(`   • Subtitles Found: ${result.hasSubtitles ? `✅ (${result.source})` : '❌'}`);
+        console.log(`   • Subtitles Found: ${result.hasSubtitles ? `✅ (${result.source})` : result.autoOnly ? '⚠️ auto-generated only (not saved)' : '❌'}`);
         if (result.hasSubtitles) {
           console.log(`   • SRT File: public/lyrics/${result.srtFilename}`);
         }
