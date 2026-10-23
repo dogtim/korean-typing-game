@@ -55,9 +55,7 @@
 - **現場規模**：BABYMONSTER 首次巨蛋公演，單場 45,000+ 人，兩天累計 90,000 名觀眾。
 - **日本拍攝環境特點**：
   > ⚠️ **版權與安檢限制**：日本巨蛋有極嚴格的「撮影禁止」規定，現場安檢極密，導致 YouTube 上**沒有單一 1~2 小時不中斷的完整直拍**，但有許多 10~15 分鐘的現場精華與單曲特寫。
-- **YouTube 長度與精華資源**：
-  - 🎬 **[51:18]** [MONSTIEZ VLOG - BABYMONSTER 2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME](https://www.youtube.com/watch?v=nzPPN62FHnQ) (`nzPPN62FHnQ`) —— 包含巨蛋入場、周邊、手燈海與現場演出全景紀錄。
-  - 🎬 **[15:07]** [BABYMONSTER WORLD TOUR CHOOM 2026-27 IN OSAKA DAY 1](https://www.youtube.com/watch?v=39J8a2OgRGQ) (`39J8a2OgRGQ`) —— 搖滾區大舞台精華。
+- **YouTube 資源**：目前沒有收錄符合條件（15 分鐘以上、連續舞台影像、可嵌入、畫質足夠）的大阪影片，已從播放牆移除。
 
 ---
 
