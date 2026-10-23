@@ -544,6 +544,16 @@ export const KPOP_SONG_PRESETS = [
     srtFilename: 'GIRLS-GENERATION-HRS-SKIBIDI.srt',
     srtPath: '/lyrics/GIRLS-GENERATION-HRS-SKIBIDI.srt',
     lyrics: []
+  },
+  {
+    id: 'oC6brLXQe4I',
+    title: "DESERVE",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=oC6brLXQe4I',
+    thumbnail: 'https://img.youtube.com/vi/oC6brLXQe4I/hqdefault.jpg',
+    srtFilename: 'BABYMONSTER-DESERVE.srt',
+    srtPath: '/lyrics/BABYMONSTER-DESERVE.srt',
+    lyrics: []
   }
 ];
 

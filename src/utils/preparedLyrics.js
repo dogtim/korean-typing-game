@@ -366,5 +366,14 @@ export const PREPARED_SRT_LIBRARY = [
     filename: 'GIRLS-GENERATION-HRS-SKIBIDI.srt',
     path: '/lyrics/GIRLS-GENERATION-HRS-SKIBIDI.srt',
     description: "Girls' Generation-HRS (소녀시대-효리수) Skibidi full prepared SRT subtitle file."
+  },
+  {
+    id: 'babymonster_deserve',
+    title: "DESERVE",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    youtubeId: 'oC6brLXQe4I',
+    filename: 'BABYMONSTER-DESERVE.srt',
+    path: '/lyrics/BABYMONSTER-DESERVE.srt',
+    description: "BABYMONSTER (베이비몬스터) DESERVE full prepared SRT subtitle file."
   }
 ];

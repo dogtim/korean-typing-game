@@ -432,6 +432,17 @@ export const VIDEO_SRT_MAPPINGS = [
     primaryUrl: 'https://www.youtube.com/watch?v=oAwzFFEYm38',
     alternateUrls: [],
     description: "Girls' Generation-HRS (소녀시대-효리수) - Skibidi synchronized SRT subtitle lyrics"
+  },
+  {
+    id: 'babymonster_deserve',
+    title: "DESERVE",
+    artist: 'BABYMONSTER (베이비몬스터)',
+    srtFilename: 'BABYMONSTER-DESERVE.srt',
+    srtPath: '/lyrics/BABYMONSTER-DESERVE.srt',
+    youtubeIds: ['oC6brLXQe4I'],
+    primaryUrl: 'https://www.youtube.com/watch?v=oC6brLXQe4I',
+    alternateUrls: [],
+    description: "BABYMONSTER (베이비몬스터) - DESERVE synchronized SRT subtitle lyrics"
   }
 ];
 

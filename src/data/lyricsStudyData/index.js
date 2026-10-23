@@ -1,5 +1,5 @@
 // Centralized Lyrics Study Library for BABYMONSTER & K-Pop Songs
-// Complete Discography Coverage for BABYMONSTER (All 22 Songs!)
+// Complete Discography Coverage for BABYMONSTER (All 23 Songs!)
 // Supports:
 // 1. 韓英雙語深度精讀 (Korean + English Bilingual Analysis)
 // 2. 100% 全英語美式嘻哈深度研習 (All-English Hip-Hop Analysis)
@@ -30,6 +30,7 @@ import { SUPA_DUPA_LUV_STUDY_DATA } from './supaDupaLuvStudy';
 import { WILD_STUDY_DATA } from './wildStudy';
 import { MOON_STUDY_DATA } from './moonStudy';
 import { I_LIKE_IT_STUDY_DATA } from './iLikeItStudy';
+import { DESERVE_STUDY_DATA } from './deserveStudy';
 
 export {
   DRIP_STUDY_DATA,
@@ -53,7 +54,8 @@ export {
   SUPA_DUPA_LUV_STUDY_DATA,
   WILD_STUDY_DATA,
   MOON_STUDY_DATA,
-  I_LIKE_IT_STUDY_DATA
+  I_LIKE_IT_STUDY_DATA,
+  DESERVE_STUDY_DATA
 };
 
 export const LYRIC_STUDY_PRESETS = [
@@ -78,7 +80,8 @@ export const LYRIC_STUDY_PRESETS = [
   WILD_STUDY_DATA,
   MOON_STUDY_DATA,
   I_LIKE_IT_STUDY_DATA,
-  SUGAR_HONEY_ICE_TEA_STUDY_DATA
+  SUGAR_HONEY_ICE_TEA_STUDY_DATA,
+  DESERVE_STUDY_DATA
 ];
 
 /**
