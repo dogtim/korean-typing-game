@@ -21,6 +21,9 @@ import iLikeIt from './babymonster_iLikeIt.js';
 
 export { FANCHANT_TYPES };
 
+/** Seconds before a cue starts that the prompter begins its countdown, unless the cue sets `leadTimeSec`. */
+export const DEFAULT_LEAD_TIME_SEC = 2.0;
+
 const allSongs = [
   sheesh,
   drip,
@@ -99,7 +102,7 @@ export function getFanchantStatusAtTime(cues, currentTime) {
     }
   }
 
-  // 2. Check for upcoming cue within its leadTimeSec (default 2.0s)
+  // 2. Check for upcoming cue within its leadTimeSec (default DEFAULT_LEAD_TIME_SEC)
   let upcomingCue = null;
   let countdownSec = null;
   let countdownPercent = 0;
@@ -107,7 +110,7 @@ export function getFanchantStatusAtTime(cues, currentTime) {
 
   for (let i = 0; i < cues.length; i++) {
     const cue = cues[i];
-    const leadTime = cue.leadTimeSec || 2.0;
+    const leadTime = cue.leadTimeSec ?? DEFAULT_LEAD_TIME_SEC;
     const diff = cue.start - currentTime;
 
     if (diff > 0 && diff <= leadTime) {

@@ -10,7 +10,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "vite build && npx -y firebase-tools deploy --only hosting",
-    "tool": "node tools/cli.js"
+    "tool": "node tools/cli.js",
+    "test": "node --test tests/"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",

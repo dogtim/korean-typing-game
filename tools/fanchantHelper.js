@@ -49,6 +49,13 @@ export function validateFanchants() {
       continue;
     }
 
+    const MIN_CUES_WARN = 15;
+    if (preset.cues.length < MIN_CUES_WARN) {
+      console.warn(`  ⚠️ Only ${preset.cues.length} cue(s) (< ${MIN_CUES_WARN}); the fanchant may be incomplete.`);
+      warnCount++;
+    }
+
+    const seenIds = new Set();
     let prevEnd = 0;
     preset.cues.forEach((cue, idx) => {
       if (typeof cue.start !== 'number' || typeof cue.end !== 'number') {
@@ -59,6 +66,19 @@ export function validateFanchants() {
         errorCount++;
       } else if (cue.start < prevEnd - 0.2) {
         console.warn(`  ⚠️ Cue #${idx + 1} (${cue.chant}) starts (${cue.start}s) before previous cue ended (${prevEnd}s).`);
+        warnCount++;
+      }
+
+      if (cue.id) {
+        if (seenIds.has(cue.id)) {
+          console.error(`  ❌ Cue #${idx + 1}: duplicate id "${cue.id}".`);
+          errorCount++;
+        }
+        seenIds.add(cue.id);
+      }
+
+      if (!cue.roman || !cue.meaning) {
+        console.warn(`  ⚠️ Cue #${idx + 1} (${cue.chant}): missing ${!cue.roman ? 'roman' : 'meaning'}.`);
         warnCount++;
       }
 
@@ -74,6 +94,11 @@ export function validateFanchants() {
 
       prevEnd = cue.end || 0;
     });
+
+    if (!preset.cues.some(c => c.type === 'scream')) {
+      console.warn(`  ⚠️ No "scream" cue found (finale cue is usually expected).`);
+      warnCount++;
+    }
 
     console.log(`  ✅ Verified ${preset.cues.length} cue(s) for "${preset.title}".`);
   }

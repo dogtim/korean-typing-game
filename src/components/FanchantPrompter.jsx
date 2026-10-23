@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FANCHANT_TYPES, getFanchantStatusAtTime } from '../utils/fanchantData';
+import { FANCHANT_TYPES, DEFAULT_LEAD_TIME_SEC, getFanchantStatusAtTime } from '../utils/fanchantData';
 import { Info } from 'lucide-react';
 import { sound } from '../utils/audio';
 
@@ -64,7 +64,7 @@ export default function FanchantPrompter({
       ? FANCHANT_TYPES[upcomingCue.type.toUpperCase()] || FANCHANT_TYPES.SHOUT
       : FANCHANT_TYPES.SHOUT;
 
-  const isCountingDown = typeof countdownSec === 'number' && countdownSec <= (upcomingCue?.leadTimeSec || 2.0);
+  const isCountingDown = typeof countdownSec === 'number' && countdownSec <= (upcomingCue?.leadTimeSec ?? DEFAULT_LEAD_TIME_SEC);
 
   return (
     <div className={`fanchant-prompter-stage glassmorphism ${activeCue ? 'is-chant-active' : ''}`}>
@@ -159,8 +159,8 @@ export default function FanchantPrompter({
                 <button
                   type="button"
                   className="peek-jump-btn"
-                  onClick={() => onSeek && onSeek(Math.max(0, upcomingCue.start - 2.0))}
-                  title="跳轉到該句前 2 秒"
+                  onClick={() => onSeek && onSeek(Math.max(0, upcomingCue.start - (upcomingCue.leadTimeSec ?? DEFAULT_LEAD_TIME_SEC)))}
+                  title="跳轉到該句開始前"
                 >
                   直達這段 ⏩
                 </button>
