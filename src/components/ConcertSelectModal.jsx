@@ -92,11 +92,13 @@ export default function ConcertSelectModal({
     }
   ], []);
 
-  // Filter presets based on category and search query
-  const categorizedSections = useMemo(() => {
+  const isSearching = searchQuery.trim() !== '';
+  const activeTour = tourCategoryList.find(cat => cat.id === activeTourCategory);
+
+  // With a query, search across every tour; otherwise show only the active tab.
+  const visiblePresets = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
 
-    // Helper to check if concert matches search query
     const matchSearch = (preset) => {
       if (!q) return true;
       const titleMatch = preset.title?.toLowerCase().includes(q);
@@ -111,37 +113,10 @@ export default function ConcertSelectModal({
       return titleMatch || subTitleMatch || venueMatch || dateMatch || categoryMatch || descMatch || angleMatch;
     };
 
-    if (activeTourCategory === 'all_concert') {
-      const allSections = [
-        {
-          id: 'all_featured_mix',
-          label: '🌟 ALL Concert 自由混搭主卡片',
-          subTitle: '預設 CAM 1: Hello Monsters × CAM 2: Love Monsters × CAM 3: Choom',
-          color: '#f43f5e',
-          icon: <Sparkles size={14} color="#f43f5e" />,
-          presets: CONCERT_PRESETS.filter(p => p.tourCategory === 'all_concert' && matchSearch(p))
-        }
-      ];
-      return allSections.filter(s => s.presets.length > 0);
-    }
-
-    const specificTour = tourCategoryList.find(cat => cat.id === activeTourCategory);
-    if (!specificTour) return [];
-
-    const matchedPresets = CONCERT_PRESETS.filter(
-      p => p.tourCategory === specificTour.id && matchSearch(p)
+    return CONCERT_PRESETS.filter(
+      p => (q || p.tourCategory === activeTourCategory) && matchSearch(p)
     );
-
-    return [{
-      ...specificTour,
-      presets: matchedPresets
-    }].filter(s => s.presets.length > 0);
-  }, [activeTourCategory, searchQuery, tourCategoryList]);
-
-  // Total matching count
-  const totalMatchingCount = useMemo(() => {
-    return categorizedSections.reduce((acc, sec) => acc + sec.presets.length, 0);
-  }, [categorizedSections]);
+  }, [activeTourCategory, searchQuery]);
 
   if (!isOpen) return null;
 
@@ -161,7 +136,6 @@ export default function ConcertSelectModal({
             </div>
           </div>
           <div className="modal-header-actions">
-            <span className="switcher-count-badge">已收錄 {CONCERT_PRESETS.length} 場大型演唱會</span>
             <button
               type="button"
               className="close-btn"
@@ -198,20 +172,23 @@ export default function ConcertSelectModal({
           </div>
           <div className="video-count-tag">
             <Radio size={13} color="#f43f5e" />
-            <span>{totalMatchingCount} 場演唱會</span>
+            <span>{visiblePresets.length} 場演唱會</span>
           </div>
         </div>
 
         {/* Category Tabs: ALL Concert, Hello Monsters, Love Monsters, Choom, 其他 */}
         <div className="concert-category-tabs-bar">
           {tourCategoryList.map((cat) => {
-            const isActive = activeTourCategory === cat.id;
+            const isActive = !isSearching && activeTourCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 type="button"
                 className={`concert-cat-tab-btn ${isActive ? 'is-active' : ''}`}
-                onClick={() => setActiveTourCategory(cat.id)}
+                onClick={() => {
+                  setActiveTourCategory(cat.id);
+                  setSearchQuery('');
+                }}
                 style={{ '--cat-color': cat.color }}
               >
                 {cat.icon}
@@ -221,26 +198,27 @@ export default function ConcertSelectModal({
           })}
         </div>
 
-        {/* ALL Concert Mix Info Banner */}
-        {activeTourCategory === 'all_concert' && !searchQuery && (
-          <div className="all-concert-mix-banner">
-            <div className="mix-banner-left">
-              <Sparkles size={16} color="#f43f5e" className="mix-sparkle-icon" />
-              <span>
-                <strong>ALL Concert 自由搭配模式</strong>：下方收錄所有演唱會，可點擊各場次右下角的 <strong>[CAM 1]</strong>、<strong>[CAM 2]</strong>、<strong>[CAM 3]</strong> 自由混搭（例如 CAM 1 播放 Hello Monsters、CAM 2 播放 Love Monsters、CAM 3 播放 Choom），享受三大巡演同時競演！
-              </span>
-            </div>
+        {/* One-line description of the active tab (or of the cross-tour search) */}
+        <div className="concert-tab-description">
+          <span className="tab-description-text">
+            {isSearching
+              ? '搜尋範圍：所有巡演'
+              : activeTourCategory === 'all_concert'
+                ? `${activeTour?.subTitle}：點卡片上的 CAM 1 / 2 / 3 混搭不同場次`
+                : activeTour?.subTitle}
+          </span>
+          {!isSearching && activeTourCategory === 'all_concert' && (
             <div className="mix-banner-pills">
               <span className="mix-cam-pill cam1">CAM 1: {slots[0]?.tag || '機位 1'}</span>
               <span className="mix-cam-pill cam2">CAM 2: {slots[1]?.tag || '機位 2'}</span>
               <span className="mix-cam-pill cam3">CAM 3: {slots[2]?.tag || '機位 3'}</span>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Scrollable Container with Categorized Sections & Cards */}
         <div className="concert-modal-scroll-area">
-          {categorizedSections.length === 0 ? (
+          {visiblePresets.length === 0 ? (
             <div className="video-empty-state">
               <Sparkles size={40} className="empty-sparkle" color="#f43f5e" />
               <h4>查無符合條件的演唱會場次</h4>
@@ -253,110 +231,97 @@ export default function ConcertSelectModal({
                   setActiveTourCategory('all_concert');
                 }}
               >
-                顯示所有演唱會場次
+                清除搜尋
               </button>
             </div>
           ) : (
-            categorizedSections.map((sec) => (
-              <div key={sec.id} className="concert-section-group">
-                <div className="concert-section-header">
-                  <div className="concert-section-title-wrap">
-                    {sec.icon}
-                    <span className="concert-section-title">{sec.label}</span>
-                    <span className="concert-section-sub">• {sec.subTitle}</span>
-                  </div>
-                  <span className="concert-section-count-tag">
-                    {sec.presets.length} 場收錄
-                  </span>
+        <div className="concert-switcher-cards-grid">
+          {visiblePresets.map((concert) => {
+            const globalIdx = CONCERT_PRESETS.findIndex(p => p.id === concert.id);
+            const isActive = activeConcert?.id === concert.id || selectedConcertIndex === globalIdx;
+
+            return (
+              <div
+                key={concert.id}
+                role="button"
+                tabIndex={0}
+                className={`concert-card-btn ${isActive ? 'is-active' : ''}`}
+                onClick={() => {
+                  if (globalIdx !== -1) {
+                    onSelectConcert(globalIdx);
+                    onClose();
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    if (globalIdx !== -1) {
+                      onSelectConcert(globalIdx);
+                      onClose();
+                    }
+                  }
+                }}
+                style={{
+                  '--accent-color': concert.themeColor || '#e11d48'
+                }}
+              >
+                <div className="card-btn-header">
+                  {isSearching && (
+                    <span
+                      className="card-category-tag"
+                      style={{
+                        borderColor: `${concert.themeColor || '#fb7185'}66`,
+                        color: concert.themeColor || '#fb7185'
+                      }}
+                    >
+                      {concert.categoryTag || concert.title}
+                    </span>
+                  )}
+                  {isActive ? (
+                    <span className="card-playing-badge">
+                      <span className="pulse-dot"></span> 播放中
+                    </span>
+                  ) : (
+                    <span className="card-switch-label">點擊切換全場</span>
+                  )}
                 </div>
 
-                <div className="concert-switcher-cards-grid">
-                  {sec.presets.map((concert) => {
-                    const globalIdx = CONCERT_PRESETS.findIndex(p => p.id === concert.id);
-                    const isActive = activeConcert?.id === concert.id || selectedConcertIndex === globalIdx;
+                <div className="card-btn-title">{concert.title}</div>
+                <div className="card-btn-subtitle">{concert.subTitle}</div>
 
-                    return (
-                      <div
-                        key={concert.id}
-                        role="button"
-                        tabIndex={0}
-                        className={`concert-card-btn ${isActive ? 'is-active' : ''}`}
-                        onClick={() => {
-                          if (globalIdx !== -1) {
-                            onSelectConcert(globalIdx);
-                            onClose();
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            if (globalIdx !== -1) {
-                              onSelectConcert(globalIdx);
-                              onClose();
-                            }
-                          }
-                        }}
-                        style={{
-                          '--accent-color': concert.themeColor || '#e11d48'
-                        }}
-                      >
-                        <div className="card-btn-header">
-                          <span
-                            className="card-category-tag"
-                            style={{
-                              borderColor: `${concert.themeColor || '#fb7185'}66`,
-                              color: concert.themeColor || '#fb7185'
-                            }}
-                          >
-                            {concert.categoryTag || sec.label}
-                          </span>
-                          {isActive ? (
-                            <span className="card-playing-badge">
-                              <span className="pulse-dot"></span> 播放中
-                            </span>
-                          ) : (
-                            <span className="card-switch-label">點擊切換全場</span>
-                          )}
-                        </div>
+                <div className="card-btn-meta">
+                  <span>{concert.venue}</span>
+                  <span>•</span>
+                  <span>{concert.date}</span>
+                </div>
 
-                        <div className="card-btn-title">{concert.title}</div>
-                        <div className="card-btn-subtitle">{concert.subTitle}</div>
-
-                        <div className="card-btn-meta">
-                          <span>{concert.venue}</span>
-                          <span>•</span>
-                          <span>{concert.date}</span>
-                        </div>
-
-                        {/* Quick Assign to CAM 1 / 2 / 3 */}
-                        <div className="card-cam-assign-row" onClick={(e) => e.stopPropagation()}>
-                          <span className="cam-assign-hint">自由指派機位:</span>
-                          <div className="cam-assign-buttons">
-                            {[0, 1, 2].map((slotIdx) => {
-                              const targetVideoId = concert.defaultSlots?.[slotIdx]?.videoId || concert.defaultSlots?.[0]?.videoId;
-                              const isCurrentCam = slots[slotIdx]?.videoId === targetVideoId;
-                              return (
-                                <button
-                                  key={`assign-${concert.id}-${slotIdx}`}
-                                  type="button"
-                                  className={`cam-assign-btn ${isCurrentCam ? 'is-active-cam' : ''}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onAssignConcertToSlot?.(concert, slotIdx);
-                                  }}
-                                  title={`將《${concert.title}》指派載入至 CAM ${slotIdx + 1} 播放`}
-                                >
-                                  {isCurrentCam ? `✓ CAM ${slotIdx + 1}` : `CAM ${slotIdx + 1}`}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                {/* Quick Assign to CAM 1 / 2 / 3 */}
+                <div className="card-cam-assign-row" onClick={(e) => e.stopPropagation()}>
+                  <span className="cam-assign-hint">自由指派機位:</span>
+                  <div className="cam-assign-buttons">
+                    {[0, 1, 2].map((slotIdx) => {
+                      const targetVideoId = concert.defaultSlots?.[slotIdx]?.videoId || concert.defaultSlots?.[0]?.videoId;
+                      const isCurrentCam = slots[slotIdx]?.videoId === targetVideoId;
+                      return (
+                        <button
+                          key={`assign-${concert.id}-${slotIdx}`}
+                          type="button"
+                          className={`cam-assign-btn ${isCurrentCam ? 'is-active-cam' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAssignConcertToSlot?.(concert, slotIdx);
+                          }}
+                          title={`將《${concert.title}》指派載入至 CAM ${slotIdx + 1} 播放`}
+                        >
+                          {isCurrentCam ? `✓ CAM ${slotIdx + 1}` : `CAM ${slotIdx + 1}`}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            ))
+            );
+          })}
+        </div>
           )}
         </div>
       </div>

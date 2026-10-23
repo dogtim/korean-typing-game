@@ -98,15 +98,15 @@ export const CONCERT_PRESETS = [
   {
     id: 'babymonster_choom_2026',
     title: '2026-27 BABYMONSTER WORLD TOUR [춤 (CHOOM)]',
-    subTitle: 'SEOUL KSPO DOME, MANILA & JAKARTA (首爾 / 馬尼拉 / 雅加達 全場長片)',
+    subTitle: 'SEOUL, MANILA, JAKARTA & OSAKA (首爾 / 馬尼拉 / 雅加達 / 大阪京瓷巨蛋 全場長片)',
     categoryTag: 'CHOOM 巡演 2026',
     artist: 'BABYMONSTER (베이비몬스터)',
-    venue: 'KSPO Dome, Seoul / Manila / Jakarta, Indonesia',
-    date: '2026.06.26 - 2026.09.05',
+    venue: 'KSPO Dome, Seoul / Manila / Jakarta, Indonesia / Kyocera Dome Osaka, Japan',
+    date: '2026.06.26 - 2026.09.23',
     attendance: 'World Tour Full Show',
     themeColor: '#f97316',
     tourCategory: 'choom',
-    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 雅加達全場含彩排 (1:55:04)、CAM 2 雅加達 4K 全場 (1:45:00)、CAM 3 雅加達主舞台 (1:13:02)。三機位均為雅加達現場，支援全曲目多角度即時同步 Seek 與播放。',
+    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 雅加達全場含彩排 (1:55:04)、CAM 2 雅加達 4K 全場 (1:45:00)、CAM 3 雅加達主舞台 (1:13:02)。三機位均為雅加達現場，支援全曲目多角度即時同步 Seek 與播放。另收錄首爾、馬尼拉與大阪京瓷巨蛋（首次巨蛋公演）的現場長片可自由指派機位。',
 
     // Song-Centric Setlist for Quick Multi-Cam Seek
     songs: {
@@ -466,62 +466,15 @@ export const CONCERT_PRESETS = [
       { id: 'choom_full_seoul', title: '260628 BABYMONSTER CHOOM WORLD TOUR IN SEOUL (Full 1:40:55)', tag: '首爾全場', videoId: 'A3M7Nxt3_-Q', author: '키코', badge: '首爾全場' },
       { id: 'choom_seoul_vod', title: '[SE] BABYMONSTER: WORLD TOUR [춤 (CHOOM)] in Seoul (Full 1:57:23)', tag: '首爾公演', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: '首爾公演' },
       { id: 'choom_full_manila', title: 'BABYMONSTER CHOOM 2026 WORLD TOUR IN MANILA (Full 1:53:01)', tag: '馬尼拉全場', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: '馬尼拉全場' },
-      { id: 'choom_manila_2', title: 'BABYMONSTER WORLD TOUR - CHOOM - MANILA 2026 (Full 1:39:01)', tag: '馬尼拉全場2', videoId: 'nQCoyE-fK2s', author: 'Cha', badge: '馬尼拉2' },
       { id: 'choom_seoul_vlog', title: '[몬스티즈 브이로그] 2026-27 WORLD TOUR CHOOM IN SEOUL (1:26:29)', tag: '首爾沉浸直擊', videoId: 'Dr-8WJLQquU', author: '이번 역은 아현', badge: '首爾直擊' },
       { id: 'choom_manila_talk', title: 'BABYMONSTER CHOOM IN MANILA | Raw Concert + Talk & Encore (1:09:31)', tag: '馬尼拉全場+Talk', videoId: 'TG3t--k_7kw', author: 'Sheanne Palma', badge: 'Talk+安可' },
       { id: 'choom_osaka_full', title: '2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME in OSAKA (51:18)', tag: '大阪巨蛋全場', videoId: 'nzPPN62FHnQ', author: 'AdarrCP4', badge: '京瓷巨蛋' },
       { id: 'choom_seoul_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in SEOUL (27:08)', tag: 'YG 官方首爾', videoId: 'U_jAcFKeY_c', author: 'BABYMONSTER', badge: '官方首爾' },
       { id: 'choom_japan_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in JAPAN #1 (20:01)', tag: 'YG 官方日本', videoId: 'UJjvmfRc51c', author: 'BABYMONSTER', badge: '官方日本' },
+      { id: 'choom_osaka_d1_4k', title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026 Night 1 (13:53)', tag: '大阪巨蛋 Day 1 4K', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: '巨蛋 Day 1' },
+      { id: 'choom_osaka_vip', title: 'CHOOM 2026-27 IN OSAKA AT KYOCERA DOME DAY 1 (15:07)', tag: '大阪巨蛋搖滾區', videoId: '39J8a2OgRGQ', author: 'babymonster Haram', badge: '巨蛋搖滾區' },
+      { id: 'choom_osaka_d2', title: 'BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME (14:28)', tag: '大阪巨蛋 Day 2', videoId: '6QnZyKUFAoU', author: 'MONSTIEZ2203', badge: '巨蛋 Day 2' },
       { id: 'choom_solo_comp', title: 'Solo Stage 솔로무대 모음 4K Fancam (CHOOM 260626, 12:35)', tag: 'Solo 舞台 4K', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'Solo精選' }
-    ]
-  },
-  {
-    id: 'babymonster_kyocera_dome_osaka_2026',
-    title: '2026-27 BABYMONSTER WORLD TOUR [CHOOM] IN JAPAN',
-    subTitle: 'KYOCERA DOME OSAKA (大阪京瓷巨蛋 9萬人巡演全場長片)',
-    categoryTag: '巨蛋巡演 2026',
-    artist: 'BABYMONSTER (베이비몬스터)',
-    venue: 'Kyocera Dome Osaka, Japan (京瓷大阪巨蛋)',
-    date: '2026.09.22 - 2026.09.23',
-    attendance: '90,000 Fans (2 Days Sold-out)',
-    themeColor: '#e11d48',
-    tourCategory: 'choom',
-    description: 'BABYMONSTER 首次巨蛋公演！震撼 9 萬名現場觀眾的大阪巨蛋全場特輯（全數為高畫質現場長片，已剔除純音檔與短片）。CAM 1 為大阪巨蛋 51 分鐘現場長片、CAM 2 為京瓷巨蛋 Day 1 現場 4K (13:53)、CAM 3 為京瓷巨蛋 Day 1 搖滾區現場 (15:07)。',
-    defaultSlots: [
-      {
-        slotId: 0,
-        name: 'CAM 1',
-        title: '2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME in OSAKA 2026 (51:18)',
-        tag: '京瓷巨蛋 51分鐘全場',
-        videoId: 'nzPPN62FHnQ',
-        offset: 0,
-        description: '大阪京瓷巨蛋 51 分鐘長片視角，沉浸感受 4 萬 5 千人紅海震撼氛圍。'
-      },
-      {
-        slotId: 1,
-        name: 'CAM 2',
-        title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026, Night 1 (13:53)',
-        tag: '京瓷巨蛋 Day 1 現場 4K',
-        videoId: 'je7aZ-pGcDk',
-        offset: 0,
-        description: '京瓷巨蛋首日現場直擊 4K 演出。'
-      },
-      {
-        slotId: 2,
-        name: 'CAM 3',
-        title: 'CHOOM 2026-27 IN OSAKA AT KYOCERA DOME DAY 1 (15:07)',
-        tag: '京瓷巨蛋 搖滾區現場',
-        videoId: '39J8a2OgRGQ',
-        offset: 0,
-        description: '大阪京瓷巨蛋 Day 1 搖滾區近距離超震撼直擊。'
-      }
-    ],
-    availableAngles: [
-      { id: 'kyd_osaka_full', title: 'CHOOM LIVE AT KYOCERA DOME in OSAKA 2026 (51:18)', tag: '巨蛋全場', videoId: 'nzPPN62FHnQ', author: 'AdarrCP4', badge: 'CAM 1' },
-      { id: 'kyd_osaka_d1', title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026 Night 1 (13:53)', tag: '巨蛋 Day 1', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: 'CAM 2' },
-      { id: 'kyd_osaka_vip', title: 'CHOOM 2026-27 IN OSAKA AT KYOCERA DOME DAY 1 (15:07)', tag: '巨蛋搖滾區', videoId: '39J8a2OgRGQ', author: 'babymonster Haram', badge: 'CAM 3' },
-      { id: 'kyd_japan_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in JAPAN #1 (20:01)', tag: 'YG 官方日本', videoId: 'UJjvmfRc51c', author: 'BABYMONSTER', badge: '官方日本' },
-      { id: 'kyd_osaka_d2', title: 'BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME (14:28)', tag: '巨蛋 Day 2', videoId: '6QnZyKUFAoU', author: 'MONSTIEZ2203', badge: '巨蛋 Day 2' }
     ]
   },
   {
