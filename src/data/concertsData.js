@@ -467,7 +467,6 @@ export const CONCERT_PRESETS = [
       { id: 'choom_seoul_vod', title: '[SE] BABYMONSTER: WORLD TOUR [춤 (CHOOM)] in Seoul (Full 1:57:23)', tag: '首爾公演', videoId: 'sODCh7HvDAs', author: 'Sweetener Events', badge: '首爾公演' },
       { id: 'choom_full_manila', title: 'BABYMONSTER CHOOM 2026 WORLD TOUR IN MANILA (Full 1:53:01)', tag: '馬尼拉全場', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: '馬尼拉全場' },
       { id: 'choom_seoul_vlog', title: '[몬스티즈 브이로그] 2026-27 WORLD TOUR CHOOM IN SEOUL (1:26:29)', tag: '首爾沉浸直擊', videoId: 'Dr-8WJLQquU', author: '이번 역은 아현', badge: '首爾直擊' },
-      { id: 'choom_manila_talk', title: 'BABYMONSTER CHOOM IN MANILA | Raw Concert + Talk & Encore (1:09:31)', tag: '馬尼拉全場+Talk', videoId: 'TG3t--k_7kw', author: 'Sheanne Palma', badge: 'Talk+安可' },
       { id: 'choom_osaka_full', title: '2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME in OSAKA (51:18)', tag: '大阪巨蛋全場', videoId: 'nzPPN62FHnQ', author: 'AdarrCP4', badge: '京瓷巨蛋' },
       { id: 'choom_seoul_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in SEOUL (27:08)', tag: 'YG 官方首爾', videoId: 'U_jAcFKeY_c', author: 'BABYMONSTER', badge: '官方首爾' },
       { id: 'choom_japan_yg', title: '★YG 官方 BABYMONSTER - WORLD TOUR [춤 (CHOOM)] BEHIND in JAPAN #1 (20:01)', tag: 'YG 官方日本', videoId: 'UJjvmfRc51c', author: 'BABYMONSTER', badge: '官方日本' },
