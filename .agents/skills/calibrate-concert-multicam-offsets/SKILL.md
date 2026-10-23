@@ -61,7 +61,7 @@ The script will:
 1. Fetch native YouTube chapters or description tracklists from the Anchor video.
 2. Calculate the exact $\Delta$ for every camera.
 3. Automatically apply $\Delta$ to all tracks.
-4. Output a clean, copy-paste ready `songs: { ... }` object for `src/data/concertsData.js`.
+4. Output clean, copy-paste ready `SONG_START_TIMES` entries for `src/data/concertSongTimes.js`.
 
 ---
 
@@ -92,24 +92,25 @@ If a video's total runtime is substantially shorter than the anchor (e.g., 32 mi
   * E.g. `MC1` was 131s $\rightarrow$ for all songs after MC1, subtract 131s + transition (e.g. -155s).
   * E.g. `MC3` was 177s $\rightarrow$ for all songs after MC3, subtract an additional 177s.
 
-### Step 5: Update `src/data/concertsData.js`
-Format the output into the Song-Centric schema:
+### Step 5: Update `src/data/concertSongTimes.js`
+Song start times live in one shared table (`SONG_START_TIMES[songKey][videoId] = seconds`); `concertsData.js` derives each
+concert's `songs` from it. Add the calibrated offsets under each song:
 
 ```javascript
-songs: {
+export const SONG_START_TIMES = {
   drip: {
-    title: 'DRIP',
-    availableVideos: [
-      { videoId: 'WuelifqxMLs', offset: 679 },
-      { videoId: 'xJuXrgbx-8I', offset: 679 },
-      { videoId: '9Y-95rgsDDY', offset: 524 },
-      { videoId: 'wSj_O5v5aMo', offset: 708 },
-      { videoId: '_zV0QTAHd5I', offset: 746 }
-    ]
+    WuelifqxMLs: 679,
+    'xJuXrgbx-8I': 679,
+    '9Y-95rgsDDY': 524,
+    wSj_O5v5aMo: 708,
+    _zV0QTAHd5I: 746
   },
   // ...other songs
-}
+};
 ```
+
+Also add a title in `SONG_TITLES` for a new song key, mark the video in `TIME_SOURCES` (`'manual'`), and put new keys in
+`SONG_ORDER`. For videos with no chapters, `tools/songRecognizer` can detect the times from the audio.
 
 ---
 

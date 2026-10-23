@@ -236,7 +236,8 @@ korean-typing-game/
 │   │   └── VirtualKeyboard.jsx     # Dubeolsik keyboard with finger guides
 │   ├── data/
 │   │   ├── concertTourHistoryData.js # World tour dates, venues, and setlist metadata
-│   │   ├── concertsData.js         # Multi-cam angles, setlist offsets, & dynamic mix getters
+│   │   ├── concertsData.js         # Multi-cam angles per concert (songs are derived from concertSongTimes.js) & dynamic mix getters
+│   │   ├── concertSongTimes.js     # One table: song start second per YouTube video (manual or audio-detected)
 │   │   ├── fanchants/              # 18+ official agency fanchant guide datasets
 │   │   └── lyricsStudyData/        # 22+ deep lyrics study packs (tokens, grammar, politeness)
 │   ├── utils/

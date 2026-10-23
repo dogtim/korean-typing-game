@@ -49,9 +49,6 @@
     - **影片 ID**：`A3M7Nxt3_-Q`
     - **時長**：100 分鐘
     - **特色**：正面看台全景，收錄全員 Solo 舞台、開場《WE GO UP》到安可謝幕。
-  - 🎬 **[12:35]** [Solo Stage 솔로무대 모음 4K Fancam 직캠](https://www.youtube.com/watch?v=cbYjGuqNrX4)
-    - **影片 ID**：`cbYjGuqNrX4`
-    - **特色**：7 位成員個人 Solo 舞台的 4K 連續無縫精華集。
 
 #### 📍 日本・大阪京瓷巨蛋特別公演 (Special Live at Kyocera Dome Osaka)
 - **演出日期**：2026.09.22 - 2026.09.23
@@ -61,8 +58,6 @@
 - **YouTube 長度與精華資源**：
   - 🎬 **[51:18]** [MONSTIEZ VLOG - BABYMONSTER 2nd WORLD TOUR CHOOM LIVE AT KYOCERA DOME](https://www.youtube.com/watch?v=nzPPN62FHnQ) (`nzPPN62FHnQ`) —— 包含巨蛋入場、周邊、手燈海與現場演出全景紀錄。
   - 🎬 **[15:07]** [BABYMONSTER WORLD TOUR CHOOM 2026-27 IN OSAKA DAY 1](https://www.youtube.com/watch?v=39J8a2OgRGQ) (`39J8a2OgRGQ`) —— 搖滾區大舞台精華。
-  - 🎬 **[14:28]** [BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME](https://www.youtube.com/watch?v=6QnZyKUFAoU) (`6QnZyKUFAoU`) —— 第二日連貫舞台直擊。
-  - 🎬 **[13:54]** [BABYMONSTER live in Osaka at Kyocera Dome 2026, night 1](https://www.youtube.com/watch?v=je7aZ-pGcDk) (`je7aZ-pGcDk`) —— 第一日主舞台連貫直拍。
 
 ---
 

@@ -33,3 +33,8 @@ ui-debug.log*
 output/
 scratch/
 .claude/
+
+# Song recognizer: downloaded audio / results / virtualenv
+tools/songRecognizer/.cache/
+tools/songRecognizer/.venv/
+__pycache__/

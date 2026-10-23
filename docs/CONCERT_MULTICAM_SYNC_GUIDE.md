@@ -320,7 +320,7 @@ if (layoutMode === 'coverflow') {
 
 ## 4. 資料結構定義範例
 
-在 `src/data/concertsData.js` 中的標準定義模式：
+在 `src/data/concertsData.js` 中的標準定義模式（注意：各曲目的開始秒數已抽離到 `src/data/concertSongTimes.js` 的 `SONG_START_TIMES[歌曲][videoId]`，`concertsData.js` 會依各場次的機位自動產生 `songs`；下方 `songs` 區塊為舊版寫法，僅供理解資料形狀）：
 
 ```javascript
 {
