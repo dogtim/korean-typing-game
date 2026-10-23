@@ -2,9 +2,9 @@
 // Sorted strictly from NEWEST to OLDEST (時間軸由最新到最舊)
 
 export const TOUR_CATEGORIES = [
-  { id: 'all', label: '全部站點', count: 43, totalShows: 70 },
+  { id: 'all', label: '全部站點', count: 43, totalShows: 71 },
   { id: 'upcoming', label: '⏳ 即將演出', count: 7, totalShows: 10, color: '#10b981' },
-  { id: 'choom', label: '🌟 춤 (CHOOM)', count: 9, totalShows: 16, color: '#f97316' },
+  { id: 'choom', label: '🌟 춤 (CHOOM)', count: 9, totalShows: 17, color: '#f97316' },
   { id: 'love_monsters', label: '💖 LOVE MONSTERS', count: 6, totalShows: 12, color: '#ec4899' },
   { id: 'hello_monsters', label: '👑 HELLO MONSTERS', count: 21, totalShows: 32, color: '#e11d48' }
 ];
@@ -143,10 +143,10 @@ export const CONCERT_TOUR_HISTORY = [
     tourName: '2026–2027 第二輪世界巡演《춤 (CHOOM)》',
     tourBadge: 'CHOOM 世巡',
     tourColor: '#f97316',
-    date: '2026/09/12',
+    date: '2026/09/11 – 09/12',
     city: '澳門（中國）',
-    venue: '澳門銀河綜藝館（Galaxy Arena）',
-    shows: 1,
+    venue: '澳門威尼斯人綜藝館（Venetian Macao）',
+    shows: 2,
     year: 2026,
     status: 'concluded',
     statusLabel: '已舉行',

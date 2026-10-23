@@ -98,15 +98,15 @@ export const CONCERT_PRESETS = [
   {
     id: 'babymonster_choom_2026',
     title: '2026-27 BABYMONSTER WORLD TOUR [춤 (CHOOM)]',
-    subTitle: 'SEOUL, MANILA, JAKARTA & OSAKA (首爾 / 馬尼拉 / 雅加達 / 大阪京瓷巨蛋 全場長片)',
+    subTitle: 'SEOUL, MANILA, JAKARTA, MACAO & OSAKA (首爾 / 馬尼拉 / 雅加達 / 澳門 / 大阪京瓷巨蛋)',
     categoryTag: 'CHOOM 巡演 2026',
     artist: 'BABYMONSTER (베이비몬스터)',
-    venue: 'KSPO Dome, Seoul / Manila / Jakarta, Indonesia / Kyocera Dome Osaka, Japan',
+    venue: 'KSPO Dome, Seoul / Manila / Jakarta, Indonesia / Venetian Macao / Kyocera Dome Osaka, Japan',
     date: '2026.06.26 - 2026.09.23',
     attendance: 'World Tour Full Show',
     themeColor: '#f97316',
     tourCategory: 'choom',
-    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 雅加達全場含彩排 (1:55:04)、CAM 2 雅加達 4K 全場 (1:45:00)、CAM 3 雅加達主舞台 (1:13:02)。三機位均為雅加達現場，支援全曲目多角度即時同步 Seek 與播放。另收錄首爾、馬尼拉與大阪京瓷巨蛋（首次巨蛋公演）的現場長片可自由指派機位。',
+    description: 'CHOOM 世界巡演全場長片（全部大於 10 分鐘）：CAM 1 雅加達全場含彩排 (1:55:04)、CAM 2 雅加達 4K 全場 (1:45:00)、CAM 3 雅加達主舞台 (1:13:02)。三機位均為雅加達現場，支援全曲目多角度即時同步 Seek 與播放。另收錄首爾、馬尼拉、澳門（威尼斯人綜藝館，Day 1 / Day 2 安可與合輯）與大阪京瓷巨蛋（首次巨蛋公演）的現場影片可自由指派機位。',
 
     // Song-Centric Setlist for Quick Multi-Cam Seek
     songs: {
@@ -473,6 +473,10 @@ export const CONCERT_PRESETS = [
       { id: 'choom_osaka_d1_4k', title: 'BABYMONSTER live in Osaka at Kyocera Dome 2026 Night 1 (13:53)', tag: '大阪巨蛋 Day 1 4K', videoId: 'je7aZ-pGcDk', author: 'SaDru', badge: '巨蛋 Day 1' },
       { id: 'choom_osaka_vip', title: 'CHOOM 2026-27 IN OSAKA AT KYOCERA DOME DAY 1 (15:07)', tag: '大阪巨蛋搖滾區', videoId: '39J8a2OgRGQ', author: 'babymonster Haram', badge: '巨蛋搖滾區' },
       { id: 'choom_osaka_d2', title: 'BABY MONSTER IN OSAKA, JAPAN (DAY 2) KYOCERA DOME (14:28)', tag: '大阪巨蛋 Day 2', videoId: '6QnZyKUFAoU', author: 'MONSTIEZ2203', badge: '巨蛋 Day 2' },
+      { id: 'choom_macao_d2_main', title: '2026-27 BABYMONSTER WORLD TOUR (CHOOM) Day 2 Macao - BATTER UP｜DRIP｜talk｜MOON｜CLIK CLAK (16:24)', tag: '澳門 Day 2 主舞台', videoId: 'xztX5RPnbQA', author: '卡MEOW', badge: '澳門 Day 2' },
+      { id: 'choom_macao_d2_encore', title: '2026-27 BABYMONSTER WORLD TOUR (CHOOM) Day 2 Macao ENCORE - BATTER UP｜SHEESH｜SUGAR HONEY ICE TEA (11:53)', tag: '澳門 Day 2 安可', videoId: '_CFe2iRUxFg', author: '卡MEOW', badge: '澳門安可' },
+      { id: 'choom_macao_d1_encore', title: '260911 BABYMONSTER WORLD TOUR [춤(CHOOM)] IN MACAO｜ENCORE+ending (16:53)', tag: '澳門 Day 1 安可', videoId: 'SeGBn4q0lKo', author: 'KW.', badge: '澳門 Day 1' },
+      { id: 'choom_macao_d1_soundcheck', title: 'BABYMONSTER - SOUNDCHECK 2026-27 WORLD TOUR [춤 (CHOOM)] IN MACAO 20260911 4K FANCAM (12:26)', tag: '澳門 Soundcheck 4K', videoId: 'FetTyqXwL7E', author: 'R FANCAM 二葉', badge: '澳門彩排' },
       { id: 'choom_solo_comp', title: 'Solo Stage 솔로무대 모음 4K Fancam (CHOOM 260626, 12:35)', tag: 'Solo 舞台 4K', videoId: 'cbYjGuqNrX4', author: 'K-PLANET', badge: 'Solo精選' }
     ]
   },
@@ -487,7 +491,7 @@ export const CONCERT_PRESETS = [
     attendance: 'Arena World Tour (Japan & Taipei)',
     themeColor: '#a855f7',
     tourCategory: 'hello_monsters',
-    description: 'HELLO MONSTERS 全場長片（全部大於 10 分鐘）：CAM 1 橫濱 K-Arena 4K 全場 (2:13:49)、CAM 2 神奈川 Day 2 全場 (1:53:53)、CAM 3 台北小巨蛋站 4K 全場 (1:46:41)。歌單涵蓋 DRIP (Remix)、BATTER UP、CLIK CLAK、LIKE THAT、SHEESH、成員 Solo、BILLIONAIRE、FOREVER、Love In My Heart 及完整安可。',
+    description: 'HELLO MONSTERS 全場長片（全部大於 10 分鐘）：CAM 1 橫濱 K-Arena 4K 全場 (2:13:49)、CAM 2 神奈川 Day 2 全場 (1:53:53)、CAM 3 神奈川完整安可 (27:35)。歌單涵蓋 DRIP (Remix)、BATTER UP、CLIK CLAK、LIKE THAT、SHEESH、成員 Solo、BILLIONAIRE、FOREVER、Love In My Heart 及完整安可。',
     songs: [
       { id: 'hm_opening', title: '開場 / 全場播放', tag: '從頭開始' }
     ],
@@ -515,18 +519,17 @@ export const CONCERT_PRESETS = [
       {
         slotId: 2,
         name: 'CAM 3',
-        title: '[4K] 2025 BABYMONSTER 1ST WORLD TOUR 《HELLO MONSTERS》 IN TAIPEI | Full concert (1:46:41)',
-        tag: '台北站 4K 全場 1:46:41',
-        videoId: '_7md4Zp8c4E',
+        title: "'FULL ENCORE' HELLO MONSTER WORLD TOUR KANAGAWA (27:35)",
+        tag: '神奈川完整安可 27:35',
+        videoId: 't6Zeru_VdSg',
         offset: 0,
         songCues: { hm_opening: 0 },
-        description: '台北小巨蛋站 4K 超高清全場演唱會。'
+        description: '神奈川站完整安可片段。'
       }
     ],
     availableAngles: [
       { id: 'hm_karena_full', title: 'HELLO MONSTERS IN JAPAN 2025.04.13 K-ARENA YOKOHAMA [4K] (2:13:49)', tag: '橫濱全場 4K', videoId: 'v0QTRX_fyPk', author: 'Mokrij Vinograd', badge: 'CAM 1', songCues: { hm_opening: 0 } },
       { id: 'hm_kanagawa_d2', title: '【Day2】HELLO MONSTERS IN 神奈川 Full Video (1:53:53)', tag: '神奈川 Day 2 全場', videoId: '81u-SQQyS4o', author: 'Bình Nguyễn', badge: 'CAM 2', songCues: { hm_opening: 0 } },
-      { id: 'hm_taipei_full', title: '[4K] 2025 HELLO MONSTERS IN TAIPEI | Full concert (1:46:41)', tag: '台北站 4K 全場', videoId: '_7md4Zp8c4E', author: '黛比的追星日記', badge: 'CAM 3', songCues: { hm_opening: 0 } },
       { id: 'hm_kanagawa_encore', title: "'FULL ENCORE' HELLO MONSTER WORLD TOUR KANAGAWA (27:35)", tag: '完整安可', videoId: 't6Zeru_VdSg', author: 'Yakisoba Studio', badge: '安可長片', songCues: { hm_opening: 0 } }
     ]
   },

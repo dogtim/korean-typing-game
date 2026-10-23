@@ -95,7 +95,7 @@ export default function ConcertTourHistoryModal({ isOpen, onClose }) {
               BABYMONSTER 演唱會巡迴清單
             </h2>
             <p className="tour-modal-desc">
-              收錄 43 個城市站點、共 70 場演出紀錄 • 時間軸由最新到最舊（從 2026 年底排定場次至 2025 首度世巡啟航）
+              收錄 43 個城市站點、共 71 場演出紀錄 • 時間軸由最新到最舊（從 2026 年底排定場次至 2025 首度世巡啟航）
             </p>
           </div>
 

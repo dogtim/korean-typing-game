@@ -835,7 +835,7 @@ export default function ConcertWall() {
           >
             <Calendar size={14} />
             <span>演唱會清單</span>
-            <span className="tour-badge-chip">43 站 / 70 場</span>
+            <span className="tour-badge-chip">43 站 / 71 場</span>
           </button>
         </div>
       </section>
@@ -856,7 +856,7 @@ export default function ConcertWall() {
               title="點擊開啟過往與即將演出演唱會清單"
             >
               <Calendar size={13} />
-              <span>巡演歷史全清單 (70 場)</span>
+              <span>巡演歷史全清單 (71 場)</span>
             </button>
           </div>
 
