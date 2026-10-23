@@ -148,7 +148,10 @@ export const CONCERT_PRESETS = [
       { id: 'choom_full_manila', title: 'BABYMONSTER CHOOM 2026 WORLD TOUR IN MANILA (Full 1:53:01)', tag: '馬尼拉全場', videoId: 'BN61wzbvI7M', author: '_rvnshlby', badge: '馬尼拉全場' },
       { id: 'choom_seoul_vlog', title: '[몬스티즈 브이로그] 2026-27 WORLD TOUR CHOOM IN SEOUL (1:26:29)', tag: '首爾沉浸直擊', videoId: 'Dr-8WJLQquU', author: '이번 역은 아현', badge: '首爾直擊' },
       { id: 'choom_macao_d2_main', title: '2026-27 BABYMONSTER WORLD TOUR (CHOOM) Day 2 Macao - BATTER UP｜DRIP｜talk｜MOON｜CLIK CLAK (16:24)', tag: '澳門 Day 2 主舞台', videoId: 'xztX5RPnbQA', author: '卡MEOW', badge: '澳門 Day 2' },
-      { id: 'choom_macao_d1_encore', title: '260911 BABYMONSTER WORLD TOUR [춤(CHOOM)] IN MACAO｜ENCORE+ending (16:53)', tag: '澳門 Day 1 安可', videoId: 'SeGBn4q0lKo', author: 'KW.', badge: '澳門 Day 1' }
+      { id: 'choom_macao_d1_encore', title: '260911 BABYMONSTER WORLD TOUR [춤(CHOOM)] IN MACAO｜ENCORE+ending (16:53)', tag: '澳門 Day 1 安可', videoId: 'SeGBn4q0lKo', author: 'KW.', badge: '澳門 Day 1' },
+      { id: 'choom_jakarta_fancam3', title: 'BABYMONSTER CHOOM WORLD TOUR IN JAKARTA 2026 (FULL FANCAM) (1:45:54)', tag: '雅加達全場', videoId: 'lxUiPVbLvkc', author: 'Mulyana Family', badge: '雅加達全場' },
+      { id: 'choom_manila_full2', title: 'BABYMONSTER (Choom) World Tour in Manila 20260905 (1:41:17)', tag: '馬尼拉全場', videoId: 'eeDAmzucFss', author: 'ilovecazey', badge: '馬尼拉全場' },
+      { id: 'choom_manila_full3', title: '090526 : BABYMONSTER 2026-27 WORLD TOUR IN MANILA (1:09:35)', tag: '馬尼拉現場', videoId: 'lQDKZl8pB-c', author: 'Gianne Arevalo', badge: '馬尼拉現場' }
     ]
   },
   {
@@ -243,7 +246,9 @@ export const CONCERT_PRESETS = [
       { id: 'lm_japan_full', title: 'BABYMONSTER LOVE MONSTERS JAPAN FAN CONCERT (Full 2:04:47)', tag: '日本站全場', videoId: 'XSFajbcHCZA', author: 'Multiverso kpop', badge: 'CAM 2' },
       { id: 'lm_taipei_full', title: 'BABYMONSTER "LOVE MONSTERS" 台北站 (Full 1:45:17)', tag: '台北站全場', videoId: 'f9PBmq77faA', author: 'Alung12345', badge: 'CAM 1' },
       { id: 'lm_bkk_full', title: 'BABYMONSTER LOVE MONSTERS IN BANGKOK (Full 1:29:30)', tag: '曼谷站全場', videoId: 'ddnxQR2hWF8', author: 'ม๊ะ!!ดูกัน', badge: 'CAM 3' },
-      { id: 'lm_taipei_42m', title: 'BABYMONSTER "LOVE MONSTERS" In Taipei (42:23)', tag: '台北場現場', videoId: '7HobWcbWKjI', author: 'BABYMONSTER fan', badge: '台北精選' }
+      { id: 'lm_taipei_42m', title: 'BABYMONSTER "LOVE MONSTERS" In Taipei (42:23)', tag: '台北場現場', videoId: '7HobWcbWKjI', author: 'BABYMONSTER fan', badge: '台北精選' },
+      { id: 'lm_bkk_d2_cam2', title: '2025.12.28 BABYMONSTER FANCAM LOVE MONSTERS IN BANGKOK DAY 2 (1:25:30)', tag: '曼谷 Day 2 全場', videoId: 'yddrUDXPeO0', author: 'อิม โซเฟียร์ หวังต้วน', badge: '曼谷 Day 2' },
+      { id: 'lm_bkk_d1_full', title: '[251227] BABYMONSTER LOVE MONSTERS ASIA FAN CONCERT 2025 IN BANGKOK Day 1 (1:16:40)', tag: '曼谷 Day 1 全場', videoId: 'Y8DKhh4JJfo', author: 'mitsumeteitai', badge: '曼谷 Day 1' }
     ]
   },
   {
