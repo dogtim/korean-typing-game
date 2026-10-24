@@ -8,6 +8,7 @@ import { GAME_MODES, getGameModeConfig, containsKorean, buildKoreanLinePool, pic
 import { sound } from '../utils/audio';
 import GameChallengeOverlay from './gameModes/GameChallengeOverlay';
 import VideoSelectModal from './VideoSelectModal';
+import { lightstick } from '../utils/lightstickBle';
 import {
   Heart,
   RotateCcw,
@@ -431,6 +432,15 @@ export default function KpopGameMode({
         sound.playCorrect();
       }
 
+      // 手燈連動燈效反饋
+      try {
+        if (newCombo % 5 === 0) {
+          lightstick.flash(255, 215, 0, 180); // 金色爆閃慶祝 Combo
+        } else {
+          lightstick.flash(0, 229, 255, 90); // 霓虹青光擊打閃動
+        }
+      } catch (_e) {}
+
       setRecentScorePopup({
         text: `+${pointsEarned} PTS ${newCombo >= 2 ? `🔥 ${newCombo}x COMBO!` : '✨'}`,
         type: 'correct',
@@ -438,6 +448,9 @@ export default function KpopGameMode({
       });
     } else {
       sound.playError();
+      try {
+        lightstick.flash(255, 0, 51, 140); // 答錯紅光警示
+      } catch (_e) {}
       setCombo(0);
 
       // Record wrong answer to review notebook

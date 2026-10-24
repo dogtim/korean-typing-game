@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import LessonMode from './components/LessonMode';
 import BadgeModal from './components/BadgeModal';
 import ReviewNotebookModal from './components/ReviewNotebookModal';
+import LightstickModal from './components/LightstickModal';
 import { sound } from './utils/audio';
 
 import KpopVideoMode from './components/KpopVideoMode';
@@ -98,6 +99,7 @@ export default function App() {
     }
   });
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isLightstickModalOpen, setIsLightstickModalOpen] = useState(false);
   const [loopTarget, setLoopTarget] = useState(null);
 
   // Sync Level with XP
@@ -189,6 +191,7 @@ export default function App() {
         showAdminTab={import.meta.env.DEV}
         learningLanguage={learningLanguage}
         onSelectLanguage={handleSelectLanguage}
+        onOpenLightstick={() => setIsLightstickModalOpen(true)}
       />
 
       {/* Main Tab Content */}
@@ -278,6 +281,12 @@ export default function App() {
         onLoopSentence={handleLoopSentence}
         onRemoveMissed={handleRemoveMissed}
         onClearAll={handleClearAllMissed}
+      />
+
+      {/* BABYMONSTER Official Lightstick BLE Controller Modal */}
+      <LightstickModal
+        isOpen={isLightstickModalOpen}
+        onClose={() => setIsLightstickModalOpen(false)}
       />
     </div>
   );

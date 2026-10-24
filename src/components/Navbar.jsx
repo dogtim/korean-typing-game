@@ -1,14 +1,22 @@
-import React from 'react';
-import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio, GraduationCap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio, GraduationCap, Zap } from 'lucide-react';
+import { lightstick } from '../utils/lightstickBle';
 
 export default function Navbar({
   activeTab,
   setActiveTab,
   showAdminTab = false,
   learningLanguage = 'korean',
-  onSelectLanguage
+  onSelectLanguage,
+  onOpenLightstick
 }) {
   const isHokkien = learningLanguage === 'hokkien';
+  const [bleState, setBleState] = useState(() => lightstick.getState());
+
+  useEffect(() => {
+    const unsubscribe = lightstick.subscribe((st) => setBleState(st));
+    return unsubscribe;
+  }, []);
 
   return (
     <header className="navbar-container">
@@ -91,6 +99,36 @@ export default function Navbar({
             <GraduationCap className="tab-icon" size={18} />
             <span>Lyric Study</span>
             <span className="live-nav-badge" style={{ background: 'linear-gradient(135deg, #ec4899, #8b5cf6)' }}>NEW</span>
+          </button>
+        )}
+
+        {!isHokkien && onOpenLightstick && (
+          <button
+            type="button"
+            className={`tab-btn lightstick-nav-btn ${bleState.isConnected ? 'connected' : ''}`}
+            onClick={onOpenLightstick}
+            title="BABYMONSTER 官方手燈藍牙連動控制 (Fanlight BLE)"
+          >
+            <Zap
+              className="tab-icon"
+              size={17}
+              style={{
+                color: bleState.isConnected ? bleState.currentColor.hex : '#ff0033',
+                filter: bleState.isConnected ? `drop-shadow(0 0 6px ${bleState.currentColor.hex})` : 'none'
+              }}
+            />
+            <span>手燈連動</span>
+            {bleState.isConnected ? (
+              <span
+                className="ble-status-dot"
+                style={{
+                  background: bleState.currentColor.hex,
+                  boxShadow: `0 0 8px ${bleState.currentColor.hex}`
+                }}
+              />
+            ) : (
+              <span className="ble-nav-badge">BLE</span>
+            )}
           </button>
         )}
 

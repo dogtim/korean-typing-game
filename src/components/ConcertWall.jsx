@@ -28,6 +28,7 @@ import {
 import { CONCERT_PRESETS } from '../data/concertsData';
 import ConcertSelectModal from './ConcertSelectModal';
 import ConcertTourHistoryModal from './ConcertTourHistoryModal';
+import { lightstick } from '../utils/lightstickBle';
 import './ConcertWall.css';
 
 function extractYouTubeId(urlOrId) {
@@ -473,6 +474,11 @@ export default function ConcertWall() {
 
     const songTitle = song?.title || songKey.toUpperCase();
     setActiveSongKey(song?.id || songKey);
+
+    // 觸發 BABYMONSTER 藍牙手燈演唱會曲目風格連動
+    try {
+      lightstick.triggerSongTheme(songTitle);
+    } catch (_e) {}
 
     let syncedCount = 0;
     const syncedSummary = [];
