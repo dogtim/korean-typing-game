@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio, GraduationCap, Zap } from 'lucide-react';
+import { BookOpen, Tv, Gamepad2, BookMarked, Wrench, Radio, Zap } from 'lucide-react';
 import { lightstick } from '../utils/lightstickBle';
 
 export default function Navbar({
@@ -27,28 +27,6 @@ export default function Navbar({
           <span className="brand-subtitle">{isHokkien ? 'Taiwanese' : 'Korean'}</span>
         </div>
       </div>
-
-      {/* Language Switcher Pill Group */}
-      {onSelectLanguage && (
-        <div className="navbar-lang-switcher">
-          <button
-            type="button"
-            className={`navbar-lang-btn ${learningLanguage === 'korean' ? 'active' : ''}`}
-            onClick={() => onSelectLanguage('korean')}
-            title="Switch to Korean (한국어) mode"
-          >
-            🇰🇷 Korean
-          </button>
-          <button
-            type="button"
-            className={`navbar-lang-btn ${learningLanguage === 'hokkien' ? 'active' : ''}`}
-            onClick={() => onSelectLanguage('hokkien')}
-            title="Switch to Hokkien (台語) mode"
-          >
-            🇹🇼 台語 (Hokkien)
-          </button>
-        </div>
-      )}
 
       <nav className="navbar-tabs">
         {/* Lessons (WIP) / Typing series temporarily hidden until complete */}
@@ -87,20 +65,7 @@ export default function Navbar({
         >
           <Radio className="tab-icon" size={18} />
           <span>Concert Wall</span>
-          <span className="live-nav-badge">LIVE</span>
         </button>
-
-        {!isHokkien && (
-          <button
-            className={`tab-btn study-tab-highlight ${activeTab === 'lyric-study' ? 'active' : ''}`}
-            onClick={() => setActiveTab('lyric-study')}
-            title="K-Lyric Studio 韓語歌詞研習室 (Interactive Study Studio)"
-          >
-            <GraduationCap className="tab-icon" size={18} />
-            <span>Lyric Study</span>
-            <span className="live-nav-badge" style={{ background: 'linear-gradient(135deg, #ec4899, #8b5cf6)' }}>NEW</span>
-          </button>
-        )}
 
         {!isHokkien && onOpenLightstick && (
           <button
@@ -118,7 +83,7 @@ export default function Navbar({
               }}
             />
             <span>手燈連動</span>
-            {bleState.isConnected ? (
+            {bleState.isConnected && (
               <span
                 className="ble-status-dot"
                 style={{
@@ -126,8 +91,6 @@ export default function Navbar({
                   boxShadow: `0 0 8px ${bleState.currentColor.hex}`
                 }}
               />
-            ) : (
-              <span className="ble-nav-badge">BLE</span>
             )}
           </button>
         )}
