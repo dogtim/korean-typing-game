@@ -9,7 +9,7 @@ export const CONCERT_CATEGORY_DEFINITIONS = [
   { id: 'hello_monsters', label: 'Hello Monsters', subTitle: '2025 首次世界巡演 (共 32 場)', color: '#a855f7' },
   { id: 'love_monsters', label: 'Love Monsters', subTitle: '2025–2026 Fan Concert 巡迴 (共 12 場)', color: '#ec4899' },
   { id: 'choom', label: 'Choom', subTitle: '2026–2027 第二輪世界巡演', color: '#f97316' },
-  { id: 'others', label: '其他現場', subTitle: 'Summer Sonic 2026 音樂祭等', color: '#0284c7' }
+  { id: 'others', label: '其他現場', subTitle: 'Summer Sonic 音樂祭、頒獎典禮 (TIMA / TMEA)', color: '#0284c7' }
 ];
 
 export const CONCERT_PRESETS = [
@@ -299,6 +299,94 @@ export const CONCERT_PRESETS = [
       { id: 'angle_ss_4', title: 'BABYMONSTER FULL PERFORMANCE [Summer Sonic Tokyo] (44:33)', tag: '完整直擊', videoId: 'wSj_O5v5aMo', author: 'Keep Going', badge: 'CAM 3' },
       { id: 'angle_ss_1', title: 'BABYMONSTER [FULL PERFORMANCE] SUMMER SONIC 2026 (32:53)', tag: '全景主視角', videoId: '9Y-95rgsDDY', author: 'Summer Live', badge: 'CAM 4' },
       { id: 'angle_ss_3', title: 'BABYMONSTER SUMMER SONIC 2026 in TOKYO (43:58)', tag: '球場特寫', videoId: 'WuelifqxMLs', author: 'Tokyo Live', badge: 'CAM 5' }
+    ]
+  },
+  {
+    id: 'babymonster_tima_2026',
+    title: 'BABYMONSTER AT TMElive INTERNATIONAL MUSIC AWARDS 2026',
+    subTitle: 'TIMA 2026 香港頒獎典禮 (WE GO UP / CHOOM / MOON / DRIP / I LIKE IT)',
+    categoryTag: '',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    venue: 'Hong Kong (TMElive International Music Awards)',
+    date: '2026.08.22',
+    attendance: 'Global Icon Group 得獎 + 完整表演',
+    themeColor: '#0284c7',
+    tourCategory: 'others',
+    description: 'BABYMONSTER 於 2026 TMElive 國際音樂大獎（TIMA）香港站獲頒 Global Icon Group，並帶來完整舞台。收錄 18 至 25 分鐘的完整表演影片（皆在 10 分鐘以上），同一場不同上傳者的剪輯可自由指派機位。',
+
+    defaultSlots: [
+      {
+        slotId: 0,
+        name: 'CAM 1',
+        title: 'TIMA 2026 完整表演 (24:23)',
+        tag: '主視角 24:23',
+        videoId: 'JIBuuvPlaa0',
+        offset: 0,
+        description: 'TIMA 2026 香港頒獎典禮 (WE GO UP / CHOOM / MOON / DRIP / I LIKE IT)。'
+      },
+      {
+        slotId: 1,
+        name: 'CAM 2',
+        title: 'TIMA 2026 Full Performance 260822 (24:10)',
+        tag: '另一剪輯 24:10',
+        videoId: 'Pa2OcRibAro',
+        offset: 0,
+        description: 'TIMA 2026 香港頒獎典禮 (WE GO UP / CHOOM / MOON / DRIP / I LIKE IT)。'
+      },
+      {
+        slotId: 2,
+        name: 'CAM 3',
+        title: 'TIMA award show performance 2026 (24:08)',
+        tag: '舞台 24:08',
+        videoId: 'zEXqtJbaKh0',
+        offset: 0,
+        description: 'TIMA 2026 香港頒獎典禮 (WE GO UP / CHOOM / MOON / DRIP / I LIKE IT)。'
+      }
+    ],
+    availableAngles: [
+      { id: 'angle_tima_1', title: 'TIMA 2026 完整表演 (24:23)', tag: '主視角 24:23', videoId: 'JIBuuvPlaa0', author: 'byColonia', badge: 'CAM 1' },
+      { id: 'angle_tima_2', title: 'TIMA 2026 Full Performance 260822 (24:10)', tag: '另一剪輯 24:10', videoId: 'Pa2OcRibAro', author: 'BaemonShadow', badge: 'CAM 2' },
+      { id: 'angle_tima_3', title: 'TIMA award show performance 2026 (24:08)', tag: '舞台 24:08', videoId: 'zEXqtJbaKh0', author: '~Bubblebeeyy~', badge: 'CAM 3' },
+      { id: 'angle_tima_4', title: 'Full Perform at TME 2026 & WIN GLOBAL ICON GROUP (22:55)', tag: '含得獎 22:55', videoId: 'Aowjq0wWGNA', author: 'Rian Sioh', badge: 'CAM 4' },
+      { id: 'angle_tima_5', title: 'All Performance TIMA 2026 260822 (18:28)', tag: '精華 18:28', videoId: 'sGc5s-0YfTY', author: 'Monstiez Home', badge: 'CAM 5' }
+    ]
+  },
+  {
+    id: 'babymonster_tmea_2024',
+    title: 'BABYMONSTER AT TMEA 2024',
+    subTitle: 'TMEA 2024 頒獎典禮 (SHEESH / BATTER UP / LIKE THAT / FOREVER)',
+    categoryTag: '',
+    artist: 'BABYMONSTER (베이비몬스터)',
+    venue: 'TMEA (Tencent Music Entertainment Awards) 2024',
+    date: '2024.07.20',
+    attendance: 'TMEA 2024 Stage',
+    themeColor: '#0284c7',
+    tourCategory: 'others',
+    description: 'BABYMONSTER 於 2024 年 7 月 20 日 TMEA 的舞台，收錄 10 分鐘以上的完整表演影片。',
+
+    defaultSlots: [
+      {
+        slotId: 0,
+        name: 'CAM 1',
+        title: 'BABYMONSTER Full Stage at TMEA 20240720 (19:53)',
+        tag: '完整舞台 19:53',
+        videoId: 'cwdsSG3YAYg',
+        offset: 0,
+        description: 'TMEA 2024 頒獎典禮 (SHEESH / BATTER UP / LIKE THAT / FOREVER)。'
+      },
+      {
+        slotId: 1,
+        name: 'CAM 2',
+        title: 'SHEESH + BATTER UP + LIKE THAT + FOREVER 240720 TMEA 2024 [FULL HD] (13:33)',
+        tag: 'FULL HD 13:33',
+        videoId: 'JAFLqbej8Rw',
+        offset: 0,
+        description: 'TMEA 2024 頒獎典禮 (SHEESH / BATTER UP / LIKE THAT / FOREVER)。'
+      }
+    ],
+    availableAngles: [
+      { id: 'angle_tmea_1', title: 'BABYMONSTER Full Stage at TMEA 20240720 (19:53)', tag: '完整舞台 19:53', videoId: 'cwdsSG3YAYg', author: 'Bonusthisyears', badge: 'CAM 1' },
+      { id: 'angle_tmea_2', title: 'SHEESH + BATTER UP + LIKE THAT + FOREVER 240720 TMEA 2024 [FULL HD] (13:33)', tag: 'FULL HD 13:33', videoId: 'JAFLqbej8Rw', author: 'RORACHIPS', badge: 'CAM 2' }
     ]
   }
 ];
