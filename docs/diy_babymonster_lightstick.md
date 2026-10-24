@@ -287,13 +287,13 @@ void loop() {
     if (digitalRead(BTN_PIN) == LOW) {
       static uint8_t presetIdx = 0;
       const uint8_t presets[][3] = {
-        {230, 0, 38},   // Ruka 緋紅
-        {0, 191, 255},  // Pharita 天空藍
-        {255, 215, 0},  // Asa 金黃
-        {208, 0, 255},  // Ahyeon 洋紅
-        {255, 107, 53}, // Rami 珊瑚橘
-        {138, 43, 226}, // Rora 夜紫
-        {0, 250, 154}   // Chiquita 薄荷綠
+        {0, 71, 255},   // Ruka 湛藍 (Bright Deep Blue)
+        {226, 232, 240},// Pharita 耀眼銀芒 (Silver)
+        {255, 105, 180},// Asa 甜蜜粉紅 (Pink)
+        {255, 255, 255},// Ahyeon 純白 (White)
+        {255, 0, 51},   // Rami 熱情鮮紅 (Red)
+        {153, 51, 255}, // Rora 皇家炫紫 (Purple)
+        {0, 0, 0}       // Chiquita 暗夜極黑 (Black)
       };
       presetIdx = (presetIdx + 1) % 7;
       currentR = presets[presetIdx][0];
@@ -317,8 +317,8 @@ void loop() {
 
 ### 6.1 演唱會電視牆焦點連動 (Concert Wall Focus Sync)
 - 進入 [ConcertWall.jsx](file:///Users/hsiaotingchen/korean-typing-game/src/components/ConcertWall.jsx)。
-- 點選 CAM 2（Ahyeon 直拍）➔ 手燈自動收到洋紅指令變為 `#D000FF`。
-- 點選 CAM 3（Ruka 直拍）➔ 手燈自動變為緋紅 `#E60026`。
+- 點選 CAM 2（Ahyeon 直拍）➔ 手燈自動收到純白指令變為 `#FFFFFF`。
+- 點選 CAM 3（Ruka 直拍）➔ 手燈自動變為湛藍 `#0047FF`。
 - 切換至歌曲《SHEESH》➔ 手燈進入高潮重低音血紅頻閃。
 
 ### 6.2 打字遊戲擊打觸覺回饋 (K-Pop Game & Haptic Burst)

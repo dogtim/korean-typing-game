@@ -7,16 +7,74 @@ export const FANLIGHT_SERVICE_UUID = '00010203-0405-0607-0809-0a0b0c0d1911';
 export const FANLIGHT_WRITE_CHAR_UUID = '00010203-0405-0607-0809-0a0b0c0d2b19';
 export const FANLIGHT_NOTIFY_CHAR_UUID = '00010203-0405-0607-0809-0a0b0c0d1912';
 
-// 7 位成員專屬色票
+// 7 位成員專屬色票 (自訂色調)
 export const BM_MEMBER_COLORS = [
-  { id: 'ruka', name: 'RUKA', koName: '루카', color: '#E60026', rgb: [230, 0, 38], emoji: '🍒', role: 'Main Rapper' },
-  { id: 'pharita', name: 'PHARITA', koName: '파리타', color: '#00BFFF', rgb: [0, 191, 255], emoji: '🩵', role: 'Lead Vocal' },
-  { id: 'asa', name: 'ASA', koName: '아사', color: '#FFD700', rgb: [255, 215, 0], emoji: '☀️', role: 'Main Rapper' },
-  { id: 'ahyeon', name: 'AHYEON', koName: '아현', color: '#D000FF', rgb: [208, 0, 255], emoji: '⚡', role: 'All-Rounder' },
-  { id: 'rami', name: 'RAMI', koName: '라미', color: '#FF6B35', rgb: [255, 107, 53], emoji: '🌅', role: 'Main Vocal' },
-  { id: 'rora', name: 'RORA', koName: '로라', color: '#8A2BE2', rgb: [138, 43, 226], emoji: '👑', role: 'Lead Vocal' },
-  { id: 'chiquita', name: 'CHIQUITA', koName: '치키타', color: '#00FA9A', rgb: [0, 250, 154], emoji: '🍀', role: 'Maknae' }
+  { id: 'ruka', name: 'RUKA', koName: '루카', color: '#0047FF', rgb: [0, 71, 255], emoji: '💙', role: 'Main Rapper', desc: 'Bright Deep Blue (湛藍)' },
+  { id: 'pharita', name: 'PHARITA', koName: '파리타', color: '#E2E8F0', rgb: [226, 232, 240], emoji: '✨', role: 'Lead Vocal', desc: 'Shine Like Silver (銀芒)' },
+  { id: 'asa', name: 'ASA', koName: '아사', color: '#FF69B4', rgb: [255, 105, 180], emoji: '🩷', role: 'Main Rapper', desc: 'Pink (粉紅)' },
+  { id: 'ahyeon', name: 'AHYEON', koName: '아현', color: '#FFFFFF', rgb: [255, 255, 255], emoji: '🤍', role: 'All-Rounder', desc: 'White (純白)' },
+  { id: 'rami', name: 'RAMI', koName: '라미', color: '#FF0033', rgb: [255, 0, 51], emoji: '❤️', role: 'Main Vocal', desc: 'Red (鮮紅)' },
+  { id: 'rora', name: 'RORA', koName: '로라', color: '#9933FF', rgb: [153, 51, 255], emoji: '💜', role: 'Lead Vocal', desc: 'Purple (炫紫)' },
+  { id: 'chiquita', name: 'CHIQUITA', koName: '치키타', color: '#18181B', rgb: [0, 0, 0], emoji: '🖤', role: 'Maknae', desc: 'Black (暗夜黑)' }
 ];
+
+const LOCAL_STORAGE_CUSTOM_COLORS_KEY = 'bm_custom_member_colors';
+
+/**
+ * 取得成員色票（優先使用使用者客製化並快取的色碼）
+ */
+export function getSavedMemberColors() {
+  try {
+    const saved = localStorage.getItem(LOCAL_STORAGE_CUSTOM_COLORS_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return BM_MEMBER_COLORS.map((m) => {
+        if (parsed[m.id]) {
+          const customHex = parsed[m.id];
+          return {
+            ...m,
+            color: customHex,
+            rgb: hexToRgb(customHex),
+            isCustom: customHex.toLowerCase() !== m.color.toLowerCase()
+          };
+        }
+        return { ...m, isCustom: false };
+      });
+    }
+  } catch (_e) {}
+  return BM_MEMBER_COLORS.map(m => ({ ...m, isCustom: false }));
+}
+
+/**
+ * 儲存特定成員的客製色碼
+ */
+export function saveMemberColor(memberId, hex) {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_CUSTOM_COLORS_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+    map[memberId] = hex;
+    localStorage.setItem(LOCAL_STORAGE_CUSTOM_COLORS_KEY, JSON.stringify(map));
+  } catch (_e) {}
+}
+
+/**
+ * 重設特定或全部成員的色碼回原廠預設
+ */
+export function resetMemberColor(memberId = null) {
+  try {
+    if (!memberId) {
+      localStorage.removeItem(LOCAL_STORAGE_CUSTOM_COLORS_KEY);
+    } else {
+      const raw = localStorage.getItem(LOCAL_STORAGE_CUSTOM_COLORS_KEY);
+      if (raw) {
+        const map = JSON.parse(raw);
+        delete map[memberId];
+        localStorage.setItem(LOCAL_STORAGE_CUSTOM_COLORS_KEY, JSON.stringify(map));
+      }
+    }
+  } catch (_e) {}
+  return getSavedMemberColors();
+}
 
 // 演唱會主題曲風格燈光
 export const BM_SONG_THEMES = {

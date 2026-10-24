@@ -64,10 +64,11 @@ export default function FanchantPrompter({
               {activeCue.chant}
             </div>
 
-            <div className="chant-sub-info">
-              {activeCue.roman && <div className="chant-roman">{activeCue.roman}</div>}
-              {activeCue.meaning && <div className="chant-meaning">💡 {activeCue.meaning}</div>}
-            </div>
+            {activeCue.meaning && (
+              <div className="chant-sub-info">
+                <div className="chant-meaning">💡 {activeCue.meaning}</div>
+              </div>
+            )}
 
             {activeCue.tip && (
               <div className="chant-tip-bubble">
@@ -110,11 +111,6 @@ export default function FanchantPrompter({
               <div className="upcoming-chant-text">
                 {upcomingCue.chant}
               </div>
-              {upcomingCue.roman && (
-                <div className="upcoming-roman-text">
-                  {upcomingCue.roman}
-                </div>
-              )}
               {upcomingCue.tip && (
                 <div className="upcoming-tip-text">
                   {upcomingCue.tip}

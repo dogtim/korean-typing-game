@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Bluetooth,
   Radio,
@@ -14,13 +14,18 @@ import {
   Battery,
   Activity,
   Music,
-  RotateCw
+  RotateCw,
+  Edit3,
+  Check
 } from 'lucide-react';
 import {
   lightstick,
   BM_MEMBER_COLORS,
   BM_SONG_THEMES,
-  hexToRgb
+  hexToRgb,
+  getSavedMemberColors,
+  saveMemberColor,
+  resetMemberColor
 } from '../utils/lightstickBle';
 import './LightstickModal.css';
 
@@ -28,6 +33,12 @@ export default function LightstickModal({ isOpen, onClose }) {
   const [bleState, setBleState] = useState(lightstick.getState());
   const [showDiagnostics, setShowDiagnostics] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [memberColors, setMemberColors] = useState(() => getSavedMemberColors());
+  const [editingMember, setEditingMember] = useState(null);
+  const [editingColorHex, setEditingColorHex] = useState('#FFFFFF');
+
+  const longPressTimerRef = useRef(null);
+  const isLongPressTriggeredRef = useRef(false);
 
   // 監聽手燈狀態更新
   useEffect(() => {
@@ -56,6 +67,93 @@ export default function LightstickModal({ isOpen, onClose }) {
     setSelectedMember(member.id);
     const [r, g, b] = member.rgb;
     await lightstick.setColor(r, g, b, true);
+  };
+
+  // 長按檢測邏輯 (550ms 判定為長按)
+  const handlePressStart = (member) => {
+    isLongPressTriggeredRef.current = false;
+    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+    longPressTimerRef.current = setTimeout(() => {
+      isLongPressTriggeredRef.current = true;
+      setEditingMember(member);
+      setEditingColorHex(member.color);
+    }, 550);
+  };
+
+  const handlePressEnd = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  };
+
+  const handleContextMenu = (e, member) => {
+    e.preventDefault();
+    setEditingMember(member);
+    setEditingColorHex(member.color);
+  };
+
+  const handleMemberClick = (member) => {
+    if (isLongPressTriggeredRef.current) {
+      isLongPressTriggeredRef.current = false;
+      return;
+    }
+    handleSelectMember(member);
+  };
+
+  // 即時儲存客製色碼並同步手燈
+  const handleSaveCustomColor = (newHex) => {
+    if (!editingMember) return;
+    const cleanHex = newHex.startsWith('#') ? newHex : `#${newHex}`;
+    saveMemberColor(editingMember.id, cleanHex);
+
+    const updated = memberColors.map((m) => {
+      if (m.id === editingMember.id) {
+        return {
+          ...m,
+          color: cleanHex,
+          rgb: hexToRgb(cleanHex),
+          isCustom: true
+        };
+      }
+      return m;
+    });
+    setMemberColors(updated);
+    setEditingColorHex(cleanHex);
+
+    if (selectedMember === editingMember.id) {
+      const [r, g, b] = hexToRgb(cleanHex);
+      lightstick.setColor(r, g, b, true);
+    }
+  };
+
+  // 恢復當前成員預設
+  const handleResetThisMember = () => {
+    if (!editingMember) return;
+    const updated = resetMemberColor(editingMember.id);
+    setMemberColors(updated);
+    const original = updated.find((m) => m.id === editingMember.id);
+    if (original) {
+      setEditingColorHex(original.color);
+      if (selectedMember === editingMember.id) {
+        const [r, g, b] = original.rgb;
+        lightstick.setColor(r, g, b, true);
+      }
+    }
+  };
+
+  // 恢復所有成員預設
+  const handleResetAllMembers = () => {
+    const defaultColors = resetMemberColor(null);
+    setMemberColors(defaultColors);
+    setEditingMember(null);
+    if (selectedMember) {
+      const cur = defaultColors.find((m) => m.id === selectedMember);
+      if (cur) {
+        const [r, g, b] = cur.rgb;
+        lightstick.setColor(r, g, b, true);
+      }
+    }
   };
 
   const handleSetEffect = (mode) => {
@@ -236,20 +334,36 @@ export default function LightstickModal({ isOpen, onClose }) {
             </div>
 
             <div className="member-color-grid">
-              {BM_MEMBER_COLORS.map((m) => {
+              {memberColors.map((m) => {
                 const isSelected = selectedMember === m.id;
+                const isEditing = editingMember?.id === m.id;
                 return (
                   <button
                     key={m.id}
-                    className={`member-card-btn ${isSelected ? 'active' : ''}`}
+                    className={`member-card-btn ${isSelected ? 'active' : ''} ${isEditing ? 'is-editing' : ''}`}
                     style={{
-                      '--member-color': m.color,
-                      '--member-glow': m.color + '66'
+                      '--member-color': m.id === 'chiquita' ? '#64748b' : m.color,
+                      '--member-glow': m.id === 'chiquita' ? 'rgba(255, 255, 255, 0.25)' : m.color + '66'
                     }}
-                    onClick={() => handleSelectMember(m)}
-                    title={`${m.name} (${m.koName}) - ${m.role}`}
+                    onMouseDown={() => handlePressStart(m)}
+                    onMouseUp={handlePressEnd}
+                    onMouseLeave={handlePressEnd}
+                    onTouchStart={() => handlePressStart(m)}
+                    onTouchEnd={handlePressEnd}
+                    onTouchCancel={handlePressEnd}
+                    onContextMenu={(e) => handleContextMenu(e, m)}
+                    onClick={() => handleMemberClick(m)}
+                    title={`${m.name} (${m.koName}) - ${m.desc || m.role} (長按或右鍵可自訂色碼)`}
                   >
-                    <div className="member-color-dot" />
+                    {m.isCustom && <span className="member-custom-badge" title="已自訂色碼" />}
+                    <div
+                      className="member-color-dot"
+                      style={{
+                        background: m.id === 'chiquita' ? '#0a0a0f' : m.color,
+                        boxShadow: m.id === 'chiquita' ? '0 0 8px rgba(255, 255, 255, 0.3)' : `0 0 10px ${m.color}`,
+                        border: m.id === 'chiquita' ? '2px solid rgba(255, 255, 255, 0.9)' : undefined
+                      }}
+                    />
                     <span className="member-name-label">
                       {m.emoji} {m.name}
                     </span>
@@ -257,6 +371,79 @@ export default function LightstickModal({ isOpen, onClose }) {
                   </button>
                 );
               })}
+            </div>
+
+            {/* 長按自訂成員色碼編輯面板 */}
+            {editingMember && (
+              <div className="member-edit-panel">
+                <div className="member-edit-header">
+                  <div className="member-edit-title">
+                    <Edit3 size={15} color="#38bdf8" />
+                    <span>自訂【{editingMember.name}】色碼</span>
+                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>({editingMember.koName})</span>
+                  </div>
+                  <button
+                    className="lightstick-close-btn"
+                    style={{ width: '26px', height: '26px' }}
+                    onClick={() => setEditingMember(null)}
+                    title="關閉編輯"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+
+                <div className="member-edit-controls">
+                  <div className="member-edit-input-group">
+                    <input
+                      type="color"
+                      className="member-color-picker-input"
+                      value={editingColorHex}
+                      onChange={(e) => handleSaveCustomColor(e.target.value)}
+                      title="點擊自訂調色"
+                    />
+                    <input
+                      type="text"
+                      className="member-hex-text-input"
+                      value={editingColorHex}
+                      maxLength={7}
+                      onChange={(e) => handleSaveCustomColor(e.target.value)}
+                      placeholder="#RRGGBB"
+                    />
+                  </div>
+
+                  <div className="member-edit-actions">
+                    <button
+                      type="button"
+                      className="btn-member-reset"
+                      onClick={handleResetThisMember}
+                      title="恢復此成員預設色彩"
+                    >
+                      恢復預設
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-member-save"
+                      onClick={() => setEditingMember(null)}
+                    >
+                      <Check size={13} style={{ display: 'inline', marginRight: '4px' }} />
+                      完成
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="member-grid-hint-row">
+              <span>💡 提示：長按按鈕（或右鍵）可自訂專屬色碼，調整後自動記憶</span>
+              {memberColors.some((m) => m.isCustom) && (
+                <button
+                  type="button"
+                  className="btn-reset-all-members"
+                  onClick={handleResetAllMembers}
+                >
+                  恢復所有成員預設色
+                </button>
+              )}
             </div>
           </div>
 
